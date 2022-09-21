@@ -1,9 +1,9 @@
 import 'react-native-gesture-handler';
-import {LogBox, View, Text} from 'react-native';
+import {LogBox, View} from 'react-native';
 import {Provider} from 'redux';
 import {store} from './src/redux/store';
 import {useFonts} from 'react-native-font';
-// import RootNavigator from './src/routes';
+import RootNavigator from './src/routes';
 
 LogBox.ignoreLogs(['VirtualizedLists', 'Warning:...']);
 LogBox.ignoreAllLogs();
@@ -18,11 +18,8 @@ export default function App() {
   // if (!loaded) return <View />;
 
   return (
-    <View>
-      <Text>ckfncdkcndkc</Text>
-    </View>
     //  <Provider store={store}>
-    // <RootNavigator />
+    <RootNavigator />
     //  </Provider>
   );
 }
