@@ -1,18 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import
+import firestore from '@react-native-firebase/firestore';
 // import auth from '@react-native-firebase/auth';
 
-export const SignupEmailPassword = async (email, password) => {
-  try {
-    const userCredentials = await auth().createUserWithEmailAndPassword(
-      email,
-      password,
-    );
-    return userCredentials;
-  } catch (error) {
-    throw error;
-  }
-};
+// export const SignupEmailPassword = async (email, password) => {
+//   try {
+//     const userCredentials = await auth().createUserWithEmailAndPassword(
+//       email,
+//       password,
+//     );
+//     return userCredentials;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
 
 export const AuthLogin = async (email, password) => {
   // try {
@@ -26,15 +26,15 @@ export const AuthLogin = async (email, password) => {
   // }
 };
 export const saveUser = async (authId, data) => {
-  // try {
-  //   const response = await firestore
-  //     .collection("users")
-  //     .doc(authId)
-  //     .set(data, { merge: true });
-  //   return response;
-  // } catch (error) {
-  //   throw error;
-  // }
+  try {
+    const response = await firestore()
+      .collection('users')
+      .doc(authId)
+      .set(data, {merge: true});
+    return response;
+  } catch (error) {
+    throw error;
+  }
 };
 export const uploadImage = async uri => {
   // try {
@@ -49,26 +49,27 @@ export const uploadImage = async uri => {
   // }
 };
 
-export const addUserData = async (id, phone, email, name, image) => {
-  await firestore().doc(`users/${id}`).set(
-    {
-      id,
-      email,
-      phone,
-      name,
-      image,
-    },
-    {merge: true},
-  );
-};
+// export const addUserData = async (id, phone, email, name, image) => {
+//   await firestore().doc(`users/${id}`).set(
+//     {
+//       id,
+//       email,
+//       phone,
+//       name,
+//       image,
+//     },
+//     {merge: true},
+//   );
+// };
+
 export const getSpecificeUser = async userId => {
-  // try {
-  //   const user = await firestore.collection("users").doc(userId).get();
-  //   return user.data();
-  // } catch (error) {
-  //   // console.log('getUser line 51', error);
-  //   throw error;
-  // }
+  try {
+    const user = await firestore().collection('users').doc(userId).get();
+    return user.data();
+  } catch (error) {
+    // console.log('getUser line 51', error);
+    throw error;
+  }
 };
 
 // export const getUser = (setAuthData, authId,) => {
