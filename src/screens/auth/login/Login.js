@@ -1,28 +1,29 @@
-import React, { useState } from "react";
-import commonStyles from "../../../utils/CommonStyles";
-import CustomTextInput from "../../../components/CustomTextInput";
-import { Spacer } from "../../../components/Spacer";
-import { moderateScale, verticalScale } from "react-native-size-matters";
-import CustomText from "../../../components/CustomText";
-import ConditionPassCon from "./molecules/ConditionPassCon";
-import { View } from "react-native";
-import CustomButton from "../../../components/CustomButton";
-import { colors } from "../../../utils/Colors";
-import { styles } from "../ViewPager/styles";
-import LoginpWithCon from "./LoginWithCon";
-import { ValidateInput } from "../signup/UseSignup";
-import { AuthLogin } from "../../../services/FirebaseAuth";
-import { ValidateLogin } from "./molecules/UseLogin";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, {useState} from 'react';
+import commonStyles from '../../../utils/CommonStyles';
+import CustomTextInput from '../../../components/CustomTextInput';
+import {Spacer} from '../../../components/Spacer';
+import {moderateScale, verticalScale} from 'react-native-size-matters';
+import CustomText from '../../../components/CustomText';
+import ConditionPassCon from './molecules/ConditionPassCon';
+import {View} from 'react-native';
+import CustomButton from '../../../components/CustomButton';
+import {colors} from '../../../utils/Colors';
+import {styles} from '../ViewPager/styles';
+import LoginpWithCon from './LoginWithCon';
+import {ValidateInput} from '../signup/UseSignup';
+import auth from '@react-native-firebase/auth';
+// import {AuthLogin} from '../../../services/FirebaseAuth';
+import {ValidateLogin} from './molecules/UseLogin';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Login = ({ navigation }) => {
+const Login = ({navigation}) => {
   const [eyeClick, setEyeClick] = useState(true);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitError, setSubmitError] = useState({
-    emailError: "",
-    passwordError: "",
+    emailError: '',
+    passwordError: '',
   });
 
   const onHandleSubmit = async () => {
@@ -30,34 +31,35 @@ const Login = ({ navigation }) => {
       email,
       password,
       submitError,
-      setSubmitError
+      setSubmitError,
     );
 
     if (response) {
-      console.log("cdcdc");
       setLoading(true);
 
       try {
-        const res = await AuthLogin(email, password);
-        if (res.user.uid) {
-
-          AsyncStorage.setItem("userAuth", res.user.uid);
+        const userCredentials = await auth().signInWithEmailAndPassword(
+          email.trim(),
+          password.trim(),
+        );
+        if (userCredentials.user.uid) {
+          AsyncStorage.setItem('userAuth', userCredentials.user.uid);
 
           navigation.reset({
             index: 0,
-            routes: [{ name: "MainStack" }],
+            routes: [{name: 'MainStack'}],
           });
         }
       } catch (error) {
         setLoading(false);
-        console.log("cjdbjd",error)
+        console.log('cjdbjd', error);
         if (
-          error.code == "auth/wrong-password" ||
-          error.code == "auth/user-not-found"
+          error.code == 'auth/wrong-password' ||
+          error.code == 'auth/user-not-found'
         ) {
           return setSubmitError({
             ...submitError,
-            passwordError: "Invalid Email and Password ",
+            passwordError: 'Invalid Email and Password ',
           });
         }
       }
@@ -71,12 +73,11 @@ const Login = ({ navigation }) => {
         {
           padding: 25,
         },
-      ]}
-    >
+      ]}>
       <Spacer height={verticalScale(35)} />
       <CustomText
         label="Login"
-        fontFamily="bold"
+        fontFamily="ProximaNova-Bold"
         // color={colors.facebookBlue}
         fontSize={verticalScale(15)}
       />
@@ -88,11 +89,11 @@ const Login = ({ navigation }) => {
       <CustomTextInput
         value={email}
         withLabel="Email adress"
-        placeholder={"example@gmail.com"}
+        placeholder={'example@gmail.com'}
         error={submitError.emailError}
-        onChangeText={(em) => {
+        onChangeText={em => {
           setEmail(em);
-          setSubmitError({ ...submitError, emailError: "" });
+          setSubmitError({...submitError, emailError: ''});
         }}
       />
       <Spacer height={verticalScale(20)} />
@@ -100,31 +101,30 @@ const Login = ({ navigation }) => {
         withLabel="Password"
         value={password}
         error={submitError.passwordError}
-        onChangeText={(pass) => {
+        onChangeText={pass => {
           setPassword(pass);
-          setSubmitError({ ...submitError, passwordError: "" });
+          setSubmitError({...submitError, passwordError: ''});
         }}
         password
         secureTextEntry={eyeClick}
         eyeClick={eyeClick}
         setEyeClick={setEyeClick}
-        placeholder={"password"}
+        placeholder={'password'}
       />
       <Spacer height={verticalScale(20)} />
 
       {/* <View style={{ flex: 1, alignItems: "center" }}> */}
       <View
         style={{
-          alignSelf: "center",
+          alignSelf: 'center',
           padding: 10,
-          position: "absolute",
+          position: 'absolute',
           bottom: verticalScale(40),
-          width: "100%",
-        }}
-      >
+          width: '100%',
+        }}>
         <CustomButton
           title="Login"
-          fontFamily="bold"
+          fontFamily="ProximaNova-Bold"
           width="100%"
           loading={loading}
           backgroundColor={colors.primary}
@@ -144,16 +144,16 @@ const Login = ({ navigation }) => {
         <View style={styles.bottomConatiner}>
           <CustomText
             label="Already have an account?"
-            fontFamily="regular"
+            fontFamily={'ProximaNova-Regular'}
             fontSize={verticalScale(12)}
           />
           <CustomText
             label="Sign up"
-            fontFamily="bold"
+            fontFamily="ProximaNova-Bold"
             color={colors.black}
             marginLeft={verticalScale(5)}
             fontSize={verticalScale(12)}
-            onPress={() => navigation.navigate("Signup")}
+            onPress={() => navigation.navigate('Signup')}
           />
           {/* </View> */}
         </View>

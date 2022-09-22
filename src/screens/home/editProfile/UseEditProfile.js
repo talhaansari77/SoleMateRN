@@ -1,150 +1,151 @@
-import moment from "moment";
-import Toast from "react-native-root-toast";
+import moment from 'moment';
+import Toast from 'react-native-root-toast';
 
 export const EditValidate = (data, submitError, setSubmitError) => {
   if (data.images.length < 2) {
-    Toast.show("All images are required");
-    return 
-  } 
-   if (!data.firstName) {
-     setSubmitError({
+    Toast.show('All images are required');
+    return;
+  }
+  if (!data.firstName) {
+    setSubmitError({
       ...submitError,
-      firstNameError: "First Name is required",
+      firstNameError: 'First Name is required',
     });
-    return
-  } 
-   if (!data.lastName) {
-     setSubmitError({
+    return;
+  }
+  if (!data.lastName) {
+    setSubmitError({
       ...submitError,
-      lastNameError: "Last Name is required",
+      lastNameError: 'Last Name is required',
     });
-    return
-  } 
-   if (!data.aboutMe) {
-     setSubmitError({
+    return;
+  }
+  if (!data.aboutMe) {
+    setSubmitError({
       ...submitError,
-      aboutError: "About me is required",
+      aboutError: 'About me is required',
     });
-    return
-  } 
-   if (!data.aboutMe) {
-     setSubmitError({
+    return;
+  }
+  if (!data.aboutMe) {
+    setSubmitError({
       ...submitError,
-      aboutError: "About me is required",
+      aboutError: 'About me is required',
     });
-    return
-  } 
-   if (data.personality.length < 1) {
-    Toast.show("Atleast one Personality is required");
-    return
-  } 
-   if (data.characteristics.length < 1) {
-    Toast.show("Atleast one Characteristics is required");
-    return 
-  } 
-   if (!data.dob) {
-     setSubmitError({
+    return;
+  }
+  if (data.personality.length < 1) {
+    Toast.show('Atleast one Personality is required');
+    return;
+  }
+  if (data.characteristics.length < 1) {
+    Toast.show('Atleast one Characteristics is required');
+    return;
+  }
+  if (!data.dob) {
+    setSubmitError({
       ...submitError,
-      birthdayError: "Birthday is required",
+      birthdayError: 'Birthday is required',
     });
-    return
-  } 
-   if (moment().diff(data.dob, "years", false) < 17) {
-     setSubmitError({
+    return;
+  }
+  if (moment().diff(data.dob, 'years', false) < 17) {
+    setSubmitError({
       ...submitError,
-      birthdayError: "Your age must be 17",
+      birthdayError: 'Your age must be 17',
     });
-    return
-  } 
-   if (!data.familyOrigin) {
-     setSubmitError({
+    return;
+  }
+  if (!data.familyOrigin) {
+    setSubmitError({
       ...submitError,
-      familyError: "Family Origin is required",
+      familyError: 'Family Origin is required',
     });
-    return
-  } 
-   if (!data.language) {
-     setSubmitError({
+    return;
+  }
+  if (!data.language) {
+    setSubmitError({
       ...submitError,
-      languageError: "Language is required",
+      languageError: 'Language is required',
     });
-    return
-  } 
-   if (!data.gender) {
-     setSubmitError({
+    return;
+  }
+  if (!data.gender) {
+    setSubmitError({
       ...submitError,
-      genderError: "Gender is required",
+      genderError: 'Gender is required',
     });
-    return
-  } 
-   if (!data.location) {
-     setSubmitError({
+    return;
+  }
+  if (!data.location) {
+    setSubmitError({
       ...submitError,
-      editlocationError: "Location is required",
+      editlocationError: 'Location is required',
     });
-    return
-  } 
-   if (!data.height) {
-     setSubmitError({
+    return;
+  }
+  if (!data.height) {
+    setSubmitError({
       ...submitError,
-      heightError: "height is required",
+      heightError: 'height is required',
     });
-    return
-  } 
-   if (!data.employment) {
-     setSubmitError({
+    return;
+  }
+  if (!data.employment) {
+    setSubmitError({
       ...submitError,
-      employmentError: "Employment is required",
+      employmentError: 'Employment is required',
     });
-    return
-  } 
-   if (!data.occupation) {
-     setSubmitError({
+    return;
+  }
+  if (!data.occupation) {
+    setSubmitError({
       ...submitError,
-      occupationError: "Occupation is required",
+      occupationError: 'Occupation is required',
     });
-    return
-  } 
-   if (!data.religion) {
-     setSubmitError({
+    return;
+  }
+  if (!data.religion) {
+    setSubmitError({
       ...submitError,
-      religionError: "Religion is required",
+      religionError: 'Religion is required',
     });
-    return
-  } 
-   if (!data.religiousity) {
-     setSubmitError({
+    return;
+  }
+  if (!data.religiousity) {
+    setSubmitError({
       ...submitError,
-      religiousityError: "Religiousity is required",
+      religiousityError: 'Religiousity is required',
     });
-    return
-  } 
-   if (!data.prayerLevel) {
-     setSubmitError({
+    return;
+  }
+  if (!data.prayerLevel) {
+    setSubmitError({
       ...submitError,
-      prayerLevelError: "Prayer Level is required",
+      prayerLevelError: 'Prayer Level is required',
     });
-    return
-  } 
-   if (!data.sector) {
-     setSubmitError({
+    return;
+  }
+  if (!data.sector) {
+    setSubmitError({
       ...submitError,
-      sectorError: "Sector is required",
+      sectorError: 'Sector is required',
     });
-    return
-  } 
-   if (!data.martialHistory) {
-     setSubmitError({
+    return;
+  }
+  if (!data.martialHistory) {
+    setSubmitError({
       ...submitError,
-      martialHistoryError: "Martial History is required",
+      martialHistoryError: 'Martial History is required',
     });
-    return
-  }  if (!data.martialTimming) {
-     setSubmitError({
+    return;
+  }
+  if (!data.martialTimming) {
+    setSubmitError({
       ...submitError,
-      martialTimmingError: "Martial Timming is required",
+      martialTimmingError: 'Martial Timming is required',
     });
-    return
+    return;
   }
   // whatKids:whatKids,
   // hasKids:hasKids,
@@ -152,31 +153,29 @@ export const EditValidate = (data, submitError, setSubmitError) => {
   // jobStatus:jobStatus,
   // drinking:drinking,
   // smoking:smoking,
-   if (!data.whatKids) {
-    Toast.show("Whats Kids is required");
-    return 
-  } 
-   if (!data.hasKids) {
-    Toast.show("Has Kids is required");
-    return 
-
-  } 
-   if (!data.willRelocate) {
-    Toast.show("willing Relocate is required");
-    return 
-  } 
-   if (!data.jobStatus) {
-    Toast.show("Job Status is required");
-    return 
-  } 
-   if (!data.drinking) {
-    Toast.show("Drinking is required");
-    return 
-  } 
-   if (!data.smoking) {
-    Toast.show("Smoking is required");
-    return 
-  } 
-    return true;
-  
+  if (!data.whatKids) {
+    Toast.show('Whats Kids is required');
+    return;
+  }
+  if (!data.hasKids) {
+    Toast.show('Has Kids is required');
+    return;
+  }
+  if (!data.willRelocate) {
+    Toast.show('willing Relocate is required');
+    return;
+  }
+  if (!data.jobStatus) {
+    Toast.show('Job Status is required');
+    return;
+  }
+  if (!data.drinking) {
+    Toast.show('Drinking is required');
+    return;
+  }
+  if (!data.smoking) {
+    Toast.show('Smoking is required');
+    return;
+  }
+  return true;
 };

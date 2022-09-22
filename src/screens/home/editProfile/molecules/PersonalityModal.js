@@ -1,13 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
-import CustomModal from "../../../../components/CustomModal";
-import commonStyles from "../../../../utils/CommonStyles";
-import { colors } from "../../../../utils/Colors";
-import CustomTextInput from "../../../../components/CustomTextInput";
-import CustomButton from "../../../../components/CustomButton";
-import { Spacer } from "../../../../components/Spacer";
-import CustomText from "../../../../components/CustomText";
-import { verticalScale, moderateScale, scale } from "react-native-size-matters";
+import {StyleSheet, Text, View} from 'react-native';
+import React from 'react';
+import CustomModal from '../../../../components/CustomModal';
+import commonStyles from '../../../../utils/CommonStyles';
+import {colors} from '../../../../utils/Colors';
+import CustomTextInput from '../../../../components/CustomTextInput';
+import CustomButton from '../../../../components/CustomButton';
+import {Spacer} from '../../../../components/Spacer';
+import CustomText from '../../../../components/CustomText';
+import {verticalScale, moderateScale, scale} from 'react-native-size-matters';
 const PersonalityModal = ({
   modalVisible,
   setModelVisible,
@@ -15,7 +15,7 @@ const PersonalityModal = ({
   setValue,
   onSaveData,
   error,
-  onChange
+  onChange,
 }) => {
   return (
     <CustomModal
@@ -23,18 +23,17 @@ const PersonalityModal = ({
       isVisible={modalVisible}
       onDisable={() => {
         setModelVisible(false);
-        setValue("")
+        setValue('');
       }}
       height={verticalScale(250)}
       width={moderateScale(350)}
-      borderRadius={moderateScale(10)}
-    >
+      borderRadius={moderateScale(10)}>
       <View style={styles.centeredView}>
         <CustomText
-          label={"Add Personality"}
+          label={'Add Personality'}
           color={colors.darkOrange}
           fontSize={13}
-          fontFamily={"medium"}
+          fontFamily={'ProximaNova-Regular'}
           // marginTop={verticalScale(5)}
           marginBottom={verticalScale(10)}
         />
@@ -83,13 +82,13 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    width: "90%",
-    height: "35%",
-    backgroundColor: "white",
+    width: '90%',
+    height: '35%',
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,

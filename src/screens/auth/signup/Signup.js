@@ -1,46 +1,44 @@
-import { View, Text } from "react-native";
-import React, { useState } from "react";
-import commonStyles from "../../../utils/CommonStyles";
-import SignupWithCon from "./SignupWithCon";
-import CustomTextInput from "../../../components/CustomTextInput";
-import { Spacer } from "../../../components/Spacer";
-import { verticalScale, moderateScale } from "react-native-size-matters";
-import CustomText from "../../../components/CustomText";
-import ConditionPassCon from "./molecules/ConditionPassCon";
-import CustomButton from "../../../components/CustomButton";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-import { colors } from "../../../utils/Colors";
+import {View, Text} from 'react-native';
+import React, {useState} from 'react';
+import commonStyles from '../../../utils/CommonStyles';
+import SignupWithCon from './SignupWithCon';
+import CustomTextInput from '../../../components/CustomTextInput';
+import {Spacer} from '../../../components/Spacer';
+import {verticalScale, moderateScale} from 'react-native-size-matters';
+import CustomText from '../../../components/CustomText';
+import ConditionPassCon from './molecules/ConditionPassCon';
+import CustomButton from '../../../components/CustomButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {colors} from '../../../utils/Colors';
 import {
   validateEmail,
   checkCharPassword,
   checkNum,
   checkSymbol,
-} from "../../../utils/Email_Password_Validation";
-import { ValidateInput } from "./UseSignup";
-
-import { styles } from "./styles";
-import { color } from "react-native-elements/dist/helpers";
-import { SignupEmailPassword } from "../../../services/FirebaseAuth";
-
-const Signup = ({ navigation }) => {
+} from '../../../utils/Email_Password_Validation';
+import {ValidateInput} from './UseSignup';
+import {styles} from './styles';
+import {color} from 'react-native-elements/dist/helpers';
+// import {SignupEmailPassword} from '../../../services/FirebaseAuth';
+import auth from '@react-native-firebase/auth';
+const Signup = ({navigation}) => {
   const [eyeClick, setEyeClick] = useState(true);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [confirmPass, setConfirmPass] = useState("")
+  const [confirmPass, setConfirmPass] = useState('');
   const [submitError, setSubmitError] = useState({
-    emailError: "",
-    passwordError: "",
-    confPasswordError:""
+    emailError: '',
+    passwordError: '',
+    confPasswordError: '',
   });
   // password.search(/[!/><"#$%&()¥|?>|=']/)==-1
-  console.log("conPas",password)
+  console.log('conPas', password);
   const passData = [
     {
       id: 1,
-      txt1: "+ 8 characters ",
-      txt2: "+ 1 symbols",
+      txt1: '+ 8 characters ',
+      txt2: '+ 1 symbols',
       color: !password
         ? colors.gray
         : !checkCharPassword(password)
@@ -54,8 +52,8 @@ const Signup = ({ navigation }) => {
     },
     {
       id: 2,
-      txt1: "+ 1 number",
-      txt2: "* get our password",
+      txt1: '+ 1 number',
+      txt2: '* get our password',
       color2: colors.gray,
       color: !password
         ? colors.gray
@@ -67,50 +65,50 @@ const Signup = ({ navigation }) => {
       },
     },
   ];
-
   const getPassword = () => {
     var chars =
-      "abcd@234@#$#$%^&*()=-{}/|-efghi234@#$jklm1234@#$%^&*()=-{}/|-567890,nopq234@#$rstu1234@#$%^&*()=-{}/|-567890,vwxyzABCDEFGHI@#$%^&*()=-{}/|-234567890,JKLMNOPQ@#$%^&*()=-{}/|-RSTUV@#$%^&*()=-{}/|-WXYZ1234567890,.!@#$%^&*()=-{}/|-";
+      'abcd@234@#$#$%^&*()=-{}/|-efghi234@#$jklm1234@#$%^&*()=-{}/|-567890,nopq234@#$rstu1234@#$%^&*()=-{}/|-567890,vwxyzABCDEFGHI@#$%^&*()=-{}/|-234567890,JKLMNOPQ@#$%^&*()=-{}/|-RSTUV@#$%^&*()=-{}/|-WXYZ1234567890,.!@#$%^&*()=-{}/|-';
     var passwordLength = 15;
-    var password = "";
+    var password = '';
 
     for (var i = 0; i <= passwordLength; i++) {
       var randomNumber = Math.floor(Math.random() * chars.length);
       password += chars.substring(randomNumber, randomNumber + 1);
     }
-    if (password) setPassword(password);
+    if (password) {
+      setPassword(password);
+    }
   };
-
   const onHandleSubmit = async () => {
     const response = ValidateInput(
       email,
       password,
       confirmPass,
       submitError,
-      setSubmitError
+      setSubmitError,
     );
-
     if (response) {
-      console.log("ok")
       setLoading(true);
 
       try {
-        const res = await SignupEmailPassword(email, password);
-        if (res.user.uid) {
-         AsyncStorage.setItem("userAuth", res.user.uid);
-
+        const userCredentials = await auth().createUserWithEmailAndPassword(
+          email.trim(),
+          password.trim(),
+        );
+        // const res = await SignupEmailPassword(email, password);
+        if (userCredentials.user.uid) {
+          AsyncStorage.setItem('userAuth', userCredentials.user.uid);
           setLoading(false);
-
           navigation.reset({
             index: 0,
-            routes: [{ name: "MainStack" }],
+            routes: [{name: 'MainStack'}],
           });
         }
       } catch (error) {
-        console.log("onSubmitRegister error", error);
+        console.log('onSubmitRegister error', error);
         setSubmitError({
           ...submitError,
-          emailError: "The email address is already in use by another account",
+          emailError: 'The email address is already in use by another account',
         });
         setLoading(false);
       }
@@ -123,12 +121,11 @@ const Signup = ({ navigation }) => {
         {
           padding: 25,
         },
-      ]}
-    >
+      ]}>
       <Spacer height={verticalScale(20)} />
       <CustomText
         label="Sign up"
-        fontFamily="bold"
+        fontFamily="ProximaNova-Bold"
         // color={colors.facebookBlue}
         fontSize={verticalScale(15)}
       />
@@ -138,11 +135,11 @@ const Signup = ({ navigation }) => {
       <CustomTextInput
         value={email}
         withLabel="Email adress"
-        placeholder={"example@gmail.com"}
+        placeholder={'example@gmail.com'}
         error={submitError.emailError}
-        onChangeText={(em) => {
+        onChangeText={em => {
           setEmail(em);
-          setSubmitError({ ...submitError, emailError: "" });
+          setSubmitError({...submitError, emailError: ''});
         }}
       />
       <Spacer height={verticalScale(15)} />
@@ -150,40 +147,39 @@ const Signup = ({ navigation }) => {
         withLabel="Password"
         value={password}
         error={submitError.passwordError}
-        onChangeText={(pass) => {
+        onChangeText={pass => {
           setPassword(pass);
-          setSubmitError({ ...submitError, passwordError: "" });
+          setSubmitError({...submitError, passwordError: ''});
         }}
         password
         secureTextEntry={eyeClick}
         eyeClick={eyeClick}
         setEyeClick={setEyeClick}
-        placeholder={"password"}
+        placeholder={'password'}
       />
-          <Spacer height={verticalScale(15)} />
+      <Spacer height={verticalScale(15)} />
       <CustomTextInput
         withLabel="Confirm Password"
         value={confirmPass}
         error={submitError.confPasswordError}
-        onChangeText={(conpass) => {
+        onChangeText={conpass => {
           setConfirmPass(conpass);
-          setSubmitError({ ...submitError, confPasswordError: "" });
+          setSubmitError({...submitError, confPasswordError: ''});
         }}
         password
         secureTextEntry={eyeClick}
         eyeClick={eyeClick}
         setEyeClick={setEyeClick}
-        placeholder={"Confirm password"}
+        placeholder={'Confirm password'}
       />
       <Spacer height={verticalScale(20)} />
       <View
         style={{
-          alignItems: "center",
-          width: "100%",
-          justifyContent: "center",
-        }}
-      >
-        {passData?.map((item) => {
+          alignItems: 'center',
+          width: '100%',
+          justifyContent: 'center',
+        }}>
+        {passData?.map(item => {
           return (
             <ConditionPassCon
               txt1={item.txt1}
@@ -197,15 +193,13 @@ const Signup = ({ navigation }) => {
       </View>
       <View
         style={{
-          alignItems: "center",
+          alignItems: 'center',
           padding: 10,
           flex: 1,
-          justifyContent: "center",
-        }}
-      >
+          justifyContent: 'center',
+        }}>
         <CustomButton
           title="Continue"
-          fontFamily="bold"
           // width="90%"
           opacity={0.4}
           loading={loading}
@@ -223,17 +217,18 @@ const Signup = ({ navigation }) => {
         <View style={styles.bottomConatiner}>
           <CustomText
             label="Already have an account?"
-            fontFamily="regular"
-            fontSize={verticalScale(12)}
+            fontFamily="ProximaNova-Regular"
+            fontSize={verticalScale(11)}
+            color={colors.gray}
           />
           <CustomText
             label="Login"
-            fontFamily="bold"
+            fontFamily="ProximaNova-Bold"
             color={colors.black}
             marginLeft={verticalScale(5)}
-            fontSize={verticalScale(12)}
+            fontSize={verticalScale(11)}
             onPress={
-              () => navigation.navigate("Login")
+              () => navigation.navigate('Login')
               // onHandleSubmit()
             }
           />

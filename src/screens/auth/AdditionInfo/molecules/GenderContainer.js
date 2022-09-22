@@ -39,7 +39,7 @@ const GenderContainer = ({ index, txt, isSelect, setIsSelect,  setGender,error,
         <CustomText
           label={txt}
           color={isSelect == index ? colors.darkOrange : colors.black}
-          fontFamily="regular"
+          fontFamily="ProximaNova-Regular"
           fontSize={verticalScale(10)}
           marginLeft={scale(30)}
         />

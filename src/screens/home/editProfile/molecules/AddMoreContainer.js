@@ -1,20 +1,19 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import CustomText from "../../../../components/CustomText";
-import { colors } from "../../../../utils/Colors";
-import { Spacer } from "../../../../components/Spacer";
-import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
-import { verticalScale, scale, moderateScale } from "react-native-size-matters";
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import CustomText from '../../../../components/CustomText';
+import {colors} from '../../../../utils/Colors';
+import {Spacer} from '../../../../components/Spacer';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import {verticalScale, scale, moderateScale} from 'react-native-size-matters';
 
-import React from "react";
+import React from 'react';
 
-const AddMoreContainer = ({ onAddMore }) => {
+const AddMoreContainer = ({onAddMore}) => {
   return (
     <TouchableOpacity
       activeOpacity={0.6}
       style={styles.mainContainer}
-      onPress={onAddMore}
-    >
-      <CustomText color={colors.primary} fontFamily={"bold"}>
+      onPress={onAddMore}>
+      <CustomText color={colors.primary} fontFamily={'ProximaNova-Regular'}>
         Add More
       </CustomText>
       <Spacer width={5} />
@@ -32,12 +31,12 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(6),
     paddingHorizontal: scale(20),
     borderRadius: moderateScale(15),
-    borderStyle: "dashed",
+    borderStyle: 'dashed',
     borderColor: colors.primary,
     borderWidth: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginLeft: scale(5),
   },
   addContainer: {
@@ -45,7 +44,7 @@ const styles = StyleSheet.create({
     height: 20,
     width: 20,
     borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

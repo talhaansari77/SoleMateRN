@@ -1,11 +1,11 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
-import CustomText from "../../../../components/CustomText";
-import { colors } from "../../../../utils/Colors";
-import { Spacer } from "../../../../components/Spacer";
-import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import {View, Text, TextInput, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import CustomText from '../../../../components/CustomText';
+import {colors} from '../../../../utils/Colors';
+import {Spacer} from '../../../../components/Spacer';
+import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const BirthdayField = ({
   onChangeText,
@@ -17,19 +17,19 @@ const BirthdayField = ({
 }) => {
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
 
-  const [month, setMonth] = useState("");
-  const [day, setDay] = useState("");
-  const [year, setYear] = useState("");
+  const [month, setMonth] = useState('');
+  const [day, setDay] = useState('');
+  const [year, setYear] = useState('');
 
-  const handleDataPicker = (data) => {
+  const handleDataPicker = data => {
     // setSubmitError({...submitError,birthdayError:" "})
     console.log(data);
     const dob = JSON.stringify(data).slice(1, 11);
     setBirthday(dob);
     setIsDatePickerVisible(!isDatePickerVisible);
-    setYear(dob.split("-")[0]);
-    setMonth(dob.split("-")[1]);
-    setDay(dob.split("-")[2]);
+    setYear(dob.split('-')[0]);
+    setMonth(dob.split('-')[1]);
+    setDay(dob.split('-')[2]);
     // setAge(dobyear);
 
     getAge(new Date(year, month, day));
@@ -43,24 +43,23 @@ const BirthdayField = ({
     <>
       <View>
         <CustomText
-          label={"Birthday"}
+          label={'Birthday'}
           color={colors.darkOrange}
-          fontFamily={"regular"}
+          fontFamily={'ProximaNova-Regular'}
           fontSize={11}
         />
         <Spacer height={10} />
         <View
           style={{
-            display: "flex",
-            flexDirection: "row",
+            display: 'flex',
+            flexDirection: 'row',
             paddingHorizontal: scale(10),
             // justifyContent: "space-between",
-          }}
-        >
-          <View style={{ flex: 5 }}>
+          }}>
+          <View style={{flex: 5}}>
             <CustomText
               color={colors.gray}
-              label={"Month"}
+              label={'Month'}
               marginLeft={verticalScale(5)}
 
               // value={month}
@@ -73,7 +72,7 @@ const BirthdayField = ({
             <TouchableOpacity
               activeOpacity={0.6}
               onPress={() => {
-                setSubmitError({ ...submitError, birthdayError: "" });
+                setSubmitError({...submitError, birthdayError: ''});
 
                 setIsDatePickerVisible(true);
               }}
@@ -82,18 +81,17 @@ const BirthdayField = ({
                 padding: moderateScale(2),
                 borderRadius: moderateScale(7),
                 height: verticalScale(25),
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
                 paddingHorizontal: scale(5),
-              }}
-            >
+              }}>
               <TextInput
                 value={month}
-                onChangeText={(mo) => setMonth(mo)}
+                onChangeText={mo => setMonth(mo)}
                 placeholder="January"
-                placeholderTextColor={"#5B5B5B"}
-                style={{ width: "70%" }}
+                placeholderTextColor={'#5B5B5B'}
+                style={{width: '70%'}}
               />
 
               <View>
@@ -103,25 +101,25 @@ const BirthdayField = ({
             {error ? (
               <CustomText
                 color={colors.red}
-                fontFamily={"medium"}
+                fontFamily={'ProximaNova-Regular'}
                 fontSize={11}
-                marginTop={4}
-              >
+                marginTop={4}>
                 * {error}
               </CustomText>
             ) : null}
           </View>
           <Spacer width={10} />
-          <View style={{ flex: 2 }}>
+          <View style={{flex: 2}}>
             <CustomText
-              label={"Day"}
+              label={'Day'}
               color={colors.gray}
+              fontFamily={'ProximaNova-Regular'}
               marginLeft={verticalScale(5)}
             />
             <TouchableOpacity
               activeOpacity={0.6}
               onPress={() => {
-                setSubmitError({ ...submitError, birthdayError: "" });
+                setSubmitError({...submitError, birthdayError: ''});
 
                 setIsDatePickerVisible(true);
               }}
@@ -131,26 +129,28 @@ const BirthdayField = ({
                 borderRadius: moderateScale(7),
                 height: verticalScale(25),
                 paddingHorizontal: 5,
-                justifyContent: "center",
-              }}
-            >
+                justifyContent: 'center',
+              }}>
               <TextInput
                 value={day}
-                onChangeText={(da) => setDay(da)}
+                onChangeText={da => setDay(da)}
                 placeholder="20"
-                placeholderTextColor={"#5B5B5B"}
+                placeholderTextColor={'#5B5B5B'}
               />
             </TouchableOpacity>
           </View>
           <Spacer width={10} />
-          <View style={{ flex: 3 }}>
-            <CustomText color={colors.gray} marginLeft={verticalScale(5)}>
+          <View style={{flex: 3}}>
+            <CustomText
+              color={colors.gray}
+              fontFamily={'ProximaNova-Regular'}
+              marginLeft={verticalScale(5)}>
               Year
             </CustomText>
             <TouchableOpacity
               activeOpacity={0.6}
               onPress={() => {
-                setSubmitError({ ...submitError, birthdayError: "" });
+                setSubmitError({...submitError, birthdayError: ''});
 
                 setIsDatePickerVisible(true);
               }}
@@ -160,14 +160,13 @@ const BirthdayField = ({
                 borderRadius: moderateScale(7),
                 height: verticalScale(25),
                 paddingHorizontal: 5,
-                justifyContent: "center",
-              }}
-            >
+                justifyContent: 'center',
+              }}>
               <TextInput
                 placeholder="1994"
                 value={year}
-                onChangeText={(ye) => setYear(ye)}
-                placeholderTextColor={"#5B5B5B"}
+                onChangeText={ye => setYear(ye)}
+                placeholderTextColor={'#5B5B5B'}
               />
             </TouchableOpacity>
           </View>
@@ -175,7 +174,7 @@ const BirthdayField = ({
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
           mode="date"
-          onConfirm={(data) => handleDataPicker(data)}
+          onConfirm={data => handleDataPicker(data)}
           onCancel={() => setIsDatePickerVisible(false)}
           maximumDate={new Date()}
         />
