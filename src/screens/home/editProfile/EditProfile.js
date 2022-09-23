@@ -4,120 +4,119 @@ import {
   TouchableOpacity,
   Modal,
   StyleSheet,
-} from "react-native";
-import React, { useState, useEffect } from "react";
-import { Container } from "../profile/Profile";
-import { Spacer } from "../../../components/Spacer";
-import CustomText from "../../../components/CustomText";
-import { colors } from "../../../utils/Colors";
-import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import { Divider, ListItem } from "react-native-elements";
-import GenderContainer from "../../auth/AdditionInfo/molecules/GenderContainer";
-import Header from "./molecules/Header";
-import InputField from "./molecules/InputField";
-import IceBreakQField from "./molecules/IceBreakQField";
-import TagsField from "./molecules/TagsField";
-import BirthdayField from "./molecules/BirthdayField";
-import SelectBtn from "./molecules/SelectBtn";
-import HeightField from "./molecules/HeightField";
-import TextArea from "./molecules/TextArea";
-import styled from "react-native-styled-components";
-import CustomButton from "../../../components/CustomButton";
-import { EditValidate } from "./UseEditProfile";
-import PersonalityModal from "./molecules/PersonalityModal";
-import AddMoreContainer from "./molecules/AddMoreContainer";
-import PhotoContainer from "./molecules/PhotoContainer";
-import {
-  getAuthId,
-  saveUser,
-  uploadImage,
-} from "../../../services/FirebaseAuth";
+} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Container} from '../profile/Profile';
+import {Spacer} from '../../../components/Spacer';
+import CustomText from '../../../components/CustomText';
+import {colors} from '../../../utils/Colors';
+import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
+import {Divider, ListItem} from 'react-native-elements';
+import GenderContainer from '../../auth/AdditionInfo/molecules/GenderContainer';
+import Header from './molecules/Header';
+import InputField from './molecules/InputField';
+import IceBreakQField from './molecules/IceBreakQField';
+import TagsField from './molecules/TagsField';
+import BirthdayField from './molecules/BirthdayField';
+import SelectBtn from './molecules/SelectBtn';
+import HeightField from './molecules/HeightField';
+import TextArea from './molecules/TextArea';
+import styled from 'react-native-styled-components';
+import CustomButton from '../../../components/CustomButton';
+import {EditValidate} from './UseEditProfile';
+import PersonalityModal from './molecules/PersonalityModal';
+import AddMoreContainer from './molecules/AddMoreContainer';
+import PhotoContainer from './molecules/PhotoContainer';
+import {getAuthId, saveUser, uploadImage} from '../../../services/FirebaseAuth';
+import PictureBox from './molecules/PictureBox';
 
 const genders = [
-  { id: 1, name: "Male" },
-  { id: 2, name: "Female" },
+  {id: 1, name: 'Male'},
+  {id: 2, name: 'Female'},
 ];
 
-const EditProfile = ({ navigation }) => {
+const EditProfile = ({navigation}) => {
   const [isSelect, setIsSelect] = useState(-1);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [aboutMe, setAboutMe] = useState("");
-  const [familyOrigin, setfamilyOrigin] = useState("");
-  const [language, setLanguage] = useState("");
-  const [employment, setEmployment] = useState("");
-  const [occupation, setOccupation] = useState("");
-  const [religion, setReligion] = useState("");
-  const [religiousity, setReligiousity] = useState("");
-  const [prayerLevel, setPrayerLevel] = useState("");
-  const [sector, setSector] = useState("");
-  const [martialHistory, setMartialHistory] = useState("");
-  const [martialTimming, setMartialTimming] = useState("");
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [aboutMe, setAboutMe] = useState('');
+  const [familyOrigin, setfamilyOrigin] = useState('');
+  const [language, setLanguage] = useState('');
+  const [employment, setEmployment] = useState('');
+  const [occupation, setOccupation] = useState('');
+  const [religion, setReligion] = useState('');
+  const [religiousity, setReligiousity] = useState('');
+  const [prayerLevel, setPrayerLevel] = useState('');
+  const [sector, setSector] = useState('');
+  const [martialHistory, setMartialHistory] = useState('');
+  const [martialTimming, setMartialTimming] = useState('');
   const [loading, setLoading] = useState(false);
-  const [birthday, setBirthday] = useState("");
-  const [gender, setGender] = useState("");
-  const [feetHeight, setFeetHeight] = useState("");
-  const [inchesHeight, setInchesHeight] = useState("");
-  const [whatKids, setWhatKids] = useState("");
-  const [hasKids, setHasKids] = useState("");
-  const [willRelocate, setWillRelocate] = useState("");
-  const [jobStatus, setJobStatus] = useState("");
-  const [drinking, setDrinking] = useState("");
-  const [smoking, setSmoking] = useState("");
-  const [addMore, setAddMore] = useState("");
+  const [birthday, setBirthday] = useState('');
+  const [gender, setGender] = useState('');
+  const [feetHeight, setFeetHeight] = useState('');
+  const [inchesHeight, setInchesHeight] = useState('');
+  const [whatKids, setWhatKids] = useState('');
+  const [hasKids, setHasKids] = useState('');
+  const [willRelocate, setWillRelocate] = useState('');
+  const [jobStatus, setJobStatus] = useState('');
+  const [drinking, setDrinking] = useState('');
+  const [smoking, setSmoking] = useState('');
+  const [addMore, setAddMore] = useState('');
   const [personality, setPersonality] = useState([]);
   const [characteristics, setcharacteristics] = useState([]);
   const [characterModal, setCharacterModal] = useState(false);
   const [images, setImages] = useState([]);
   const [personalityModal, setPersonalityModal] = useState(false);
-  const [editLocation, setEditLocation] = useState("");
-  const [authID, setAuthID] = useState("");
+  const [editLocation, setEditLocation] = useState('');
+  const [authID, setAuthID] = useState('');
+
+  console.log('images', images);
 
   const questions = [
-    { id: 1, question: "Want Kids", onValue: setWhatKids },
-    { id: 2, question: "Has Kids", onValue: setHasKids },
-    { id: 3, question: "Willing Relocate", onValue: setWillRelocate },
-    { id: 4, question: "Job Status", onValue: setJobStatus },
-    { id: 5, question: "Drinking", onValue: setDrinking },
-    { id: 6, question: "Smoking", onValue: setSmoking },
+    {id: 1, question: 'Want Kids', onValue: setWhatKids},
+    {id: 2, question: 'Has Kids', onValue: setHasKids},
+    {id: 3, question: 'Willing Relocate', onValue: setWillRelocate},
+    {id: 4, question: 'Job Status', onValue: setJobStatus},
+    {id: 5, question: 'Drinking', onValue: setDrinking},
+    {id: 6, question: 'Smoking', onValue: setSmoking},
   ];
   const [data] = useState([1, 2, 3, 4, 5, 6]);
 
-  useEffect( () => {
-    getCurrentID()
-  
+  useEffect(() => {
+    getCurrentID();
   }, []);
 
-  const  getCurrentID= async()=>{
-    await getAuthId().then((id) => {
+  const getCurrentID = async () => {
+    await getAuthId().then(id => {
       setAuthID(id);
     });
-
-  }
+  };
 
   const [submitError, setSubmitError] = useState({
-    firstNameError: "",
-    lastNameError: "",
-    aboutError: "",
-    birthdayError: "",
-    familyError: "",
-    genderError: "",
-    languageError: "",
-    heightError: "",
-    employmentError: "",
-    editlocationError: "",
-    occupationError: "",
-    religionError: "",
-    religiousityError: "",
-    prayerLevelError: "",
-    sectorError: "",
-    martialHistoryError: "",
-    martialTimmingError: "",
-    addPersonalityError: "",
-    characterError: "",
+    firstNameError: '',
+    lastNameError: '',
+    aboutError: '',
+    birthdayError: '',
+    familyError: '',
+    genderError: '',
+    languageError: '',
+    heightError: '',
+    employmentError: '',
+    editlocationError: '',
+    occupationError: '',
+    religionError: '',
+    religiousityError: '',
+    prayerLevelError: '',
+    sectorError: '',
+    martialHistoryError: '',
+    martialTimmingError: '',
+    addPersonalityError: '',
+    characterError: '',
   });
 
+
   const onHandleSubmit = async () => {
+    console.log('I Am Submit ✌');
     const data = {
       firstName: firstName,
       lastName: lastName,
@@ -125,9 +124,9 @@ const EditProfile = ({ navigation }) => {
       dob: birthday,
       familyOrigin: familyOrigin,
       language: language,
-      personality: personality.map((item) => item.personality),
-      characteristics: characteristics.map((item) => item.characteristics),
-      images: images.map((item) => item.uri),
+      personality: personality.map(item => item.personality),
+      characteristics: characteristics.map(item => item.characteristics),
+      images: images.map(item => item.uri),
       gender: gender,
       location: editLocation,
       height: feetHeight,
@@ -148,24 +147,24 @@ const EditProfile = ({ navigation }) => {
     };
     const response = EditValidate(data, submitError, setSubmitError);
     if (response) {
-      console.log("data");
+      console.log('data');
       setLoading(true);
 
       try {
-        let imageLink = [];
-        for (let index = 0; index < data.images.length; index++) {
-          const element = data.images[index];
-          const link = await uploadImage(element);
-          imageLink.push(link);
-        }
-        data.images = imageLink;
+        // let imageLink = [];
+        // for (let index = 0; index < data.images.length; index++) {
+        //   const element = data.images[index];
+        //   const link = await uploadImage(element);
+        //   imageLink.push(link);
+        // }
+        // data.images = imageLink;
 
         setLoading(false);
         if (authID) {
           await saveUser(authID, data);
 
           setLoading(false);
-          console.log("dataSave");
+          console.log('dataSave');
           // navigation.reset({
           //   index: 0,
           //   routes: [{ name: "EmailVerification" }],
@@ -173,7 +172,7 @@ const EditProfile = ({ navigation }) => {
         }
       } catch (error) {
         setLoading(false);
-        console.log("onSubmit Registeration", error);
+        console.log('onSubmit Registeration', error);
       }
     }
   };
@@ -181,15 +180,15 @@ const EditProfile = ({ navigation }) => {
     if (!addMore) {
       return setSubmitError({
         ...submitError,
-        characterError: "This field is required",
+        characterError: 'This field is required',
       });
     } else {
       let data = {
         characteristics: addMore,
       };
       characteristics.push(data);
-      setAddMore("");
-      setSubmitError({ ...submitError, characterError: "" });
+      setAddMore('');
+      setSubmitError({...submitError, characterError: ''});
       setCharacterModal(false);
     }
   };
@@ -197,22 +196,22 @@ const EditProfile = ({ navigation }) => {
     if (!addMore) {
       return setSubmitError({
         ...submitError,
-        addPersonalityError: "This field is required",
+        addPersonalityError: 'This field is required',
       });
     } else {
       let data = {
         personality: addMore,
       };
       personality.push(data);
-      setAddMore("");
-      setSubmitError({ ...submitError, addPersonalityError: "" });
+      setAddMore('');
+      setSubmitError({...submitError, addPersonalityError: ''});
       setPersonalityModal(false);
     }
   };
   return (
     <Container>
       {/* Header */}
-      <Header navigation={navigation} />
+      <Header handleSubmit={onHandleSubmit} navigation={navigation} />
       <Divider />
       <Spacer height={10} />
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -234,37 +233,37 @@ const EditProfile = ({ navigation }) => {
         {/* <PictureBox /> */}
         {/* <Spacer height={10}/> */}
 
-        <View style={{ padding: moderateScale(5) }}>
+        <View style={{padding: moderateScale(5)}}>
           <CustomText
-            label={"Bio"}
+            label={'Bio'}
             color={colors.darkOrange}
             fontSize={16}
-            fontFamily={"bold"}
+            fontFamily={'ProximaNova-Bold'}
             marginTop={verticalScale(5)}
           />
           <Spacer height={10} />
 
-          <View style={{ padding: moderateScale(5) }}>
+          <View style={{padding: moderateScale(5)}}>
             {/* First Name */}
             <InputField
-              label={"First Name"}
+              label={'First Name'}
               arrow={false}
               value={firstName}
-              onChangeText={(nam) => {
+              onChangeText={nam => {
                 setFirstName(nam),
-                  setSubmitError({ ...submitError, firstNameError: "" });
+                  setSubmitError({...submitError, firstNameError: ''});
               }}
               error={submitError.firstNameError}
             />
             <Spacer height={15} />
             {/* Last Name */}
             <InputField
-              label={"Last Name"}
+              label={'Last Name'}
               arrow={false}
               value={lastName}
-              onChangeText={(last) => {
+              onChangeText={last => {
                 setLastName(last),
-                  setSubmitError({ ...submitError, lastNameError: "" });
+                  setSubmitError({...submitError, lastNameError: ''});
               }}
               error={submitError.lastNameError}
             />
@@ -272,11 +271,11 @@ const EditProfile = ({ navigation }) => {
             {/* About Me */}
 
             <TextArea
-              label={"About Me"}
+              label={'About Me'}
               value={aboutMe}
-              onChangeText={(about) => {
+              onChangeText={about => {
                 setAboutMe(about),
-                  setSubmitError({ ...submitError, aboutError: "" });
+                  setSubmitError({...submitError, aboutError: ''});
               }}
               error={submitError.aboutError}
             />
@@ -299,20 +298,18 @@ const EditProfile = ({ navigation }) => {
           /> */}
             <CustomText label="personality" color={colors.primary} />
             <View
-              style={{ width: "100%", flexDirection: "row", flexWrap: "wrap" }}
-            >
-              <View style={{ marginTop: 8 }}>
+              style={{width: '100%', flexDirection: 'row', flexWrap: 'wrap'}}>
+              <View style={{marginTop: 8}}>
                 <Spacer width={5} />
                 <View
                   style={{
-                    width: "100%",
-                    flexDirection: "row",
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-                    {personality.map((item) => {
+                    width: '100%',
+                    flexDirection: 'row',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                    {personality.map(item => {
                       return (
                         <TagsField
                           label={item.personality}
@@ -321,7 +318,7 @@ const EditProfile = ({ navigation }) => {
                       );
                     })}
                   </View>
-                  <View style={{ marginTop: verticalScale(15) }}>
+                  <View style={{marginTop: verticalScale(15)}}>
                     <AddMoreContainer
                       onAddMore={() => {
                         setPersonalityModal(true);
@@ -336,9 +333,9 @@ const EditProfile = ({ navigation }) => {
                   modalVisible={personalityModal}
                   setValue={setAddMore}
                   value={addMore}
-                  onChange={(add) => {
+                  onChange={add => {
                     setAddMore(add);
-                    setSubmitError({ ...submitError, addPersonalityError: "" });
+                    setSubmitError({...submitError, addPersonalityError: ''});
                   }}
                   error={submitError.addPersonalityError}
                   onSaveData={() => {
@@ -355,13 +352,12 @@ const EditProfile = ({ navigation }) => {
 
                 <View
                   style={{
-                    width: "100%",
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-                    {characteristics.map((item) => {
+                    width: '100%',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                    {characteristics.map(item => {
                       return (
                         <TagsField
                           label={item.characteristics}
@@ -370,7 +366,7 @@ const EditProfile = ({ navigation }) => {
                       );
                     })}
                   </View>
-                  <View style={{ marginTop: verticalScale(15) }}>
+                  <View style={{marginTop: verticalScale(15)}}>
                     <AddMoreContainer
                       onAddMore={() => {
                         setCharacterModal(true);
@@ -385,9 +381,9 @@ const EditProfile = ({ navigation }) => {
                   modalVisible={characterModal}
                   setValue={setAddMore}
                   value={addMore}
-                  onChange={(add) => {
+                  onChange={add => {
                     setAddMore(add);
-                    setSubmitError({ ...submitError, characterError: "" });
+                    setSubmitError({...submitError, characterError: ''});
                   }}
                   error={submitError.characterError}
                   onSaveData={() => {
@@ -410,20 +406,20 @@ const EditProfile = ({ navigation }) => {
                 <Spacer height={10} />
                 <View>
                   <CustomText
-                    label={" Demographics"}
+                    label={' Demographics'}
                     color={colors.primary}
-                    fontFamily={"medium"}
+                    fontFamily={'ProximaNova-Regular'}
                     fontSize={12}
                   />
                   {/* Family Origin */}
                   <Spacer height={10} />
                   <PH10>
                     <InputField
-                      label={"Family Origin"}
+                      label={'Family Origin'}
                       value={familyOrigin}
-                      onChangeText={(family) => {
+                      onChangeText={family => {
                         setfamilyOrigin(family),
-                          setSubmitError({ ...submitError, familyError: "" });
+                          setSubmitError({...submitError, familyError: ''});
                       }}
                       error={submitError.familyError}
                     />
@@ -432,11 +428,11 @@ const EditProfile = ({ navigation }) => {
                   <Spacer height={10} />
                   <PH10>
                     <InputField
-                      label={"Language"}
+                      label={'Language'}
                       value={language}
-                      onChangeText={(lang) => {
+                      onChangeText={lang => {
                         setLanguage(lang),
-                          setSubmitError({ ...submitError, languageError: "" });
+                          setSubmitError({...submitError, languageError: ''});
                       }}
                       error={submitError.languageError}
                     />
@@ -445,20 +441,19 @@ const EditProfile = ({ navigation }) => {
                   <Spacer height={10} />
                   <PH10>
                     <CustomText
-                      label={"Gender"}
+                      label={'Gender'}
                       color={colors.darkOrange}
-                      fontFamily={"regular"}
+                      fontFamily={'ProximaNova-Regular'}
                       marginTop={verticalScale(7)}
                       fontSize={11}
                     />
                     <Spacer height={10} />
                     <View
                       style={{
-                        justifyContent: "center",
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
+                        justifyContent: 'center',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
                       {genders.map((g, index) => (
                         <>
                           <GenderContainer
@@ -479,10 +474,9 @@ const EditProfile = ({ navigation }) => {
                     {submitError.genderError ? (
                       <CustomText
                         color={colors.red}
-                        fontFamily={"medium"}
+                        fontFamily={'ProximaNova-Regular'}
                         fontSize={11}
-                        marginTop={4}
-                      >
+                        marginTop={4}>
                         * {submitError.genderError}
                       </CustomText>
                     ) : null}
@@ -491,14 +485,14 @@ const EditProfile = ({ navigation }) => {
                   <Spacer height={15} />
                   <PH10>
                     <InputField
-                      label={"Current Location"}
+                      label={'Current Location'}
                       // arrow={false}
                       value={editLocation}
-                      onChangeText={(nam) => {
+                      onChangeText={nam => {
                         setEditLocation(nam),
                           setSubmitError({
                             ...submitError,
-                            editlocationError: "",
+                            editlocationError: '',
                           });
                       }}
                       error={submitError.editlocationError}
@@ -518,10 +512,9 @@ const EditProfile = ({ navigation }) => {
                   {submitError.heightError ? (
                     <CustomText
                       color={colors.red}
-                      fontFamily={"medium"}
+                      fontFamily={'ProximaNova-Regular'}
                       fontSize={11}
-                      marginTop={4}
-                    >
+                      marginTop={4}>
                       * {submitError.heightError}
                     </CustomText>
                   ) : null}
@@ -531,21 +524,21 @@ const EditProfile = ({ navigation }) => {
                 <Spacer height={20} />
                 <View>
                   <CustomText
-                    label={"Education and Career"}
+                    label={'Education and Career'}
                     color={colors.primary}
-                    fontFamily={"medium"}
+                    fontFamily={'ProximaNova-Regular'}
                     fontSize={12}
                   />
                   {/* Employment */}
                   <Spacer height={10} />
                   <PH10>
                     <InputField
-                      label={"Employment"}
-                      onChangeText={(emp) => {
+                      label={'Employment'}
+                      onChangeText={emp => {
                         setEmployment(emp),
                           setSubmitError({
                             ...submitError,
-                            employmentError: "",
+                            employmentError: '',
                           });
                       }}
                       error={submitError.employmentError}
@@ -555,12 +548,12 @@ const EditProfile = ({ navigation }) => {
                   <Spacer height={15} />
                   <PH10>
                     <InputField
-                      label={"Occupation"}
-                      onChangeText={(occ) => {
+                      label={'Occupation'}
+                      onChangeText={occ => {
                         setOccupation(occ),
                           setSubmitError({
                             ...submitError,
-                            occupationError: "",
+                            occupationError: '',
                           });
                       }}
                       error={submitError.occupationError}
@@ -573,19 +566,19 @@ const EditProfile = ({ navigation }) => {
                 <Spacer height={10} />
                 <View>
                   <CustomText
-                    label={"Religiousness"}
+                    label={'Religiousness'}
                     color={colors.primary}
-                    fontFamily={"medium"}
+                    fontFamily={'ProximaNova-Regular'}
                     fontSize={12}
                   />
                   {/* Religion */}
                   <Spacer height={10} />
                   <PH10>
                     <InputField
-                      label={"Religion"}
-                      onChangeText={(rel) => {
+                      label={'Religion'}
+                      onChangeText={rel => {
                         setReligion(rel),
-                          setSubmitError({ ...submitError, religionError: "" });
+                          setSubmitError({...submitError, religionError: ''});
                       }}
                       error={submitError.religionError}
                     />
@@ -594,12 +587,12 @@ const EditProfile = ({ navigation }) => {
                   <Spacer height={15} />
                   <PH10>
                     <InputField
-                      label={"Religiousity"}
-                      onChangeText={(relg) => {
+                      label={'Religiousity'}
+                      onChangeText={relg => {
                         setReligiousity(relg),
                           setSubmitError({
                             ...submitError,
-                            religiousityError: "",
+                            religiousityError: '',
                           });
                       }}
                       error={submitError.religiousityError}
@@ -609,12 +602,12 @@ const EditProfile = ({ navigation }) => {
                   <Spacer height={15} />
                   <PH10>
                     <InputField
-                      label={"Prayer Level"}
-                      onChangeText={(pry) => {
+                      label={'Prayer Level'}
+                      onChangeText={pry => {
                         setPrayerLevel(pry),
                           setSubmitError({
                             ...submitError,
-                            prayerLevelError: "",
+                            prayerLevelError: '',
                           });
                       }}
                       error={submitError.prayerLevelError}
@@ -624,10 +617,10 @@ const EditProfile = ({ navigation }) => {
                   <Spacer height={15} />
                   <PH10>
                     <InputField
-                      label={"Sector"}
-                      onChangeText={(sec) => {
+                      label={'Sector'}
+                      onChangeText={sec => {
                         setSector(sec),
-                          setSubmitError({ ...submitError, sectorError: "" });
+                          setSubmitError({...submitError, sectorError: ''});
                       }}
                       error={submitError.sectorError}
                     />
@@ -639,21 +632,21 @@ const EditProfile = ({ navigation }) => {
                 <Spacer height={10} />
                 <View>
                   <CustomText
-                    label={"Partner Expectation"}
+                    label={'Partner Expectation'}
                     color={colors.primary}
-                    fontFamily={"medium"}
+                    fontFamily={'ProximaNova-Regular'}
                     fontSize={12}
                   />
                   {/* Marital History */}
                   <Spacer height={10} />
                   <PH10>
                     <InputField
-                      label={"Marital History"}
-                      onChangeText={(marh) => {
+                      label={'Marital History'}
+                      onChangeText={marh => {
                         setMartialHistory(marh),
                           setSubmitError({
                             ...submitError,
-                            martialHistoryError: "",
+                            martialHistoryError: '',
                           });
                       }}
                       error={submitError.martialHistoryError}
@@ -663,12 +656,12 @@ const EditProfile = ({ navigation }) => {
                   <Spacer height={15} />
                   <PH10>
                     <InputField
-                      label={"Marital Timing"}
-                      onChangeText={(mart) => {
+                      label={'Marital Timing'}
+                      onChangeText={mart => {
                         setMartialTimming(mart),
                           setSubmitError({
                             ...submitError,
-                            martialTimmingError: "",
+                            martialTimmingError: '',
                           });
                       }}
                       error={submitError.martialTimmingError}
@@ -683,8 +676,8 @@ const EditProfile = ({ navigation }) => {
                     key={index}
                     index={index}
                     onValue={q.onValue}
-                    txt1={"Yes"}
-                    txt2={"No"}
+                    txt1={'Yes'}
+                    txt2={'No'}
                     label={q.question}
                   />
                 ))}
@@ -698,7 +691,7 @@ const EditProfile = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
-      <View style={{ marginBottom: verticalScale(10) }}>
+      {/* <View style={{marginBottom: verticalScale(10)}}>
         <CustomButton
           title="Save"
           loading={loading}
@@ -716,7 +709,7 @@ const EditProfile = ({ navigation }) => {
         }}
         // backgroundColor={colors.primary}
       /> */}
-      </View>
+      {/* </View> */}
     </Container>
   );
 };
@@ -724,19 +717,19 @@ const EditProfile = ({ navigation }) => {
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     // marginTop: 22,
   },
   modalView: {
     margin: 20,
-    width: "90%",
-    height: "35%",
-    backgroundColor: "white",
+    width: '90%',
+    height: '35%',
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -747,11 +740,11 @@ const styles = StyleSheet.create({
   },
 
   imageView: {
-    width: "100%",
-    flexDirection: "row",
+    width: '100%',
+    flexDirection: 'row',
     // marginBottom: '50@vs',
-    flexWrap: "wrap",
-    justifyContent: "space-evenly",
+    flexWrap: 'wrap',
+    justifyContent: 'space-evenly',
   },
 });
 

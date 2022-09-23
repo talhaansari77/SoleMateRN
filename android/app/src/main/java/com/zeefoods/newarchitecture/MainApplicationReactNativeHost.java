@@ -1,4 +1,4 @@
-package com.zeefoods.newarchitecture;
+package com.SolMate.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.zeefoods.BuildConfig;
-import com.zeefoods.newarchitecture.components.MainComponentsRegistry;
-import com.zeefoods.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.SolMate.BuildConfig;
+import com.SolMate.newarchitecture.components.MainComponentsRegistry;
+import com.SolMate.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

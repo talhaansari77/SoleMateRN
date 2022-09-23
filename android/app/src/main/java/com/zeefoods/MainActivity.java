@@ -1,4 +1,4 @@
-package com.zeefoods;
+package com.SolMate;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

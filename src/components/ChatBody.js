@@ -255,14 +255,14 @@ const styles = ScaledSheet.create({
     color: colors.gray,
     alignSelf: 'center',
     marginTop: verticalScale(10),
-    fontFamily: 'regular',
+    fontFamily: 'ProximaNova-Regular',
   },
   timerText1: {
     fontSize: verticalScale(10),
     color: colors.gray,
 
     // marginTop: verticalScale(15),
-    fontFamily: 'regular',
+    fontFamily: 'ProximaNova-Regular',
     // marginRight: "5@s",
 
     // marginLeft: "10@s",
@@ -300,6 +300,6 @@ const styles = ScaledSheet.create({
   messageText: {
     fontSize: verticalScale(12),
     color: colors.black,
-    fontFamily: 'regular',
+    fontFamily: 'ProximaNova-Regular',
   },
 });

@@ -1,8 +1,8 @@
-import { View, Text, TouchableOpacity, Image, Dimensions } from "react-native";
-import React from "react";
-import { verticalScale, scale, moderateScale } from "react-native-size-matters";
+import {View, Text, TouchableOpacity, Image, Dimensions} from 'react-native';
+import React from 'react';
+import {verticalScale, scale, moderateScale} from 'react-native-size-matters';
 // import colors from '../../Utils/colors';
-import { colors } from "../utils/Colors";
+import {colors} from '../utils/Colors';
 function CustomText(props) {
   return (
     <TouchableOpacity
@@ -14,8 +14,7 @@ function CustomText(props) {
         {
           width: props.width,
         },
-      ]}
-    >
+      ]}>
       <Text
         style={[
           {
@@ -28,7 +27,7 @@ function CustomText(props) {
             marginLeft: scale(props.marginLeft || 0),
             marginRight: scale(props.marginRight || 0),
             marginBottom: scale(props.marginBottom || 0),
-            alignSelf: props.alignSelf || "flex-start",
+            alignSelf: props.alignSelf || 'flex-start',
             fontWeight: props.fontWeight,
             fontStyle: props.fontStyle,
             textAlign: props.textAlign,
@@ -40,15 +39,13 @@ function CustomText(props) {
             textDecorationLine: props.textDecorationLine,
             textDecorationColor: props.textDecorationColor,
             // text-decoration-color: "red";
-            textDecorationLine:props.textDecorationLine, 
+            textDecorationLine: props.textDecorationLine,
           },
           props.textStyle,
         ]}
-        numberOfLines={props.numberOfLines}
-      >
+        numberOfLines={props.numberOfLines}>
         {props.label}
         {props.children}
-        
       </Text>
     </TouchableOpacity>
   );
