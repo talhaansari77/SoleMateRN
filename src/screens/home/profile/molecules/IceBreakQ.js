@@ -1,10 +1,10 @@
-import { View, Text } from "react-native";
-import React from "react";
-import { Spacer } from "../../../../components/Spacer";
-import { PaddingLeft } from "../Profile";
-import { scale, verticalScale } from "react-native-size-matters";
-import CustomText from "../../../../components/CustomText";
-import { colors } from "react-native-elements";
+import {View, Text} from 'react-native';
+import React from 'react';
+import {Spacer} from '../../../../components/Spacer';
+import {PaddingLeft} from '../Profile';
+import {scale, verticalScale} from 'react-native-size-matters';
+import CustomText from '../../../../components/CustomText';
+import {colors} from 'react-native-elements';
 
 const IceBreakQ = () => {
   return (
@@ -15,13 +15,18 @@ const IceBreakQ = () => {
         <View
           style={{
             paddingRight: scale(5),
-          }}
-        >
-          <CustomText fontSize={14} color={colors.gray} fontFamily={"bold"}>
+          }}>
+          <CustomText
+            fontSize={14}
+            color={colors.gray}
+            fontFamily={'ProximaNova-Bold'}>
             Ice Breaker Question
           </CustomText>
-          <View style={{ paddingVertical: verticalScale(5) }}>
-            <CustomText fontSize={13} color={colors.black} fontFamily={"bold"}>
+          <View style={{paddingVertical: verticalScale(5)}}>
+            <CustomText
+              fontSize={13}
+              color={colors.black}
+              fontFamily={'ProximaNova-Bold'}>
               Instagram is great when it comes to OOTDs—outfit of the day—and
               quick style inspirations,
             </CustomText>

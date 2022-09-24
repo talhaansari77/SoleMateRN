@@ -33,7 +33,7 @@ function MainSettings({navigation}) {
       <TouchableOpacity>
         <View>
           <CustomText
-            fontFamily={'bold'}
+            fontFamily={'ProximaNova-Bold'}
             fontSize={16}
             fontWeight={'700'}
             alignSelf={'flex-end'}
@@ -50,7 +50,7 @@ function MainSettings({navigation}) {
           {/* <CustomText fontSize={30} fontWeight={'700'} marginLeft={18}  marginBottom={35} marginTop={20}  > */}
 
           <CustomText
-            fontFamily={'bold'}
+            fontFamily={'ProximaNova-Bold'}
             fontSize={30}
             fontWeight={'700'}
             marginLeft={18}

@@ -1,37 +1,35 @@
-import { View, Image, TouchableOpacity, Text } from "react-native";
-import styled from "react-native-styled-components";
-import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import profileImages from "../../../../../assets/Profile_images";
-import { colors } from "../../../../utils/Colors";
+import {View, Image, TouchableOpacity, Text} from 'react-native';
+import styled from 'react-native-styled-components';
+import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
+import profileImages from '../../../../../assets/Profile_images';
+import {colors} from '../../../../utils/Colors';
 const PictureBox = () => {
   return (
-    <View style={{ height: verticalScale(300) }}>
+    <View style={{height: verticalScale(300)}}>
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           flex: 3.33 * 2,
-        }}
-      >
-        <TouchableOpacity activeOpacity={0.8} style={{ flex: 3.33 * 2 }}>
+        }}>
+        <TouchableOpacity activeOpacity={0.8} style={{flex: 3.33 * 2}}>
           <Text
             style={{
-              position: "absolute",
+              position: 'absolute',
               zIndex: 1,
               color: colors.white,
-              fontFamily: "bold",
+              fontFamily: 'ProximaNova-Bold',
               top: verticalScale(10),
               left: scale(10),
-            }}
-          >
+            }}>
             1
           </Text>
           <Image
             source={profileImages.profile01}
             style={{
-              height: "100%",
-              width: "100%",
+              height: '100%',
+              width: '100%',
               borderRadius: 20,
             }}
           />
@@ -41,32 +39,29 @@ const PictureBox = () => {
           style={{
             height: verticalScale(200),
             flex: 3.33,
-          }}
-        >
+          }}>
           <TouchableOpacity
             activeOpacity={0.8}
             style={{
               flex: 1,
               paddingLeft: moderateScale(5),
-            }}
-          >
+            }}>
             <Text
               style={{
-                position: "absolute",
+                position: 'absolute',
                 zIndex: 1,
                 color: colors.white,
-                fontFamily: "bold",
+                fontFamily: 'ProximaNova-Bold',
                 top: verticalScale(10),
                 left: scale(10),
-              }}
-            >
+              }}>
               2
             </Text>
             <Image
               source={profileImages.profile02}
               style={{
-                height: "100%",
-                width: "100%",
+                height: '100%',
+                width: '100%',
                 borderRadius: 20,
               }}
             />
@@ -77,25 +72,23 @@ const PictureBox = () => {
               flex: 1,
               paddingLeft: moderateScale(5),
               paddingTop: verticalScale(5),
-            }}
-          >
+            }}>
             <Text
               style={{
-                position: "absolute",
+                position: 'absolute',
                 zIndex: 1,
                 color: colors.white,
-                fontFamily: "bold",
+                fontFamily: 'ProximaNova-Bold',
                 top: verticalScale(10),
                 left: scale(10),
-              }}
-            >
+              }}>
               3
             </Text>
             <Image
               source={profileImages.profile03}
               style={{
-                height: "100%",
-                width: "100%",
+                height: '100%',
+                width: '100%',
                 borderRadius: 20,
               }}
             />
@@ -104,34 +97,31 @@ const PictureBox = () => {
       </View>
       <View
         style={{
-          flexDirection: "row",
+          flexDirection: 'row',
 
-          justifyContent: "space-between",
-          alignItems: "center",
+          justifyContent: 'space-between',
+          alignItems: 'center',
           flex: 3.33,
-        }}
-      >
+        }}>
         <TouchableOpacity
           activeOpacity={0.8}
-          style={{ flex: 1, paddingTop: verticalScale(5) }}
-        >
+          style={{flex: 1, paddingTop: verticalScale(5)}}>
           <Text
             style={{
-              position: "absolute",
+              position: 'absolute',
               zIndex: 1,
               color: colors.white,
-              fontFamily: "bold",
+              fontFamily: 'ProximaNova-Bold',
               top: verticalScale(10),
               left: scale(10),
-            }}
-          >
+            }}>
             4
           </Text>
           <Image
             source={profileImages.profile01}
             style={{
-              height: "100%",
-              width: "100%",
+              height: '100%',
+              width: '100%',
               borderRadius: 20,
             }}
           />
@@ -142,25 +132,23 @@ const PictureBox = () => {
             flex: 1,
             paddingLeft: moderateScale(5),
             paddingTop: verticalScale(5),
-          }}
-        >
+          }}>
           <Text
             style={{
-              position: "absolute",
+              position: 'absolute',
               zIndex: 1,
               color: colors.white,
-              fontFamily: "bold",
+              fontFamily: 'ProximaNova-Bold',
               top: verticalScale(10),
               left: scale(10),
-            }}
-          >
+            }}>
             5
           </Text>
           <Image
             source={profileImages.profile02}
             style={{
-              height: "100%",
-              width: "100%",
+              height: '100%',
+              width: '100%',
               borderRadius: 20,
             }}
           />
@@ -171,31 +159,28 @@ const PictureBox = () => {
             flex: 1,
             paddingLeft: moderateScale(5),
             paddingTop: verticalScale(5),
-          }}
-        >
+          }}>
           <Text
             style={{
-              position: "absolute",
+              position: 'absolute',
               zIndex: 1,
               color: colors.white,
-              fontFamily: "bold",
+              fontFamily: 'ProximaNova-Bold',
               top: verticalScale(10),
               left: scale(10),
-            }}
-          >
+            }}>
             6
           </Text>
           <Image
             source={profileImages.profile03}
             style={{
-              height: "100%",
-              width: "100%",
+              height: '100%',
+              width: '100%',
               borderRadius: 20,
             }}
           />
         </TouchableOpacity>
       </View>
-   
     </View>
   );
 };

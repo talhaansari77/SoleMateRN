@@ -1,8 +1,11 @@
 import moment from 'moment';
-import Toast from 'react-native-root-toast';
+import Toast from 'react-native-simple-toast';
 
 export const EditValidate = (data, submitError, setSubmitError) => {
+  console.log('BCJDBJC', data);
   if (data.images.length < 2) {
+    // Toast.show('This is a toast.');
+
     Toast.show('All images are required');
     return;
   }

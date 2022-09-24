@@ -141,7 +141,7 @@ const Chat = ({navigation}) => {
                   borderRadius={25}
                   backgroundColor={colors.primary}
                   width="90%"
-                  fontFamily="bold"
+                  fontFamily="ProximaNova-Bold"
                 />
               </View>
               <View style={{width: '100%', alignItems: 'center'}}>
@@ -149,7 +149,7 @@ const Chat = ({navigation}) => {
                   backgroundColor={colors.darkOrange}
                   borderRadius={25}
                   fontSize={verticalScale(18)}
-                  fontFamily="bold"
+                  fontFamily="ProximaNova-Bold"
                   onPress={() => {
                     navigation.navigate('Report');
 
