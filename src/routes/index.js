@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import AuthStack from './AuthStack';
 import MainStack from './MainStack';
 import SettingStack from './SettingStack';
 import Chat from '../screens/home/chat';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
+
+
 const RootNavigator = () => {
   const MyTheme = {
     ...DefaultTheme,
@@ -13,6 +16,24 @@ const RootNavigator = () => {
       background: '#ffff',
     },
   };
+  const handleDynamicLink = link => {
+    // Handle dynamic link inside your own application
+    console.log('this is DynamicLink-1:🖐', link);
+    if (link.url == 'http://getsolemate.com') {
+      // ...navigate to your offers screen
+      console.log('this is DynamicLink-2:🖐', link.url);
+  
+    }
+  };   
+
+  useEffect(() => {
+   
+
+    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    // When the component is unmounted, remove the listener
+    return () => unsubscribe();
+  }, []);
+  
   const Stack = createStackNavigator();
   return (
     <NavigationContainer theme={MyTheme}>
