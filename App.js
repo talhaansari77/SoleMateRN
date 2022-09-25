@@ -5,8 +5,8 @@ import {store} from './src/redux/store';
 import {useFonts} from 'react-native-font';
 import RootNavigator from './src/routes';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
-import {useEffect} from 'react';
 import Share from 'react-native-share';
+import {useEffect} from 'react';
 
 LogBox.ignoreLogs(['VirtualizedLists', 'Warning:...']);
 LogBox.ignoreAllLogs();
@@ -55,28 +55,19 @@ export default function App() {
   // }
   // const generateLink = async () => {
   //   const id = '454edy7';
-  //   try {
-  //     var link = await dynamicLinks().buildShortLink(
-  //       {
-  //         link: `https://getsolemate.page.link/EwdR?id=${id}`,
-  //         domainUriPrefix: 'https://getsolemate.page.link',
-  //         android: {
-  //           packageName: 'com.Solmate',
-  //           minimumVersion: '18',
-  //         },
-  //         ios: {
-  //           appStoreId: '123456789',
-  //           bundleId: 'com.Solmate',
-  //           minimumVersion: '18',
-  //         },
-  //       },
-  //       dynamicLinks.ShortLinkType.DEFAULT,
-  //     );
-  //     return link;
-  //   } catch (error) {
-  //     console.log('error raised', error);
-  //   }
-  // };
+  //   const link = await dynamicLinks().buildShortLink({
+  //     link: `https://getsolemate.page.link/EwdR?id=${id}`,
+  //     // domainUriPrefix is created in your Firebase console
+  //     domainUriPrefix: 'https://getsolemate.page.link',
+  //     android: {
+  //       packageName: 'com.Solmate',
+  //       minimumVersion: '18',
+  //     },
+  //     ios: {
+  //       appStoreId: '123456789',
+  //       bundleId: 'com.Solmate',
+  //       minimumVersion: '18',
+  //     },
 
   // async function buildLink() {
   //   const link = await dynamicLinks().buildLink({
