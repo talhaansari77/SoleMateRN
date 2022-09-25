@@ -6,7 +6,7 @@ import CustomText from '../../../components/CustomText';
 import {verticalScale} from 'react-native-size-matters';
 import commonStyles from '../../../utils/CommonStyles';
 import profileImages from '../../../../assets/Profile_images';
-const SignupWithCon = () => {
+const SignupWithCon = ({onGoogle}) => {
   return (
     <View style={styles.mainContainer}>
       <TouchableOpacity style={styles.childContainer}>
@@ -17,7 +17,10 @@ const SignupWithCon = () => {
           fontSize={verticalScale(12)}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.childContainer}>
+      <TouchableOpacity
+        style={styles.childContainer}
+        activeOpacity={0.6}
+        onPress={onGoogle}>
         <Image
           style={commonStyles.img}
           resizeMode="cover"
