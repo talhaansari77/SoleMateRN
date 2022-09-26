@@ -1,6 +1,6 @@
 import {View, Text, Dimensions, Image} from 'react-native';
 import React from 'react';
-import {moderateScale} from 'react-native-size-matters';
+import {moderateScale, verticalScale} from 'react-native-size-matters';
 import CustomText from '../../../../components/CustomText';
 import {colors} from '../../../../utils/Colors';
 import {Spacer} from '../../../../components/Spacer';
@@ -13,13 +13,17 @@ const Infos = ({title, icon, label, name, icon1, label1, name1}) => {
       <View
         style={{
           width: '100%',
-          padding: moderateScale(25),
+          // padding: moderateScale(25),
+          paddingLeft: 20,
+
           // paddingRight: scale(5),
         }}>
         <CustomText
           fontSize={14}
           color={colors.gray}
-          fontFamily={'ProximaNova-Bold'}>
+          fontFamily={'ProximaNova-Bold'}
+          // marginBottom={verticalScale(20)}
+        >
           {title}
         </CustomText>
         <Spacer height={10} />
@@ -54,7 +58,11 @@ const Infos = ({title, icon, label, name, icon1, label1, name1}) => {
               width: Dimensions.get('window').width / 2.5,
             }}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image source={icon1} resizeMode={'contain'} />
+              <Image
+                source={icon1}
+                style={{width: 12, height: 12}}
+                resizeMode={'contain'}
+              />
               <CustomText color={colors.primary} marginLeft={3}>
                 {label1}
               </CustomText>

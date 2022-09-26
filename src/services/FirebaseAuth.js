@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import uuid from 'react-native-uuid';
+import auth from '@react-native-firebase/auth';
 
 // import auth from '@react-native-firebase/auth';
 
@@ -16,6 +17,10 @@ import uuid from 'react-native-uuid';
 //     throw error;
 //   }
 // };
+
+export const signout = async () => {
+  return auth().signOut();
+};
 
 export const AuthLogin = async (email, password) => {
   // try {

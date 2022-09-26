@@ -141,7 +141,9 @@ const Settings = () => {
             index={index}
             key={index}
             onPress={
-              setting.name === 'Generate link' ? shareUser : ()=>console.log('btn')
+              setting.name === 'Generate link'
+                ? shareUser
+                : () => console.log('btn')
             }
           />
           {/* <CustomText>

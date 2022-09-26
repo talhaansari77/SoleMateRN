@@ -6,7 +6,9 @@ import CustomText from '../../../components/CustomText';
 import {colors} from '../../../utils/Colors';
 import {verticalScale, scale, moderateScale} from 'react-native-size-matters';
 import icons from '../../../../assets/icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import {signout} from '../../../services/FirebaseAuth';
 function MainSettings({navigation}) {
   const MainSettingsArray = [
     {
@@ -25,7 +27,15 @@ function MainSettings({navigation}) {
       id: 3,
       name: 'Log Out',
       icon: icons.logIcon,
-      onPress: () => navigation.navigate('GeneralSettings'),
+      onPress: async () => {
+        await AsyncStorage.removeItem('userAuth');
+
+        await signout();
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'AuthStack'}],
+        });
+      },
     },
   ];
   return (
