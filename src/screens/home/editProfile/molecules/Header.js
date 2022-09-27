@@ -5,7 +5,7 @@ import ProfileNav from '../../profile/molecules/ProfileNav';
 import {colors} from '../../../../utils/Colors';
 import CustomText from '../../../../components/CustomText';
 
-const Header = ({handleSubmit}) => {
+const Header = ({handleSubmit, handleCancel}) => {
   return (
     <>
       <Spacer height={15} />
@@ -26,7 +26,7 @@ const Header = ({handleSubmit}) => {
           </TouchableOpacity>
         )}
         RightSide={() => (
-          <TouchableOpacity activeOpacity={0.6}>
+          <TouchableOpacity activeOpacity={0.6} onPress={handleCancel}>
             <CustomText
               fontSize={13}
               color={colors.black}

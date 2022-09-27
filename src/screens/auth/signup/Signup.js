@@ -124,7 +124,7 @@ const Signup = ({navigation}) => {
           setLoading(false);
           navigation.reset({
             index: 0,
-            routes: [{name: 'MainStack'}],
+            routes: [{name: 'EditProfile'}],
           });
         }
       } catch (error) {

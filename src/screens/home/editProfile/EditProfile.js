@@ -165,10 +165,10 @@ const EditProfile = ({navigation}) => {
           }, 2000);
 
           console.log('dataSave');
-          // navigation.reset({
-          //   index: 0,
-          //   routes: [{ name: "EmailVerification" }],
-          // })
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'MainStack'}],
+          });
         }
       } catch (error) {
         setLoading(false);
@@ -212,7 +212,16 @@ const EditProfile = ({navigation}) => {
     <View style={{flex: 1}}>
       <Container>
         {/* Header */}
-        <Header handleSubmit={onHandleSubmit} navigation={navigation} />
+        <Header
+          handleSubmit={onHandleSubmit}
+          handleCancel={() => {
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'MainStack'}],
+            });
+          }}
+          navigation={navigation}
+        />
         <Divider />
         <Spacer height={10} />
         <ScrollView showsVerticalScrollIndicator={false}>
