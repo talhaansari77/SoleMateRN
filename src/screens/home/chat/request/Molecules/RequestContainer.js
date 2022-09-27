@@ -28,7 +28,7 @@ const RequestContainer = ({name, age, qualification, location, onChating}) => {
         <View style={styles.detailContainer}>
           <CustomText
             label={name}
-            fontFamily="bold"
+            fontFamily="ProximaNova-Bold"
             fontSize={verticalScale(10)}
             // marginLeft={verticalScale(5)}
           />

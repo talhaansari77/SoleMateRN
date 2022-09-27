@@ -84,7 +84,7 @@ const Profile = ({navigation, actions = false, getApp = false}) => {
   var age = a.diff(b, 'years');
 
   useEffect(() => {
-    getAuthData();
+    // getAuthData();
   }, []);
 
   const getAuthData = async () => {

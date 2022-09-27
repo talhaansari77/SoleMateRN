@@ -29,6 +29,7 @@ import AddMoreContainer from './molecules/AddMoreContainer';
 import PhotoContainer from './molecules/PhotoContainer';
 import {getAuthId, saveUser, uploadImage} from '../../../services/FirebaseAuth';
 import PictureBox from './molecules/PictureBox';
+import Loader from '../../../utils/Loader';
 
 const genders = [
   {id: 1, name: 'Male'},
@@ -70,7 +71,7 @@ const EditProfile = ({navigation}) => {
   const [editLocation, setEditLocation] = useState('');
   const [authID, setAuthID] = useState('');
 
-  console.log('images', images);
+  console.log('imagesUri', images);
 
   const questions = [
     {id: 1, question: 'Want Kids', onValue: setWhatKids},
@@ -91,7 +92,6 @@ const EditProfile = ({navigation}) => {
       setAuthID(id);
     });
   };
-
   const [submitError, setSubmitError] = useState({
     firstNameError: '',
     lastNameError: '',
@@ -113,8 +113,6 @@ const EditProfile = ({navigation}) => {
     addPersonalityError: '',
     characterError: '',
   });
-
-
   const onHandleSubmit = async () => {
     console.log('I Am Submit ✌');
     const data = {
@@ -151,19 +149,21 @@ const EditProfile = ({navigation}) => {
       setLoading(true);
 
       try {
-        // let imageLink = [];
-        // for (let index = 0; index < data.images.length; index++) {
-        //   const element = data.images[index];
-        //   const link = await uploadImage(element);
-        //   imageLink.push(link);
-        // }
-        // data.images = imageLink;
+        let imageLink = [];
+        for (let index = 0; index < data.images.length; index++) {
+          const element = data.images[index];
+          const link = await uploadImage(element.uri, authID);
+          imageLink.push(link);
+        }
+        data.images = imageLink;
 
-        setLoading(false);
         if (authID) {
           await saveUser(authID, data);
 
-          setLoading(false);
+          setTimeout(() => {
+            setLoading(false);
+          }, 2000);
+
           console.log('dataSave');
           // navigation.reset({
           //   index: 0,
@@ -209,489 +209,490 @@ const EditProfile = ({navigation}) => {
     }
   };
   return (
-    <Container>
-      {/* Header */}
-      <Header handleSubmit={onHandleSubmit} navigation={navigation} />
-      <Divider />
-      <Spacer height={10} />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.imageView}>
-          {data.map((item, index) => (
-            <PhotoContainer
-              key={index}
-              index={index}
-              label={item}
-              images={images}
-              setImages={setImages}
-              width={moderateScale(100)}
-              height={verticalScale(95)}
-            />
-          ))}
-        </View>
+    <View style={{flex: 1}}>
+      <Container>
+        {/* Header */}
+        <Header handleSubmit={onHandleSubmit} navigation={navigation} />
+        <Divider />
+        <Spacer height={10} />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.imageView}>
+            {data.map((item, index) => (
+              <PhotoContainer
+                key={index}
+                index={index}
+                label={item}
+                images={images}
+                setImages={setImages}
+                width={moderateScale(100)}
+                height={verticalScale(95)}
+              />
+            ))}
+          </View>
 
-        {/* <PhotoContainer images={images} setImages={setImages}/> */}
-        {/* <PictureBox /> */}
-        {/* <Spacer height={10}/> */}
-
-        <View style={{padding: moderateScale(5)}}>
-          <CustomText
-            label={'Bio'}
-            color={colors.darkOrange}
-            fontSize={16}
-            fontFamily={'ProximaNova-Bold'}
-            marginTop={verticalScale(5)}
-          />
-          <Spacer height={10} />
+          {/* <PhotoContainer images={images} setImages={setImages}/> */}
+          {/* <PictureBox /> */}
+          {/* <Spacer height={10}/> */}
 
           <View style={{padding: moderateScale(5)}}>
-            {/* First Name */}
-            <InputField
-              label={'First Name'}
-              arrow={false}
-              value={firstName}
-              onChangeText={nam => {
-                setFirstName(nam),
-                  setSubmitError({...submitError, firstNameError: ''});
-              }}
-              error={submitError.firstNameError}
+            <CustomText
+              label={'Bio'}
+              color={colors.darkOrange}
+              fontSize={16}
+              fontFamily={'ProximaNova-Bold'}
+              marginTop={verticalScale(5)}
             />
-            <Spacer height={15} />
-            {/* Last Name */}
-            <InputField
-              label={'Last Name'}
-              arrow={false}
-              value={lastName}
-              onChangeText={last => {
-                setLastName(last),
-                  setSubmitError({...submitError, lastNameError: ''});
-              }}
-              error={submitError.lastNameError}
-            />
-            <Spacer height={15} />
-            {/* About Me */}
-
-            <TextArea
-              label={'About Me'}
-              value={aboutMe}
-              onChangeText={about => {
-                setAboutMe(about),
-                  setSubmitError({...submitError, aboutError: ''});
-              }}
-              error={submitError.aboutError}
-            />
-            <Spacer height={20} />
-            {/* Ice Breaker Question */}
-            <IceBreakQField
-            // addIceBreaker={addIceBreaker}
-            // setAddIceBreaker= {setAddIceBreaker}
-            // iceBreaker={iceBreaker}
-
-            // onSaveIceBreaker={onSaveIceBreaker()}
-            />
-            {/* Personality */}
             <Spacer height={10} />
-            {/* <CustomText
+
+            <View style={{padding: moderateScale(5)}}>
+              {/* First Name */}
+              <InputField
+                label={'First Name'}
+                arrow={false}
+                value={firstName}
+                onChangeText={nam => {
+                  setFirstName(nam),
+                    setSubmitError({...submitError, firstNameError: ''});
+                }}
+                error={submitError.firstNameError}
+              />
+              <Spacer height={15} />
+              {/* Last Name */}
+              <InputField
+                label={'Last Name'}
+                arrow={false}
+                value={lastName}
+                onChangeText={last => {
+                  setLastName(last),
+                    setSubmitError({...submitError, lastNameError: ''});
+                }}
+                error={submitError.lastNameError}
+              />
+              <Spacer height={15} />
+              {/* About Me */}
+
+              <TextArea
+                label={'About Me'}
+                value={aboutMe}
+                onChangeText={about => {
+                  setAboutMe(about),
+                    setSubmitError({...submitError, aboutError: ''});
+                }}
+                error={submitError.aboutError}
+              />
+              <Spacer height={20} />
+              {/* Ice Breaker Question */}
+              <IceBreakQField
+              // addIceBreaker={addIceBreaker}
+              // setAddIceBreaker= {setAddIceBreaker}
+              // iceBreaker={iceBreaker}
+
+              // onSaveIceBreaker={onSaveIceBreaker()}
+              />
+              {/* Personality */}
+              <Spacer height={10} />
+              {/* <CustomText
             label={"Personality"}
             color={colors.darkOrange}
             fontFamily={"medium"}
             fontSize={11}
           /> */}
-            <CustomText label="personality" color={colors.primary} />
-            <View
-              style={{width: '100%', flexDirection: 'row', flexWrap: 'wrap'}}>
-              <View style={{marginTop: 8}}>
-                <Spacer width={5} />
-                <View
-                  style={{
-                    width: '100%',
-                    flexDirection: 'row',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                    {personality.map(item => {
-                      return (
-                        <TagsField
-                          label={item.personality}
-                          //  addItems.={addItems}
-                        />
-                      );
-                    })}
-                  </View>
-                  <View style={{marginTop: verticalScale(15)}}>
-                    <AddMoreContainer
-                      onAddMore={() => {
-                        setPersonalityModal(true);
-                      }}
-                    />
-                  </View>
-                </View>
-
-                {/* Modal For Add More */}
-                <PersonalityModal
-                  setModelVisible={setPersonalityModal}
-                  modalVisible={personalityModal}
-                  setValue={setAddMore}
-                  value={addMore}
-                  onChange={add => {
-                    setAddMore(add);
-                    setSubmitError({...submitError, addPersonalityError: ''});
-                  }}
-                  error={submitError.addPersonalityError}
-                  onSaveData={() => {
-                    onSavePersonality();
-                  }}
-                />
-                {/* Characteristics */}
-
-                <CustomText
-                  label="Characteristics"
-                  color={colors.darkOrange}
-                  marginTop={verticalScale(10)}
-                />
-
-                <View
-                  style={{
-                    width: '100%',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                    {characteristics.map(item => {
-                      return (
-                        <TagsField
-                          label={item.characteristics}
-                          //  addItems.={addItems}
-                        />
-                      );
-                    })}
-                  </View>
-                  <View style={{marginTop: verticalScale(15)}}>
-                    <AddMoreContainer
-                      onAddMore={() => {
-                        setCharacterModal(true);
-                      }}
-                    />
-                  </View>
-                </View>
-
-                {/* Modal For Add More */}
-                <PersonalityModal
-                  setModelVisible={setCharacterModal}
-                  modalVisible={characterModal}
-                  setValue={setAddMore}
-                  value={addMore}
-                  onChange={add => {
-                    setAddMore(add);
-                    setSubmitError({...submitError, characterError: ''});
-                  }}
-                  error={submitError.characterError}
-                  onSaveData={() => {
-                    onSaveCharacter();
-                  }}
-                />
-
-                <Spacer height={20} />
-
-                {/* Birthday */}
-                <BirthdayField
-                  birthday={birthday}
-                  setBirthday={setBirthday}
-                  submitError={submitError}
-                  setSubmitError={setSubmitError}
-                  error={submitError.birthdayError}
-                />
-                {/* Demographics */}
-
-                <Spacer height={10} />
-                <View>
-                  <CustomText
-                    label={' Demographics'}
-                    color={colors.primary}
-                    fontFamily={'ProximaNova-Regular'}
-                    fontSize={12}
-                  />
-                  {/* Family Origin */}
-                  <Spacer height={10} />
-                  <PH10>
-                    <InputField
-                      label={'Family Origin'}
-                      value={familyOrigin}
-                      onChangeText={family => {
-                        setfamilyOrigin(family),
-                          setSubmitError({...submitError, familyError: ''});
-                      }}
-                      error={submitError.familyError}
-                    />
-                  </PH10>
-                  {/* Language */}
-                  <Spacer height={10} />
-                  <PH10>
-                    <InputField
-                      label={'Language'}
-                      value={language}
-                      onChangeText={lang => {
-                        setLanguage(lang),
-                          setSubmitError({...submitError, languageError: ''});
-                      }}
-                      error={submitError.languageError}
-                    />
-                  </PH10>
-                  {/* Gender */}
-                  <Spacer height={10} />
-                  <PH10>
-                    <CustomText
-                      label={'Gender'}
-                      color={colors.darkOrange}
-                      fontFamily={'ProximaNova-Regular'}
-                      marginTop={verticalScale(7)}
-                      fontSize={11}
-                    />
-                    <Spacer height={10} />
-                    <View
-                      style={{
-                        justifyContent: 'center',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}>
-                      {genders.map((g, index) => (
-                        <>
-                          <GenderContainer
-                            txt={g.name}
-                            gender={gender}
-                            setGender={setGender}
-                            index={index}
-                            setSubmitError={setSubmitError}
-                            submitError={submitError}
-                            error={submitError.genderError}
-                            isSelect={isSelect}
-                            setIsSelect={setIsSelect}
+              <CustomText label="personality" color={colors.primary} />
+              <View
+                style={{width: '100%', flexDirection: 'row', flexWrap: 'wrap'}}>
+                <View style={{marginTop: 8}}>
+                  <Spacer width={5} />
+                  <View
+                    style={{
+                      width: '100%',
+                      flexDirection: 'row',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                      {personality.map(item => {
+                        return (
+                          <TagsField
+                            label={item.personality}
+                            //  addItems.={addItems}
                           />
-                          <Spacer width={10} />
-                        </>
-                      ))}
+                        );
+                      })}
                     </View>
-                    {submitError.genderError ? (
+                    <View style={{marginTop: verticalScale(15)}}>
+                      <AddMoreContainer
+                        onAddMore={() => {
+                          setPersonalityModal(true);
+                        }}
+                      />
+                    </View>
+                  </View>
+
+                  {/* Modal For Add More */}
+                  <PersonalityModal
+                    setModelVisible={setPersonalityModal}
+                    modalVisible={personalityModal}
+                    setValue={setAddMore}
+                    value={addMore}
+                    onChange={add => {
+                      setAddMore(add);
+                      setSubmitError({...submitError, addPersonalityError: ''});
+                    }}
+                    error={submitError.addPersonalityError}
+                    onSaveData={() => {
+                      onSavePersonality();
+                    }}
+                  />
+                  {/* Characteristics */}
+
+                  <CustomText
+                    label="Characteristics"
+                    color={colors.darkOrange}
+                    marginTop={verticalScale(10)}
+                  />
+
+                  <View
+                    style={{
+                      width: '100%',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                      {characteristics.map(item => {
+                        return (
+                          <TagsField
+                            label={item.characteristics}
+                            //  addItems.={addItems}
+                          />
+                        );
+                      })}
+                    </View>
+                    <View style={{marginTop: verticalScale(15)}}>
+                      <AddMoreContainer
+                        onAddMore={() => {
+                          setCharacterModal(true);
+                        }}
+                      />
+                    </View>
+                  </View>
+
+                  {/* Modal For Add More */}
+                  <PersonalityModal
+                    setModelVisible={setCharacterModal}
+                    modalVisible={characterModal}
+                    setValue={setAddMore}
+                    value={addMore}
+                    onChange={add => {
+                      setAddMore(add);
+                      setSubmitError({...submitError, characterError: ''});
+                    }}
+                    error={submitError.characterError}
+                    onSaveData={() => {
+                      onSaveCharacter();
+                    }}
+                  />
+
+                  <Spacer height={20} />
+
+                  {/* Birthday */}
+                  <BirthdayField
+                    birthday={birthday}
+                    setBirthday={setBirthday}
+                    submitError={submitError}
+                    setSubmitError={setSubmitError}
+                    error={submitError.birthdayError}
+                  />
+                  {/* Demographics */}
+
+                  <Spacer height={10} />
+                  <View>
+                    <CustomText
+                      label={' Demographics'}
+                      color={colors.primary}
+                      fontFamily={'ProximaNova-Regular'}
+                      fontSize={12}
+                    />
+                    {/* Family Origin */}
+                    <Spacer height={10} />
+                    <PH10>
+                      <InputField
+                        label={'Family Origin'}
+                        value={familyOrigin}
+                        onChangeText={family => {
+                          setfamilyOrigin(family),
+                            setSubmitError({...submitError, familyError: ''});
+                        }}
+                        error={submitError.familyError}
+                      />
+                    </PH10>
+                    {/* Language */}
+                    <Spacer height={10} />
+                    <PH10>
+                      <InputField
+                        label={'Language'}
+                        value={language}
+                        onChangeText={lang => {
+                          setLanguage(lang),
+                            setSubmitError({...submitError, languageError: ''});
+                        }}
+                        error={submitError.languageError}
+                      />
+                    </PH10>
+                    {/* Gender */}
+                    <Spacer height={10} />
+                    <PH10>
+                      <CustomText
+                        label={'Gender'}
+                        color={colors.darkOrange}
+                        fontFamily={'ProximaNova-Regular'}
+                        marginTop={verticalScale(7)}
+                        fontSize={11}
+                      />
+                      <Spacer height={10} />
+                      <View
+                        style={{
+                          justifyContent: 'center',
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                        }}>
+                        {genders.map((g, index) => (
+                          <>
+                            <GenderContainer
+                              txt={g.name}
+                              gender={gender}
+                              setGender={setGender}
+                              index={index}
+                              setSubmitError={setSubmitError}
+                              submitError={submitError}
+                              error={submitError.genderError}
+                              isSelect={isSelect}
+                              setIsSelect={setIsSelect}
+                            />
+                            <Spacer width={10} />
+                          </>
+                        ))}
+                      </View>
+                      {submitError.genderError ? (
+                        <CustomText
+                          color={colors.red}
+                          fontFamily={'ProximaNova-Regular'}
+                          fontSize={11}
+                          marginTop={4}>
+                          * {submitError.genderError}
+                        </CustomText>
+                      ) : null}
+                    </PH10>
+                    {/* Current Location */}
+                    <Spacer height={15} />
+                    <PH10>
+                      <InputField
+                        label={'Current Location'}
+                        // arrow={false}
+                        value={editLocation}
+                        onChangeText={nam => {
+                          setEditLocation(nam),
+                            setSubmitError({
+                              ...submitError,
+                              editlocationError: '',
+                            });
+                        }}
+                        error={submitError.editlocationError}
+                      />
+                    </PH10>
+                    {/* Height */}
+                    <Spacer height={15} />
+                    <HeightField
+                      inchesHeight={inchesHeight}
+                      setInchesHeight={setInchesHeight}
+                      feetHeight={feetHeight}
+                      submitError={submitError}
+                      setSubmitError={setSubmitError}
+                      setFeetHeight={setFeetHeight}
+                      error={submitError.heightError}
+                    />
+                    {submitError.heightError ? (
                       <CustomText
                         color={colors.red}
                         fontFamily={'ProximaNova-Regular'}
                         fontSize={11}
                         marginTop={4}>
-                        * {submitError.genderError}
+                        * {submitError.heightError}
                       </CustomText>
                     ) : null}
-                  </PH10>
-                  {/* Current Location */}
-                  <Spacer height={15} />
-                  <PH10>
-                    <InputField
-                      label={'Current Location'}
-                      // arrow={false}
-                      value={editLocation}
-                      onChangeText={nam => {
-                        setEditLocation(nam),
-                          setSubmitError({
-                            ...submitError,
-                            editlocationError: '',
-                          });
-                      }}
-                      error={submitError.editlocationError}
-                    />
-                  </PH10>
-                  {/* Height */}
-                  <Spacer height={15} />
-                  <HeightField
-                    inchesHeight={inchesHeight}
-                    setInchesHeight={setInchesHeight}
-                    feetHeight={feetHeight}
-                    submitError={submitError}
-                    setSubmitError={setSubmitError}
-                    setFeetHeight={setFeetHeight}
-                    error={submitError.heightError}
-                  />
-                  {submitError.heightError ? (
+                  </View>
+                  {/* Education & Career */}
+
+                  <Spacer height={20} />
+                  <View>
                     <CustomText
-                      color={colors.red}
+                      label={'Education and Career'}
+                      color={colors.primary}
                       fontFamily={'ProximaNova-Regular'}
-                      fontSize={11}
-                      marginTop={4}>
-                      * {submitError.heightError}
-                    </CustomText>
-                  ) : null}
-                </View>
-                {/* Education & Career */}
+                      fontSize={12}
+                    />
+                    {/* Employment */}
+                    <Spacer height={10} />
+                    <PH10>
+                      <InputField
+                        label={'Employment'}
+                        onChangeText={emp => {
+                          setEmployment(emp),
+                            setSubmitError({
+                              ...submitError,
+                              employmentError: '',
+                            });
+                        }}
+                        error={submitError.employmentError}
+                      />
+                    </PH10>
+                    {/* Occupation */}
+                    <Spacer height={15} />
+                    <PH10>
+                      <InputField
+                        label={'Occupation'}
+                        onChangeText={occ => {
+                          setOccupation(occ),
+                            setSubmitError({
+                              ...submitError,
+                              occupationError: '',
+                            });
+                        }}
+                        error={submitError.occupationError}
+                      />
+                    </PH10>
+                  </View>
 
-                <Spacer height={20} />
-                <View>
-                  <CustomText
-                    label={'Education and Career'}
-                    color={colors.primary}
-                    fontFamily={'ProximaNova-Regular'}
-                    fontSize={12}
-                  />
-                  {/* Employment */}
+                  {/* Religiousness */}
+
                   <Spacer height={10} />
-                  <PH10>
-                    <InputField
-                      label={'Employment'}
-                      onChangeText={emp => {
-                        setEmployment(emp),
-                          setSubmitError({
-                            ...submitError,
-                            employmentError: '',
-                          });
-                      }}
-                      error={submitError.employmentError}
+                  <View>
+                    <CustomText
+                      label={'Religiousness'}
+                      color={colors.primary}
+                      fontFamily={'ProximaNova-Regular'}
+                      fontSize={12}
                     />
-                  </PH10>
-                  {/* Occupation */}
-                  <Spacer height={15} />
-                  <PH10>
-                    <InputField
-                      label={'Occupation'}
-                      onChangeText={occ => {
-                        setOccupation(occ),
-                          setSubmitError({
-                            ...submitError,
-                            occupationError: '',
-                          });
-                      }}
-                      error={submitError.occupationError}
-                    />
-                  </PH10>
-                </View>
+                    {/* Religion */}
+                    <Spacer height={10} />
+                    <PH10>
+                      <InputField
+                        label={'Religion'}
+                        onChangeText={rel => {
+                          setReligion(rel),
+                            setSubmitError({...submitError, religionError: ''});
+                        }}
+                        error={submitError.religionError}
+                      />
+                    </PH10>
+                    {/* Religiousity */}
+                    <Spacer height={15} />
+                    <PH10>
+                      <InputField
+                        label={'Religiousity'}
+                        onChangeText={relg => {
+                          setReligiousity(relg),
+                            setSubmitError({
+                              ...submitError,
+                              religiousityError: '',
+                            });
+                        }}
+                        error={submitError.religiousityError}
+                      />
+                    </PH10>
+                    {/* Prayer Level */}
+                    <Spacer height={15} />
+                    <PH10>
+                      <InputField
+                        label={'Prayer Level'}
+                        onChangeText={pry => {
+                          setPrayerLevel(pry),
+                            setSubmitError({
+                              ...submitError,
+                              prayerLevelError: '',
+                            });
+                        }}
+                        error={submitError.prayerLevelError}
+                      />
+                    </PH10>
+                    {/* Sector */}
+                    <Spacer height={15} />
+                    <PH10>
+                      <InputField
+                        label={'Sector'}
+                        onChangeText={sec => {
+                          setSector(sec),
+                            setSubmitError({...submitError, sectorError: ''});
+                        }}
+                        error={submitError.sectorError}
+                      />
+                    </PH10>
+                  </View>
 
-                {/* Religiousness */}
+                  {/* Partner Expectation */}
 
-                <Spacer height={10} />
-                <View>
-                  <CustomText
-                    label={'Religiousness'}
-                    color={colors.primary}
-                    fontFamily={'ProximaNova-Regular'}
-                    fontSize={12}
-                  />
-                  {/* Religion */}
                   <Spacer height={10} />
-                  <PH10>
-                    <InputField
-                      label={'Religion'}
-                      onChangeText={rel => {
-                        setReligion(rel),
-                          setSubmitError({...submitError, religionError: ''});
-                      }}
-                      error={submitError.religionError}
+                  <View>
+                    <CustomText
+                      label={'Partner Expectation'}
+                      color={colors.primary}
+                      fontFamily={'ProximaNova-Regular'}
+                      fontSize={12}
                     />
-                  </PH10>
-                  {/* Religiousity */}
-                  <Spacer height={15} />
-                  <PH10>
-                    <InputField
-                      label={'Religiousity'}
-                      onChangeText={relg => {
-                        setReligiousity(relg),
-                          setSubmitError({
-                            ...submitError,
-                            religiousityError: '',
-                          });
-                      }}
-                      error={submitError.religiousityError}
-                    />
-                  </PH10>
-                  {/* Prayer Level */}
-                  <Spacer height={15} />
-                  <PH10>
-                    <InputField
-                      label={'Prayer Level'}
-                      onChangeText={pry => {
-                        setPrayerLevel(pry),
-                          setSubmitError({
-                            ...submitError,
-                            prayerLevelError: '',
-                          });
-                      }}
-                      error={submitError.prayerLevelError}
-                    />
-                  </PH10>
-                  {/* Sector */}
-                  <Spacer height={15} />
-                  <PH10>
-                    <InputField
-                      label={'Sector'}
-                      onChangeText={sec => {
-                        setSector(sec),
-                          setSubmitError({...submitError, sectorError: ''});
-                      }}
-                      error={submitError.sectorError}
-                    />
-                  </PH10>
-                </View>
-
-                {/* Partner Expectation */}
-
-                <Spacer height={10} />
-                <View>
-                  <CustomText
-                    label={'Partner Expectation'}
-                    color={colors.primary}
-                    fontFamily={'ProximaNova-Regular'}
-                    fontSize={12}
-                  />
-                  {/* Marital History */}
+                    {/* Marital History */}
+                    <Spacer height={10} />
+                    <PH10>
+                      <InputField
+                        label={'Marital History'}
+                        onChangeText={marh => {
+                          setMartialHistory(marh),
+                            setSubmitError({
+                              ...submitError,
+                              martialHistoryError: '',
+                            });
+                        }}
+                        error={submitError.martialHistoryError}
+                      />
+                    </PH10>
+                    {/* Marital Timing */}
+                    <Spacer height={15} />
+                    <PH10>
+                      <InputField
+                        label={'Marital Timing'}
+                        onChangeText={mart => {
+                          setMartialTimming(mart),
+                            setSubmitError({
+                              ...submitError,
+                              martialTimmingError: '',
+                            });
+                        }}
+                        error={submitError.martialTimmingError}
+                      />
+                    </PH10>
+                  </View>
                   <Spacer height={10} />
-                  <PH10>
-                    <InputField
-                      label={'Marital History'}
-                      onChangeText={marh => {
-                        setMartialHistory(marh),
-                          setSubmitError({
-                            ...submitError,
-                            martialHistoryError: '',
-                          });
-                      }}
-                      error={submitError.martialHistoryError}
+
+                  {/* Question */}
+                  {questions.map((q, index) => (
+                    <SelectBtn
+                      key={index}
+                      index={index}
+                      onValue={q.onValue}
+                      txt1={'Yes'}
+                      txt2={'No'}
+                      label={q.question}
                     />
-                  </PH10>
-                  {/* Marital Timing */}
-                  <Spacer height={15} />
-                  <PH10>
-                    <InputField
-                      label={'Marital Timing'}
-                      onChangeText={mart => {
-                        setMartialTimming(mart),
-                          setSubmitError({
-                            ...submitError,
-                            martialTimmingError: '',
-                          });
-                      }}
-                      error={submitError.martialTimmingError}
-                    />
-                  </PH10>
+                  ))}
+
+                  {/* End Container */}
+                  <Spacer height={40} />
+
+                  <Spacer height={10} />
                 </View>
-                <Spacer height={10} />
-
-                {/* Question */}
-                {questions.map((q, index) => (
-                  <SelectBtn
-                    key={index}
-                    index={index}
-                    onValue={q.onValue}
-                    txt1={'Yes'}
-                    txt2={'No'}
-                    label={q.question}
-                  />
-                ))}
-
-                {/* End Container */}
-                <Spacer height={40} />
-
-                <Spacer height={10} />
               </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
-      {/* <View style={{marginBottom: verticalScale(10)}}>
+        </ScrollView>
+        {/* <View style={{marginBottom: verticalScale(10)}}>
         <CustomButton
           title="Save"
           loading={loading}
@@ -709,8 +710,13 @@ const EditProfile = ({navigation}) => {
         }}
         // backgroundColor={colors.primary}
       /> */}
-      {/* </View> */}
-    </Container>
+        {/* </View> */}
+      </Container>
+      <Loader
+        loading={loading}
+        file={require('../../../../assets/loader/heartLoading.json')}
+      />
+    </View>
   );
 };
 

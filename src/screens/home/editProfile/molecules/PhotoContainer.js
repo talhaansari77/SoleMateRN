@@ -29,7 +29,7 @@ const PhotoContainer = ({
         quality: 0.8,
       });
       if (!result.cancelled) {
-        console.log("ImagesDetail✌",result.assets[0].uri)
+        console.log('ImagesDetail✌', result.assets[0].uri);
         // setUri(result);
         setUri(result.assets[0].uri);
         const itemIndex = images.findIndex(item => item.index === index);
