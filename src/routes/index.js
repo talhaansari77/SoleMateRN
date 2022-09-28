@@ -16,23 +16,23 @@ const RootNavigator = () => {
       background: '#ffff',
     },
   };
-  const handleDynamicLink = link => {
-    // Handle dynamic link inside your own application
-    console.log('this is DynamicLink-1:🖐', link);
-    if (link.url == 'http://getsolemate.com') {
-      // ...navigate to your offers screen
-      console.log('this is DynamicLink-2:🖐', link.url);
+  // const handleDynamicLink = link => {
+  //   // Handle dynamic link inside your own application
+  //   console.log('this is DynamicLink-1:🖐', link);
+  //   if (link.url == 'http://getsolemate.com') {
+  //     // ...navigate to your offers screen
+  //     console.log('this is DynamicLink-2:🖐', link.url);
   
-    }
-  };   
+  //   }
+  // };   
 
-  useEffect(() => {
+  // useEffect(() => {
    
 
-    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
-    // When the component is unmounted, remove the listener
-    return () => unsubscribe();
-  }, []);
+  //   const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+  //   // When the component is unmounted, remove the listener
+  //   return () => unsubscribe();
+  // }, []);
   
   const Stack = createStackNavigator();
   return (

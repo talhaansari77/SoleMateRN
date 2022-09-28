@@ -5,8 +5,8 @@ import {store} from './src/redux/store';
 import {useFonts} from 'react-native-font';
 import RootNavigator from './src/routes';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
-import {useEffect} from 'react';
 import Share from 'react-native-share';
+import {useEffect} from 'react';
 
 LogBox.ignoreLogs(['VirtualizedLists', 'Warning:...']);
 LogBox.ignoreAllLogs();
@@ -28,56 +28,32 @@ export default function App() {
   //   // When the component is unmounted, remove the listener
   //   return () => unsubscribe();
   // }, []);
-  async function buildLink() {
-    const id = '454edy7';
-    const link = await dynamicLinks().buildShortLink({
-      link: `https://getsolemate.page.link/EwdR?id=${id}`,
-      // domainUriPrefix is created in your Firebase console
-      domainUriPrefix: 'https://getsolemate.page.link',
-      android: {
-        packageName: 'com.Solmate',
-        minimumVersion: '18',
-      },
-      ios: {
-        appStoreId: '123456789',
-        bundleId: 'com.Solmate',
-        minimumVersion: '18',
-      },
 
-      // optional setup which updates Firebase analytics campaign
-      // "banner". This also needs setting up before hand
-      // analytics: {
-      //   campaign: 'banner',
-      // },
-    });
-    dynamicLinks.ShortLinkType.DEFAULT;
-    return link;
-  }
-  // const generateLink = async () => {
+  // async function buildLink() {
   //   const id = '454edy7';
-  //   try {
-  //     var link = await dynamicLinks().buildShortLink(
-  //       {
-  //         link: `https://getsolemate.page.link/EwdR?id=${id}`,
-  //         domainUriPrefix: 'https://getsolemate.page.link',
-  //         android: {
-  //           packageName: 'com.Solmate',
-  //           minimumVersion: '18',
-  //         },
-  //         ios: {
-  //           appStoreId: '123456789',
-  //           bundleId: 'com.Solmate',
-  //           minimumVersion: '18',
-  //         },
-  //       },
-  //       dynamicLinks.ShortLinkType.DEFAULT,
-  //     );
-  //     return link;
-  //   } catch (error) {
-  //     console.log('error raised', error);
-  //   }
-  // };
+  //   const link = await dynamicLinks().buildShortLink({
+  //     link: `https://getsolemate.page.link/EwdR?id=${id}`,
+  //     // domainUriPrefix is created in your Firebase console
+  //     domainUriPrefix: 'https://getsolemate.page.link',
+  //     android: {
+  //       packageName: 'com.Solmate',
+  //       minimumVersion: '18',
+  //     },
+  //     ios: {
+  //       appStoreId: '123456789',
+  //       bundleId: 'com.Solmate',
+  //       minimumVersion: '18',
+  //     },
 
+  //     // optional setup which updates Firebase analytics campaign
+  //     // "banner". This also needs setting up before hand
+  //     // analytics: {
+  //     //   campaign: 'banner',
+  //     // },
+  //   });
+  //   dynamicLinks.ShortLinkType.DEFAULT;
+  //   return link;
+  // }
 
   // async function buildLink() {
   //   const link = await dynamicLinks().buildLink({
@@ -95,32 +71,25 @@ export default function App() {
   // }
 
   const handleDynamicUrlLink = link => {
-    console.log('this is DynamicLink:🖐', link);
+    // console.log('this is DynamicLink:🖐', link);
     if (!!link?.url) {
       let id = link.url?.split('=').pop();
-      console.log('user Id:', id);
+      let screenName = link.url?.split('=')[1].split('&')[0];
+      console.log('user Id:🖐', id);
+      console.log('screenName:🖐', screenName);
     }
   };
 
-  const showLink=async()=>{
-    const getLink = await generateLink();
-    console.log('get buildLink:🖐', getLink);
-  }
-  const shareUser = async (id) => {
-    const getLink = await generateLink()
-    console.log("get buildLink:🖐",getLink)
-    const res = await Share.open(({
-        message: 'This is My Profile Link',
-        url: getLink
-    }))
-    console.log("res==>>>", res)
-}
+  // const showLink = async () => {
+  //   const getLink = await generateLink();
+  //   console.log('get buildLink:🖐', getLink);
+  // };
+  
 
   useEffect(() => {
     // buildLink().then(res => console.log('buildLink:🖐', res));
-    
-    shareUser();
 
+    
 
     dynamicLinks()
       .getInitialLink()
