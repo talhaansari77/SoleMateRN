@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import commonStyles from '../../../utils/CommonStyles';
 import CustomTextInput from '../../../components/CustomTextInput';
 import {Spacer} from '../../../components/Spacer';
@@ -15,6 +15,11 @@ import auth from '@react-native-firebase/auth';
 // import {AuthLogin} from '../../../services/FirebaseAuth';
 import {ValidateLogin} from './molecules/UseLogin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+
 
 const Login = ({navigation}) => {
   const [eyeClick, setEyeClick] = useState(true);
@@ -65,6 +70,64 @@ const Login = ({navigation}) => {
       }
     }
   };
+  const handleGoogleSignup = async () => {
+    // console.log('GoogleLogin')
+    // try {
+    //   // Get the users ID token
+    //   const {idToken} = await GoogleSignin.signIn();
+
+    //   // Create a Google credential with the token
+    //   const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+    //   // Sign-in the user with the credential
+    //   await auth().signInWithCredential(googleCredential);
+    // } catch (error) {
+    //   alert(error.message);
+    // }
+    try {
+      await GoogleSignin.hasPlayServices({
+        // Check if device has Google Play Services installed
+        // Always resolves to true on iOS
+        showPlayServicesUpdateDialog: true,
+      });
+      const userInfo = await GoogleSignin.signIn();
+      console.log('User Info --> ', JSON.stringify(userInfo));
+      if(userInfo.user.id){
+        navigation.navigate("MainStack",{screen:"Profile"})
+      }
+      // setUserInfo(userInfo);
+    } catch (error) {
+      console.log('Message', JSON.stringify(error));
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        alert('User Cancelled the Login Flow');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        alert('Signing In');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        alert('Play Services Not Available or Outdated');
+      } else {
+        alert(error.message);
+      }
+    }
+
+    
+  };
+
+  useEffect(() => {   
+    GoogleSignin.configure({
+      scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
+      webClientId:
+        '682224677218-t6h1gn5l5qrehd7ujphg47jjslibenlq.apps.googleusercontent.com',
+      offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+      hostedDomain: '', // specifies a hosted domain restriction
+      forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
+      accountName: '', // [Android] specifies an account name on the device that should be used
+      iosClientId:
+        '682224677218-3vlood3onne18e4mqv6230o0a18qv1gi.apps.googleusercontent.com',
+      googleServicePlistPath: '', // [iOS] if you renamed your GoogleService-Info file, new name here, e.g. GoogleService-Info-Staging
+      openIdRealm: '', // [iOS] The OpenID2 realm of the home web server. This allows Google to include the user's OpenID Identifier in the OpenID Connect ID token.
+      profileImageSize: 120, // [iOS] The desired height (and width) of the profile image. Defaults to 120px
+    });
+  }, []);
 
   return (
     <View
@@ -83,7 +146,9 @@ const Login = ({navigation}) => {
       />
       <Spacer height={verticalScale(20)} />
 
-      <LoginpWithCon />
+      <LoginpWithCon onGoogle={() => {
+          handleGoogleSignup();
+        }} />
       <Spacer height={verticalScale(20)} />
 
       <CustomTextInput

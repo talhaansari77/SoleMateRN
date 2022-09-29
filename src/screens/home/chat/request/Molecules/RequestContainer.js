@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import commonStyles from '../../../../../utils/CommonStyles';
 import {
   moderateScale,
@@ -10,8 +10,42 @@ import profileImages from '../../../../../../assets/Profile_images';
 import CustomText from '../../../../../components/CustomText';
 import {colors} from '../../../../../utils/Colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {getSpecificeUser} from '../../../../../services/FirebaseAuth';
+import moment from 'moment';
 
-const RequestContainer = ({name, age, qualification, location, onChating}) => {
+const RequestContainer = ({
+  name,
+  age,
+  qualification,
+  location,
+  onChating,
+  item,
+  userId,
+}) => {
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    getUser();
+  }, []);
+  console.log('UserData', userData);
+
+  var a = moment();
+  var b = moment(userData?.dob, 'YYYY');
+  var age = a.diff(b, 'years');
+
+  const getUser = async () => {
+    // const user = await getSpecificeUser(userId);
+    // console.log('UserData', user);
+
+    getSpecificeUser(userId).then(data => {
+      setUserData(data);
+    });
+
+    // if (user) {
+    //   setUserData(user);
+    // }
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.6}
@@ -27,7 +61,8 @@ const RequestContainer = ({name, age, qualification, location, onChating}) => {
         </View>
         <View style={styles.detailContainer}>
           <CustomText
-            label={name}
+            label={userData?.firstName}
+            numberOfLines={1}
             fontFamily="ProximaNova-Bold"
             fontSize={verticalScale(10)}
             // marginLeft={verticalScale(5)}
@@ -37,22 +72,25 @@ const RequestContainer = ({name, age, qualification, location, onChating}) => {
               label={age}
               fontFamily={'ProximaNova-Regular'}
               color={colors.halfGray}
+              numberOfLines={1}
               fontSize={verticalScale(10)}
               // marginLeft={verticalScale(5)}
             />
             <View style={styles.line} />
             <CustomText
-              label={location}
+              label={userData?.location}
               fontFamily={'ProximaNova-Regular'}
+              numberOfLines={1}
               color={colors.halfGray}
               fontSize={verticalScale(10)}
               // marginLeft={verticalScale(5)}
             />
             <View style={styles.line} />
             <CustomText
-              label={qualification}
+              label={userData.occupation}
               fontFamily={'ProximaNova-Regular'}
               color={colors.halfGray}
+              numberOfLines={1}
               fontSize={verticalScale(10)}
               // marginLeft={verticalScale(5)}
             />
@@ -90,13 +128,14 @@ const styles = ScaledSheet.create({
     justifyContent: 'space-between',
     padding: '2@s',
     paddingLeft: '15@s',
+    width: '45%',
   },
   subDetail: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   line: {
-    width: 2,
+    width: 1.5,
     height: 15,
     backgroundColor: colors.halfGray,
     marginHorizontal: '5@s',

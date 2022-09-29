@@ -8,6 +8,7 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 import Share from 'react-native-share';
 import {useEffect} from 'react';
 
+
 LogBox.ignoreLogs(['VirtualizedLists', 'Warning:...']);
 LogBox.ignoreAllLogs();
 

@@ -13,6 +13,7 @@ import commonStyles from '../utils/CommonStyles';
 import icons from '../../assets/icons';
 import CustomImage from './CustomImage';
 import {Spacer} from './Spacer';
+import {getMessages} from '../services/chats';
 // import colors from "../../Utils/colors";
 // import { getMessages } from "../Services/chats";
 export const ChatBody = ({
@@ -22,118 +23,109 @@ export const ChatBody = ({
   authId,
   otherId,
 }) => {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      mess: 'Hi brother keya hall ha ok ma theak ho ',
-      time: '11:50 AM',
-    },
-  ]);
-  //   useEffect(() => {
-  //     const messageSubscriber = getMessages(userId, relatedUserId, setMessages);
+  const [messages, setMessages] = useState([]);
 
-  //     return () => messageSubscriber();
-  //   }, [userId, relatedUserId]);
+  useEffect(() => {
+    const messageSubscriber = getMessages(otherId, authId, setMessages);
+    return () => messageSubscriber();
+  }, [authId, otherId]);
 
-  // useEffect(() => {
-
-  //   const messageSubscriber = getMessages( otherId,authId, setMessages);
-  //   return () => messageSubscriber();
-
-  // }, [authId,otherId]);
-
-  const renderMessages = ({item}) => {
-    // const isUser = message?.from == authId;
+  const renderMessages = ({item: message}) => {
+    const isUser = message?.from == authId;
     return (
       <View style={{padding: 5, flex: 1}}>
-        {/* msg1 */}
-
-        {/* date */}
         <View style={{paddingBottom: verticalScale(20)}}>
           <CustomText label="January, 21" textStyle={styles.timerText} />
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            // flexWrap:"wrap",
-            display: 'flex',
-            flex: 1,
-            width: '100%',
-          }}>
+
+        {isUser ? (
+          <View style={styles.message1}>
+            <View>
+              <CustomText
+                label={message.text}
+                textStyle={{...styles.messageText, color: colors.white}}
+                textAlign={'justify'}
+              />
+            </View>
+            <View
+              style={{
+                alignSelf: 'flex-end',
+              }}>
+              <CustomText
+                label={message.createdAt}
+                textStyle={{...styles.timerText1, color: colors.white}}
+              />
+            </View>
+          </View>
+        ) : (
           <View
             style={{
-              flex: 0.2,
-              height: '100%',
+              flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'center',
-              paddingLeft: 4,
+              // flexWrap:"wrap",
+              display: 'flex',
+              flex: 1,
+              width: '100%',
             }}>
             <View
               style={{
-                width: '100%',
-                height: 60,
-
-                borderRadius: 20,
-                overflow: 'hidden',
-                marginRight: scale(10),
+                flex: 0.2,
+                height: '100%',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingLeft: 4,
               }}>
-              <Image
-                source={profileImages.profile01}
-                resizeMode="cover"
-                style={commonStyles.img}
-              />
-            </View>
-          </View>
-          <View style={{flex: 1, height: '100%', flexDirection: 'row'}}>
-            <View style={styles.message2}>
-              {/* <CustomText label={item.mess} textStyle={styles.messageText} timer={'10:50'} /> */}
-
-              {/* Testing Extra */}
-              <View>
-                <CustomText
-                  label={item.mess}
-                  textStyle={styles.messageText}
-                  textAlign={'justify'}
-                />
-              </View>
               <View
                 style={{
-                  alignSelf: 'flex-end',
+                  width: '100%',
+                  height: 60,
+
+                  borderRadius: 20,
+                  overflow: 'hidden',
+                  marginRight: scale(10),
                 }}>
-                <CustomText label={item.time} textStyle={styles.timerText1} />
+                <Image
+                  source={profileImages.profile01}
+                  resizeMode="cover"
+                  style={commonStyles.img}
+                />
               </View>
             </View>
-            <View style={{justifyContent: 'center', marginLeft: scale(10)}}>
-              <CustomImage
-                src={icons.orangeTickReadIcon}
-                height={15}
-                width={15}
-              />
-            </View>
-          </View>
-          {/* <Text>cdjnbcjd</Text> */}
-        </View>
-        <Spacer height={verticalScale(20)} />
+            <View style={{flex: 1, height: '100%', flexDirection: 'row'}}>
+              <View style={styles.message2}>
+                {/* <CustomText label={item.mess} textStyle={styles.messageText} timer={'10:50'} /> */}
 
-        <View style={styles.message1}>
-          <View>
-            <CustomText
-              label={item.mess}
-              textStyle={{...styles.messageText, color: colors.white}}
-              textAlign={'justify'}
-            />
+                {/* Testing Extra */}
+                <View>
+                  <CustomText
+                    label={message.text}
+                    textStyle={styles.messageText}
+                    textAlign={'justify'}
+                  />
+                </View>
+                <View
+                  style={{
+                    alignSelf: 'flex-end',
+                  }}>
+                  <CustomText
+                    label={message.createdAt}
+                    textStyle={styles.timerText1}
+                  />
+                </View>
+              </View>
+              <View style={{justifyContent: 'center', marginLeft: scale(10)}}>
+                <CustomImage
+                  src={icons.orangeTickReadIcon}
+                  height={15}
+                  width={15}
+                />
+              </View>
+            </View>
+            {/* <Text>cdjnbcjd</Text> */}
           </View>
-          <View
-            style={{
-              alignSelf: 'flex-end',
-            }}>
-            <CustomText
-              label={item.time}
-              textStyle={{...styles.timerText1, color: colors.white}}
-            />
-          </View>
-        </View>
+        )}
+
+        {/* <Spacer height={verticalScale(20)} /> */}
       </View>
     );
   };
