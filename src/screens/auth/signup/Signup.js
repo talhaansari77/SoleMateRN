@@ -1,5 +1,5 @@
 import {View, Text} from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import commonStyles from '../../../utils/CommonStyles';
 import SignupWithCon from './SignupWithCon';
 import CustomTextInput from '../../../components/CustomTextInput';
@@ -10,6 +10,11 @@ import ConditionPassCon from './molecules/ConditionPassCon';
 import CustomButton from '../../../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {colors} from '../../../utils/Colors';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+
 import {
   validateEmail,
   checkCharPassword,
@@ -32,6 +37,24 @@ const Signup = ({navigation}) => {
     passwordError: '',
     confPasswordError: '',
   });
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
+      webClientId:
+        '682224677218-t6h1gn5l5qrehd7ujphg47jjslibenlq.apps.googleusercontent.com',
+      offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+      hostedDomain: '', // specifies a hosted domain restriction
+      forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
+      accountName: '', // [Android] specifies an account name on the device that should be used
+      iosClientId:
+        '682224677218-3vlood3onne18e4mqv6230o0a18qv1gi.apps.googleusercontent.com',
+      googleServicePlistPath: '', // [iOS] if you renamed your GoogleService-Info file, new name here, e.g. GoogleService-Info-Staging
+      openIdRealm: '', // [iOS] The OpenID2 realm of the home web server. This allows Google to include the user's OpenID Identifier in the OpenID Connect ID token.
+      profileImageSize: 120, // [iOS] The desired height (and width) of the profile image. Defaults to 120px
+    });
+  }, []);
+
   // password.search(/[!/><"#$%&()¥|?>|=']/)==-1
   console.log('conPas', password);
   const passData = [
@@ -114,6 +137,48 @@ const Signup = ({navigation}) => {
       }
     }
   };
+
+  const handleGoogleSignup = async () => {
+    try {
+      await GoogleSignin.hasPlayServices({
+        // Check if device has Google Play Services installed
+        // Always resolves to true on iOS
+        showPlayServicesUpdateDialog: true,
+      });
+      const userInfo = await GoogleSignin.signIn();
+      console.log('User Info --> ', userInfo);
+      // setUserInfo(userInfo);
+    } catch (error) {
+      // console.log('Message', JSON.stringify(error));
+      // if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+      //   alert('User Cancelled the Login Flow');
+      // } else if (error.code === statusCodes.IN_PROGRESS) {
+      //   alert('Signing In');
+      // } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+      //   alert('Play Services Not Available or Outdated');
+      // } else {
+      //   alert(error.message);
+      // }
+    }
+
+    // setGettingLoginStatus(false);
+    // try {
+    //   await GoogleSignin.hasPlayServices();
+    //   const userInfo = await GoogleSignin.signIn();
+    //   console.log('UserInfo', userInfo);
+    //   // this.setState({userInfo});
+    // } catch (error) {
+    //   if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+    //     // user cancelled the login flow
+    //   } else if (error.code === statusCodes.IN_PROGRESS) {
+    //     // operation (e.g. sign in) is in progress already
+    //   } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+    //     // play services not available or outdated
+    //   } else {
+    //     // some other error happened
+    //   }
+    // }
+  };
   return (
     // <></>
     <View
@@ -131,7 +196,11 @@ const Signup = ({navigation}) => {
         fontSize={verticalScale(15)}
       />
       <Spacer height={verticalScale(15)} />
-      <SignupWithCon />
+      <SignupWithCon
+        onGoogle={() => {
+          handleGoogleSignup();
+        }}
+      />
       <Spacer height={verticalScale(20)} />
       <CustomTextInput
         value={email}

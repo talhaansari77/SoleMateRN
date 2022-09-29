@@ -1350,6 +1350,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/storage/-/storage-15.6.0.tgz#6891af70b5b55fc2cc70a15c79809685540c77e8"
   integrity sha512-wvg+hedOc+Ryz64JNnxsYgcXZNneZCjsDoCgL/89tiIg5g4yvj2ix74JSQZUyQVxorrzKZslWE3EDyXnzqvoPA==
 
+"@react-native-google-signin/google-signin@^8.0.0":
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/@react-native-google-signin/google-signin/-/google-signin-8.0.0.tgz#f8202c121b4df185eb165dc58b35544c643af25f"
+  integrity sha512-GV0EGXUfiqk9Kav74zOq4ww0rAhMUlwmIGEf94X2ptnxfKu9TufeTig1zuDQGasgFlziWju/Ya2WeC+7TYSbxw==
+
 "@react-native-masked-view/masked-view@^0.2.7":
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/@react-native-masked-view/masked-view/-/masked-view-0.2.7.tgz#d19f1fc646df9440c23c834b4ff3f2b8fe15e175"
