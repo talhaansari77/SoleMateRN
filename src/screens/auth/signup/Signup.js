@@ -26,6 +26,7 @@ import {styles} from './styles';
 import {color} from 'react-native-elements/dist/helpers';
 // import {SignupEmailPassword} from '../../../services/FirebaseAuth';
 import auth from '@react-native-firebase/auth';
+
 const Signup = ({navigation}) => {
   const [eyeClick, setEyeClick] = useState(true);
   const [email, setEmail] = useState('');
@@ -38,7 +39,7 @@ const Signup = ({navigation}) => {
     confPasswordError: '',
   });
 
-  useEffect(() => {
+  useEffect(() => {   
     GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
       webClientId:
@@ -139,6 +140,19 @@ const Signup = ({navigation}) => {
   };
 
   const handleGoogleSignup = async () => {
+    // console.log('GoogleLogin')
+    // try {
+    //   // Get the users ID token
+    //   const {idToken} = await GoogleSignin.signIn();
+
+    //   // Create a Google credential with the token
+    //   const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+    //   // Sign-in the user with the credential
+    //   await auth().signInWithCredential(googleCredential);
+    // } catch (error) {
+    //   alert(error.message);
+    // }
     try {
       await GoogleSignin.hasPlayServices({
         // Check if device has Google Play Services installed
@@ -147,6 +161,9 @@ const Signup = ({navigation}) => {
       });
       const userInfo = await GoogleSignin.signIn();
       console.log('User Info --> ', JSON.stringify(userInfo));
+      if(userInfo.user.id){
+        navigation.navigate("MainStack",{screen:"Profile"})
+      }
       // setUserInfo(userInfo);
     } catch (error) {
       console.log('Message', JSON.stringify(error));
@@ -161,23 +178,7 @@ const Signup = ({navigation}) => {
       }
     }
 
-    // setGettingLoginStatus(false);
-    // try {
-    //   await GoogleSignin.hasPlayServices();
-    //   const userInfo = await GoogleSignin.signIn();
-    //   console.log('UserInfo', userInfo);
-    //   // this.setState({userInfo});
-    // } catch (error) {
-    //   if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-    //     // user cancelled the login flow
-    //   } else if (error.code === statusCodes.IN_PROGRESS) {
-    //     // operation (e.g. sign in) is in progress already
-    //   } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-    //     // play services not available or outdated
-    //   } else {
-    //     // some other error happened
-    //   }
-    // }
+    
   };
   return (
     // <></>

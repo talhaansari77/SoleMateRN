@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "682224677218-hvvrlu560inmq5fgnbpk3j45bnassv22.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.SolMate",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
           "client_id": "682224677218-t6h1gn5l5qrehd7ujphg47jjslibenlq.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -31,10 +39,11 @@
               "client_type": 3
             },
             {
-              "client_id": "682224677218-rrnp13imj50n0ku8pp0h2jjhadb0a0mg.apps.googleusercontent.com",
+              "client_id": "682224677218-3vlood3onne18e4mqv6230o0a18qv1gi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.Solmate"
+                "bundle_id": "com.Solmate",
+                "app_store_id": "123456789"
               }
             }
           ]
