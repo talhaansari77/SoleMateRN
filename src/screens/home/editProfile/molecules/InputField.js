@@ -29,7 +29,7 @@ const InputField = ({label, arrow = true, onChangeText, value, error}) => {
           <TextInput
             value={value}
             onChangeText={onChangeText}
-            style={{width: '90%'}}
+            style={{width: '90%',color:colors.black}}
           />
           {arrow ? (
             <TouchableOpacity activeOpacity={0.6}>

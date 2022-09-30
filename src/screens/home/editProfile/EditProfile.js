@@ -149,13 +149,13 @@ const EditProfile = ({navigation}) => {
       setLoading(true);
 
       try {
-        let imageLink = [];
-        for (let index = 0; index < data.images.length; index++) {
-          const element = data.images[index];
-          const link = await uploadImage(element.uri, authID);
-          imageLink.push(link);
-        }
-        data.images = imageLink;
+        // let imageLink = [];
+        // for (let index = 0; index < data.images.length; index++) {
+        //   const element = data.images[index];
+        //   const link = await uploadImage(element.uri, authID);
+        //   imageLink.push(link);
+        // }
+        // data.images = imageLink; 
 
         if (authID) {
           await saveUser(authID, data);
