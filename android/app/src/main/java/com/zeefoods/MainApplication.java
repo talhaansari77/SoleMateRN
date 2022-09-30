@@ -58,7 +58,7 @@ public class MainApplication extends Application implements ReactApplication {
 
       FacebookSdk.sdkInitialize(getApplicationContext());
       AppEventsLogger.activateApp(this);
-      logger.logPurchase(BigDecimal.valueOf(4.32), Currency.getInstance("USD"));
+      // logger.logPurchase(BigDecimal.valueOf(4.32), Currency.getInstance("USD"));
     // If you opted-in for the New Architecture, we enable the TurboModule system
     ReactFeatureFlags.useTurboModules = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
     SoLoader.init(this, /* native exopackage */ false);
