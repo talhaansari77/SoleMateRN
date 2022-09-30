@@ -22,10 +22,31 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Divider} from 'react-native-elements';
 import {ChatBody} from '../../../components/ChatBody';
 import CustomButton from '../../../components/CustomButton';
+import {sendMessage} from '../../../services/chats';
+import {updateLastMessage} from '../../../services/request';
 
-const Chat = ({navigation}) => {
-  const [textMessage, setTextMessage] = useState('');
+const Chat = ({navigation, route}) => {
+  const [textMessage, setTextMessage] = useState([]);
   const [settingModal, setSettingModal] = useState(false);
+
+  console.log('RoutesData', route?.params);
+
+  const onSend = async messages => {
+    const messageData = await sendMessage(
+      route.params?.authId,
+      route?.params?.otherUserId,
+      messages,
+    );
+
+    updateLastMessage(
+      route.params?.authId,
+      route?.params?.otherUserId,
+      messageData,
+    );
+
+    setTextMessage('');
+  };
+
   return (
     <SafeAreaView style={commonStyles.commonMain}>
       <View style={styles.mainContainer}>
@@ -63,7 +84,10 @@ const Chat = ({navigation}) => {
         </View>
         <Spacer height={verticalScale(8)} />
         <View style={styles.innerMainContainer}>
-          <ChatBody />
+          <ChatBody
+            authId={route.params?.authId}
+            otherId={route?.params?.otherUserId}
+          />
         </View>
 
         <View style={styles.textInputContainer}>
@@ -101,7 +125,11 @@ const Chat = ({navigation}) => {
             </View>
             <View style={{width: verticalScale(5)}} />
             {textMessage ? (
-              <TouchableOpacity activeOpacity={0.6}>
+              <TouchableOpacity
+                onPress={() => {
+                  onSend(textMessage);
+                }}
+                activeOpacity={0.6}>
                 <Feather
                   name="send"
                   size={moderateScale(25)}

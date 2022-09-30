@@ -58,16 +58,17 @@ export default HeaderConatiner;
 
 const styles = ScaledSheet.create({
   mainContainer: {
-    shadowColor: colors.gray,
-    shadowOffset: {width: 0, height: 2},
+    shadowColor: colors.black,
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 5,
-    shadowRadius: 3,
-    elevation: 5,
+    shadowRadius: 10,
+    elevation: 20,
     flexDirection: 'row',
     backgroundColor: colors.white,
     height: '35@vs',
     width: '100%',
     alignItems: 'center',
     width: '100%',
+    marginTop: verticalScale(5),
   },
 });

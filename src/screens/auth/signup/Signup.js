@@ -112,7 +112,6 @@ const Signup = ({navigation}) => {
     );
     if (response) {
       setLoading(true);
-
       try {
         const userCredentials = await auth().createUserWithEmailAndPassword(
           email.trim(),

@@ -23,7 +23,10 @@ import GetAppBtn from './molecules/GetAppBtn';
 import icons from '../../../../assets/icons';
 import {getAuthId, getSpecificeUser} from '../../../services/FirebaseAuth';
 import Loader from '../../../utils/Loader';
+import {checkUserRequest, createRequest} from '../../../services/request';
 import {Spacer} from '../../../components/Spacer';
+import {checkCharPassword} from '../../../utils/Email_Password_Validation';
+import Toast from 'react-native-simple-toast';
 const traits = [
   {id: 1, trait: 'Gamer'},
   {id: 2, trait: 'Lover'},
@@ -73,16 +76,17 @@ const expectation = [
   {id: 7, title: 'Drinking', label: "5'6", icon: icons.drink},
   {id: 8, title: 'Smoking', label: 'English', icon: icons.smoking},
 ];
-const Profile = ({navigation, route, actions = false, getApp = false}) => {
+const Profile = ({navigation, route, actions = true, getApp = false}) => {
   const [authID, setAuthID] = useState('');
   const [authData, setAuthData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [otherID, setOtherId] = useState(route.params?.id);
 
-  console.log('authData', authData);
-  console.log('Id From Link', route.params?.id);
+  // console.log('authData', authData);
+  // console.log('Id From Link', route.params?.id);
 
   var a = moment();
-  var b = moment(authData.dob, 'YYYY');
+  var b = moment(authData?.dob, 'YYYY');
   var age = a.diff(b, 'years');
 
   useEffect(() => {
@@ -94,11 +98,40 @@ const Profile = ({navigation, route, actions = false, getApp = false}) => {
     await getAuthId().then(id => {
       setAuthID(id);
 
-      getSpecificeUser(id).then(data => {
+      getSpecificeUser(route.params?.id ? route.params?.id : id).then(data => {
         setAuthData(data);
         setLoading(false);
       });
     });
+  };
+  const onCancel = () => {
+    setLoading(true);
+    try {
+      if (otherID) {
+        setOtherId('');
+        setLoading(false);
+      }
+    } catch (error) {}
+  };
+
+  const onAccept = async () => {
+    const notesStatus = await checkUserRequest(authID, route.params?.id);
+    if (!notesStatus) {
+      const requestData = {
+        from: authID,
+        to: route.params?.id,
+        relationStatus: 0,
+        lastMessage: {},
+      };
+      await createRequest(requestData);
+      Toast.show('request sent');
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'MessagingStack'}],
+      });
+    } else {
+      alert('You already in contact with');
+    }
   };
   return (
     <View style={{flex: 1}}>
@@ -109,7 +142,18 @@ const Profile = ({navigation, route, actions = false, getApp = false}) => {
           flex: 1,
         }}>
         {/* Actions */}
-        <ActionBtn actions={actions} />
+        {route.params?.id ? (
+          <ActionBtn
+            handleCancle={() => {
+              onCancel();
+            }}
+            handleAccept={() => {
+              onAccept();
+            }}
+          />
+        ) : (
+          <></>
+        )}
 
         {/* Get The App */}
 

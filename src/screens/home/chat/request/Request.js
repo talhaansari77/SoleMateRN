@@ -1,8 +1,11 @@
 import {StyleSheet, Text, View, SafeAreaView, FlatList} from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import HeaderConatiner from './Molecules/HeaderConatiner';
 import RequestContainer from './Molecules/RequestContainer';
 import {verticalScale} from 'react-native-size-matters';
+import {getAuthId} from '../../../../services/FirebaseAuth';
+import {getAuthRequest} from '../../../../services/request';
+import moment from 'moment';
 
 // name,age,qualification,location
 
@@ -22,78 +25,52 @@ const userRequest = [
     location: 'New Jersey',
   },
 ];
-const userConversation = [
-  {
-    id: 1,
-    name: 'Razeen',
-    age: '24',
-    qualification: 'Product Manager',
-    location: 'Michigan',
-  },
-  {
-    id: 2,
-    name: 'Tolba',
-    age: '24',
-    qualification: 'Software Engineer',
-    location: 'Seattle',
-  },
-];
 
 const Request = ({navigation}) => {
+  const [authId, setAuthId] = useState('');
+  const [requestData, setRequestData] = useState({
+    request: [],
+  });
+
+  // console.log('RequestData', requestData);
+
+  useEffect(() => {
+    onAuthRequest();
+  }, []);
+
+  const onAuthRequest = async () => {
+    await getAuthId().then(id => {
+      setAuthId(id);
+      getAuthRequest(id, setRequestData);
+    });
+  };
   const RequestDetail = ({item, index}) => {
+    console.log('Itemdata', item.from);
     return (
       <View>
         <RequestContainer
-          name={item.name}
-          qualification={item.qualification}
-          location={item.location}
-          age={item.age}
+          item={item}
+          userId={item.to == authId ? item.from : item.to}
           onChating={() => {
-            navigation.navigate('Chat');
+            navigation.navigate('Chat', {
+              otherUserId: item?.from == authId ? item.to : item.from,
+              authId: item?.from != authId ? item.to : item.from,
+            });
           }}
         />
       </View>
     );
   };
 
-  const ConversationDetail = ({item, index}) => {
-    return (
-      <View>
-        <RequestContainer
-          name={item.name}
-          qualification={item.qualification}
-          location={item.location}
-          age={item.age}
-          onChating={() => {
-            navigation.navigate('Chat');
-          }}
-        />
-      </View>
-    );
-  };
   return (
     <SafeAreaView style={{flex: 1}}>
       <HeaderConatiner label="Request" />
       <View>
         <FlatList
-          data={userRequest}
+          data={requestData?.request}
           keyExtractor={item => item.id}
           renderItem={RequestDetail}
         />
-      </View>
-
-      <View style={{marginVertical: verticalScale(15)}}>
-        <HeaderConatiner label="Pass Conversation" />
-      </View>
-
-      <View>
-        <View>
-          <FlatList
-            data={userConversation}
-            keyExtractor={item => item.id}
-            renderItem={ConversationDetail}
-          />
-        </View>
       </View>
     </SafeAreaView>
   );
