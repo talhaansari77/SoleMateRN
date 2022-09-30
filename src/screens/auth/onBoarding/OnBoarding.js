@@ -141,7 +141,7 @@ const OnBoarding = ({navigation}) => {
                 <CustomText
                   label={item.privacy}
                   fontFamily="ProximaNova-Regular"
-                  textDecorationLine={"underline"}
+                  textDecorationLine={'underline'}
                   color={colors.gray}
                   fontSize={verticalScale(10)}
                   textDecorationColor="black"
