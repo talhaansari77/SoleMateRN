@@ -29,6 +29,8 @@ const Chat = ({navigation, route}) => {
   const [textMessage, setTextMessage] = useState([]);
   const [settingModal, setSettingModal] = useState(false);
 
+  console.log('RoutesData', route?.params);
+
   const onSend = async messages => {
     const messageData = await sendMessage(
       route.params?.authId,

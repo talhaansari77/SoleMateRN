@@ -45,16 +45,16 @@ const Request = ({navigation}) => {
     });
   };
   const RequestDetail = ({item, index}) => {
-    console.log('Itemdata', item);
+    console.log('Itemdata', item.from);
     return (
       <View>
         <RequestContainer
           item={item}
-          userId={item.to}
+          userId={item.to == authId ? item.from : item.to}
           onChating={() => {
             navigation.navigate('Chat', {
-              otherUserId: item.to,
-              authId: item.from,
+              otherUserId: item?.from == authId ? item.to : item.from,
+              authId: item?.from != authId ? item.to : item.from,
             });
           }}
         />
