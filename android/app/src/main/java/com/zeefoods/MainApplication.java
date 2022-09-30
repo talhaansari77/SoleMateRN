@@ -9,6 +9,8 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.config.ReactFeatureFlags;
 import com.facebook.soloader.SoLoader;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.SolMate.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -49,9 +51,14 @@ public class MainApplication extends Application implements ReactApplication {
     }
   }
 
+ 
   @Override
   public void onCreate() {
     super.onCreate();
+
+      FacebookSdk.sdkInitialize(getApplicationContext());
+      AppEventsLogger.activateApp(this);
+      logger.logPurchase(BigDecimal.valueOf(4.32), Currency.getInstance("USD"));
     // If you opted-in for the New Architecture, we enable the TurboModule system
     ReactFeatureFlags.useTurboModules = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
     SoLoader.init(this, /* native exopackage */ false);
