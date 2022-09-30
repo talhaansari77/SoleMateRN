@@ -14,6 +14,7 @@ import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
 
 import {
   validateEmail,
@@ -25,7 +26,6 @@ import {ValidateInput} from './UseSignup';
 import {styles} from './styles';
 import {color} from 'react-native-elements/dist/helpers';
 // import {SignupEmailPassword} from '../../../services/FirebaseAuth';
-import auth from '@react-native-firebase/auth';
 
 const Signup = ({navigation}) => {
   const [eyeClick, setEyeClick] = useState(true);
@@ -162,7 +162,7 @@ const Signup = ({navigation}) => {
       const userInfo = await GoogleSignin.signIn();
       console.log('User Info --> ', JSON.stringify(userInfo));
       if(userInfo.user.id){
-        navigation.navigate("MainStack",{screen:"Profile"})
+        navigation.navigate("MainStack",{screen:"EditProfile"})
       }
       // setUserInfo(userInfo);
     } catch (error) {
@@ -205,7 +205,7 @@ const Signup = ({navigation}) => {
       <Spacer height={verticalScale(20)} />
       <CustomTextInput
         value={email}
-        withLabel="Email adress"
+        withLabel="Email address"
         placeholder={'example@gmail.com'}
         error={submitError.emailError}
         onChangeText={em => {

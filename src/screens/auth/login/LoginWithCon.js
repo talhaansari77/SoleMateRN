@@ -6,7 +6,7 @@ import CustomText from '../../../components/CustomText';
 import {verticalScale} from 'react-native-size-matters';
 import commonStyles from '../../../utils/CommonStyles';
 import profileImages from '../../../../assets/Profile_images';
-const LoginpWithCon = () => {
+const LoginpWithCon = ({onGoogle}) => {
   return (
     <View style={styles.mainContainer}>
       <TouchableOpacity style={styles.childContainer}>
@@ -17,7 +17,7 @@ const LoginpWithCon = () => {
           fontSize={verticalScale(12)}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.childContainer}>
+      <TouchableOpacity onPress={onGoogle} style={styles.childContainer}>
         <Image
           style={commonStyles.img}
           resizeMode="cover"
@@ -26,7 +26,7 @@ const LoginpWithCon = () => {
 
         <View style={{position: 'absolute'}}>
           <CustomText
-            label="GOOGEL"
+            label="GOOGLE"
             fontFamily="ProximaNova-Bold"
             color={colors.googleGreen}
             fontSize={verticalScale(12)}

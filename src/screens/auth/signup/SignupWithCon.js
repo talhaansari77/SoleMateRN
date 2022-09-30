@@ -29,7 +29,7 @@ const SignupWithCon = ({onGoogle}) => {
 
         <View style={{position: 'absolute'}}>
           <CustomText
-            label="GOOGEL"
+            label="GOOGLE"
             fontFamily="ProximaNova-Bold"
             color={colors.googleGreen}
             fontSize={verticalScale(12)}
