@@ -28,6 +28,8 @@ const userRequest = [
 
 const Request = ({navigation}) => {
   const [authId, setAuthId] = useState('');
+  const [seenStatus, setSeenStatus] = useState(true);
+
   const [requestData, setRequestData] = useState({
     request: [],
   });
@@ -55,6 +57,7 @@ const Request = ({navigation}) => {
             navigation.navigate('Chat', {
               otherUserId: item?.from == authId ? item.to : item.from,
               authId: item?.from != authId ? item.to : item.from,
+              SeenStatus: true,
             });
           }}
         />

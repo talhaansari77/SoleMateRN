@@ -2,7 +2,8 @@ import firestore from '@react-native-firebase/firestore';
 import uuid from 'react-native-uuid';
 import {chatFormat} from '../utils/Time';
 
-export const sendMessage = async (from, to, text) => {
+export const sendMessage = async (from, to, text, image, status) => {
+  console.log('ImageData', status);
   const id =
     from > to
       ? from + '__' + to + '__' + uuid.v4()
@@ -12,10 +13,31 @@ export const sendMessage = async (from, to, text) => {
     from,
     to,
     text,
+    image: image ? image : '',
+    status: status,
+
     createdAt: new Date(),
   };
+
   await firestore().doc(`chats/${id}`).set(message, {merge: true});
-  return {id, text, from, to};
+  return {id, text, from, to, image, status};
+};
+
+export const sendMessageWithImage = async (from, to, image) => {
+  const id =
+    from > to
+      ? from + '__' + to + '__' + uuid.v4()
+      : to + '__' + from + '__' + uuid.v4();
+  const message = {
+    id,
+    from,
+    to,
+    image,
+    createdAt: new Date(),
+  };
+
+  await firestore().doc(`chats/${id}`).set(message, {merge: true});
+  return {id, image, from, to};
 };
 
 export const getMessages = (user1, user2, setMessages) => {
@@ -33,11 +55,12 @@ export const getMessages = (user1, user2, setMessages) => {
         if (message?.id) {
           messages.push({
             _id: message.id,
-            text: message.text,
+            text: message?.text,
             date: message.createdAt,
             createdAt: chatFormat(message.createdAt, 'HH:mm A'),
             to: message.to,
             from: message.from,
+            image: message.image,
           });
         }
       });

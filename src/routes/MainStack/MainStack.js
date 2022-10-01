@@ -25,7 +25,7 @@ const MainStack = () => {
         tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: '#fff',
-          height: verticalScale(40),
+          height: verticalScale(50),
           paddingHorizontal: scale(30),
         },
         tabBarIcon: ({focused, size, color}) => {

@@ -22,20 +22,41 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Divider} from 'react-native-elements';
 import {ChatBody} from '../../../components/ChatBody';
 import CustomButton from '../../../components/CustomButton';
-import {sendMessage} from '../../../services/chats';
-import {updateLastMessage} from '../../../services/request';
+import {sendMessage, sendMessageWithImage} from '../../../services/chats';
+import {
+  updateLastMessage,
+  updateLastMessagewithImage,
+} from '../../../services/request';
+import AddDocuments from './molecules/AddDocuments';
+import {uploadImage} from '../../../services/FirebaseAuth';
 
 const Chat = ({navigation, route}) => {
   const [textMessage, setTextMessage] = useState([]);
   const [settingModal, setSettingModal] = useState(false);
+  const [documentsModal, setDocumentsModal] = useState(false);
+  const [image, setImage] = useState('');
+  const [status, setStatus] = useState(false);
 
-  console.log('RoutesData', route?.params);
+  console.log('RoutesData', image);
 
-  const onSend = async messages => {
+  // const UploadImageData = async image => {
+  //   console.log('Resdata', res);
+  // };
+
+  const onSend = async result => {
+    console.log('Resimage', result);
+    let imgResponse = '';
+    if (result) {
+      imgResponse = await uploadImage(result.uri, route.params?.authId);
+      console.log('imageRes', imgResponse);
+    }
+
     const messageData = await sendMessage(
       route.params?.authId,
       route?.params?.otherUserId,
-      messages,
+      textMessage ? textMessage : '',
+      imgResponse ? imgResponse : '',
+      route?.params?.SeenStatus ? !status : status,
     );
 
     updateLastMessage(
@@ -45,6 +66,7 @@ const Chat = ({navigation, route}) => {
     );
 
     setTextMessage('');
+    setImage('');
   };
 
   return (
@@ -60,29 +82,7 @@ const Chat = ({navigation, route}) => {
           }}
         />
 
-        <View style={styles.Padding}>
-          {/* <ProfileNav
-            RightSide={() => (
-              <TouchableOpacity
-                activeOpacity={0.6}
-                style={{ alignItems: "flex-end", width: "100%" }}
-              >
-                <Feather
-                  name="plus"
-                  size={moderateScale(25)}
-                  color={colors.black}
-                />
-              </TouchableOpacity>
-            )}
-          />
-          <CustomText
-            label="Chandler"
-            fontFamily="bold"
-            fontSize={verticalScale(15)}
-            marginLeft={verticalScale(5)}
-          /> */}
-        </View>
-        <Spacer height={verticalScale(8)} />
+        <Spacer height={verticalScale(1)} />
         <View style={styles.innerMainContainer}>
           <ChatBody
             authId={route.params?.authId}
@@ -91,26 +91,29 @@ const Chat = ({navigation, route}) => {
         </View>
 
         <View style={styles.textInputContainer}>
-          <View style={styles.addContainer}>
-            <TouchableOpacity activeOpacity={0.6}>
-              <Feather
-                name="plus"
-                size={moderateScale(18)}
-                color={colors.white}
-              />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => {
+              setDocumentsModal(true);
+            }}
+            style={styles.addContainer}>
+            <Feather
+              name="plus"
+              size={moderateScale(18)}
+              color={colors.white}
+            />
+          </TouchableOpacity>
           <View style={{width: verticalScale(20)}} />
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <View style={styles.textInputContainer1}>
               <TextInput
                 placeholder="message"
+                multiline={true}
                 placeholderTextColor="#667085"
                 style={{
                   fontSize: verticalScale(12),
                   width: '90%',
                   color: colors.black,
-                  paddingHorizontal: verticalScale(10),
                 }}
                 value={textMessage}
                 onChangeText={value => setTextMessage(value)}
@@ -127,7 +130,7 @@ const Chat = ({navigation, route}) => {
             {textMessage ? (
               <TouchableOpacity
                 onPress={() => {
-                  onSend(textMessage);
+                  onSend();
                 }}
                 activeOpacity={0.6}>
                 <Feather
@@ -204,6 +207,14 @@ const Chat = ({navigation, route}) => {
 
         {/* <SettingModal  settingModal={settingModal}setSettingModal={setSettingModal}/> */}
       </View>
+
+      <AddDocuments
+        image={image}
+        setImage={setImage}
+        onSend={onSend}
+        documentsModal={documentsModal}
+        setDocumentsModal={setDocumentsModal}
+      />
     </SafeAreaView>
   );
 };

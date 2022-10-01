@@ -62,3 +62,19 @@ export const updateLastMessage = async (from, to, lastMessage) => {
     console.log('updateLastMessage', error);
   }
 };
+
+export const updateLastMessagewithImage = async (from, to, lastMessage) => {
+  console.log('fromLastMessage', from);
+  const id = from > to ? from + '__' + to : to + '__' + from;
+  try {
+    await firestore().doc(`request/${id}`).set(
+      {
+        date: new Date(),
+        lastMessage,
+      },
+      {merge: true},
+    );
+  } catch (error) {
+    console.log('updateLastMessage', error);
+  }
+};

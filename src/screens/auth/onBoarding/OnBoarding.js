@@ -54,10 +54,8 @@ const OnBoardingData = [
     // backgroundColor: "#59b2ab",
   },
 ];
-
 const OnBoarding = ({navigation}) => {
   const [page, setPage] = useState(0);
-
   const ref = useRef(null);
   const [isAuth, setIsAuth] = useState(true);
   useEffect(() => {
@@ -72,7 +70,6 @@ const OnBoarding = ({navigation}) => {
       setIsAuth(true);
     })();
   }, []);
-
   const moveForward = () => {
     if (page + 1 <= 2) {
       ref?.current?.goToSlide(page + 1);
@@ -81,7 +78,6 @@ const OnBoarding = ({navigation}) => {
       //   navigation.navigate("Registration");
     }
   };
-
   return isAuth ? (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       {/* <OnBoardContainer/> */}
@@ -118,7 +114,6 @@ const OnBoarding = ({navigation}) => {
                     style={page == 1 ? styles.dotactive2 : styles.dotInactive}
                   />
                 )}
-
                 <View
                   style={page == 2 ? styles.dotactive3 : styles.dotInactive}
                 />
@@ -174,7 +169,6 @@ const OnBoarding = ({navigation}) => {
                   marginTop: verticalScale(20),
                   width: '100%',
                   alignItems: 'center',
-                  // backgroundColor:"red"
                 }}>
                 {/* <CustomButton
                   title="Next"

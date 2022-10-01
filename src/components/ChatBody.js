@@ -1,7 +1,13 @@
-import {StyleSheet, View, FlatList, Image, Te} from 'react-native';
+import {StyleSheet, View, FlatList, Image, Text} from 'react-native';
 import React, {useState, useEffect} from 'react';
 
-import {scale, ScaledSheet, verticalScale} from 'react-native-size-matters';
+import {
+  moderateScale,
+  ms,
+  scale,
+  ScaledSheet,
+  verticalScale,
+} from 'react-native-size-matters';
 import CustomText from './CustomText';
 // import CustomText from "../CustomText";
 // import CustomText from "./CustomText";
@@ -14,6 +20,8 @@ import icons from '../../assets/icons';
 import CustomImage from './CustomImage';
 import {Spacer} from './Spacer';
 import {getMessages} from '../services/chats';
+import Component from './FastImage';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 // import colors from "../../Utils/colors";
 // import { getMessages } from "../Services/chats";
 export const ChatBody = ({
@@ -30,32 +38,84 @@ export const ChatBody = ({
     return () => messageSubscriber();
   }, [authId, otherId]);
 
+  console.log('AllMessage');
+
   const renderMessages = ({item: message}) => {
     const isUser = message?.from == authId;
+    console.log('ImageItem', message?.image);
     return (
-      <View style={{padding: 5, flex: 1}}>
-        <View style={{paddingBottom: verticalScale(20)}}>
+      <View
+        style={{
+          padding: 7,
+          flex: 1,
+        }}>
+        <View style={{paddingBottom: verticalScale(15)}}>
           <CustomText label="January, 21" textStyle={styles.timerText} />
         </View>
 
         {isUser ? (
-          <View style={styles.message1}>
-            <View>
-              <CustomText
-                label={message.text}
-                textStyle={{...styles.messageText, color: colors.white}}
-                textAlign={'justify'}
-              />
-            </View>
-            <View
-              style={{
-                alignSelf: 'flex-end',
-              }}>
-              <CustomText
-                label={message.createdAt}
-                textStyle={{...styles.timerText1, color: colors.white}}
-              />
-            </View>
+          <View>
+            {message.text == '' ? (
+              <></>
+            ) : (
+              <View>
+                <View style={styles.message1}>
+                  <View>
+                    <CustomText
+                      label={message.text}
+                      textStyle={{...styles.messageText, color: colors.white}}
+                      textAlign={'justify'}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      alignSelf: 'flex-end',
+                    }}>
+                    <CustomText
+                      label={message.createdAt}
+                      textStyle={{...styles.timerText1, color: colors.white}}
+                    />
+                  </View>
+                </View>
+              </View>
+            )}
+
+            {message.image == '' ? (
+              <></>
+            ) : (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}>
+                <View />
+                <View style={{width: 200, flexDirection: 'row'}}>
+                  <Text
+                    style={[
+                      styles.timerText1,
+                      {
+                        alignSelf: 'flex-end',
+                      },
+                    ]}>
+                    {message.createdAt}
+                  </Text>
+
+                  {/* <CustomText
+                    label={message.createdAt}
+                    alignSelf="flex-end"
+                    textStyle={{...styles.timerText1, color: colors.gr}}
+                  /> */}
+                  <View style={styles.imgGallery}>
+                    <Component
+                      uri={Math.random()}
+                      style={styles.imConatiner}
+                      source={{uri: message?.image}}
+                    />
+                  </View>
+                </View>
+              </View>
+            )}
           </View>
         ) : (
           <View
@@ -91,62 +151,128 @@ export const ChatBody = ({
                 />
               </View>
             </View>
-            <View style={{flex: 1, height: '100%', flexDirection: 'row'}}>
-              <View style={styles.message2}>
-                {/* <CustomText label={item.mess} textStyle={styles.messageText} timer={'10:50'} /> */}
+            <View
+              style={{
+                flex: 1,
+                height: '100%',
+                flexDirection: 'row',
+              }}>
+              {message.text == '' ? (
+                <></>
+              ) : (
+                <View style={styles.message2}>
+                  {/* <CustomText label={item.mess} textStyle={styles.messageText} timer={'10:50'} /> */}
 
-                {/* Testing Extra */}
-                <View>
-                  <CustomText
-                    label={message.text}
-                    textStyle={styles.messageText}
-                    textAlign={'justify'}
-                  />
+                  {/* Testing Extra */}
+                  <View>
+                    <CustomText
+                      label={message.text}
+                      textStyle={styles.messageText}
+                      textAlign={'justify'}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      alignSelf: 'flex-end',
+                    }}>
+                    <CustomText
+                      label={message.createdAt}
+                      textStyle={styles.timerText1}
+                    />
+                  </View>
                 </View>
+              )}
+
+              {message?.image == '' ? (
+                <></>
+              ) : (
                 <View
                   style={{
-                    alignSelf: 'flex-end',
+                    flexDirection: 'row',
+                    width: '100%',
                   }}>
-                  <CustomText
-                    label={message.createdAt}
-                    textStyle={styles.timerText1}
-                  />
+                  <View
+                    style={{
+                      width: 200,
+                      flexDirection: 'row',
+
+                      shadowColor: '#e9ecef',
+                      shadowOffset: {width: 0, height: 2},
+                      shadowOpacity: 5,
+                      shadowRadius: 3,
+                      elevation: 5,
+                    }}>
+                    <View style={styles.imgReciver}>
+                      <Component
+                        uri={Math.random()}
+                        style={styles.imConatiner}
+                        source={{uri: message?.image}}
+                      />
+                    </View>
+                    <View style={{justifyContent: 'space-between'}} />
+
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        marginLeft: scale(10),
+                        height: '80%',
+                      }}>
+                      <CustomImage
+                        resizeMode={'contain'}
+                        src={icons.orangeTickReadIcon}
+                        height={15}
+                        width={15}
+                      />
+                    </View>
+
+                    <Text
+                      style={[
+                        styles.timerText1,
+                        {
+                          alignSelf: 'flex-end',
+                          marginLeft: -20,
+                        },
+                      ]}>
+                      {message.createdAt}
+                    </Text>
+                  </View>
                 </View>
-              </View>
+              )}
+
               <View style={{justifyContent: 'center', marginLeft: scale(10)}}>
-                <CustomImage
+                {/* <CustomImage
                   src={icons.orangeTickReadIcon}
                   height={15}
                   width={15}
+                /> */}
+                {/* <Ionicons
+                  name="ios-checkmark"
+                  size={moderateScale(20)}
+                  color={colors.primary}
+                /> */}
+                <Ionicons
+                  name="ios-checkmark-done-outline"
+                  size={moderateScale(20)}
+                  color={colors.orange}
                 />
               </View>
             </View>
-            {/* <Text>cdjnbcjd</Text> */}
           </View>
         )}
-
-        {/* <Spacer height={verticalScale(20)} /> */}
       </View>
     );
   };
-
-  //   <View key={index} style={{ padding: 5 }}>
-  //         <View style={isUser ? styles.message1 : styles.message2}>
-  //           <CustomText label={message.text} textStyle={styles.messageText} />
-  //         </View>
-  //         <CustomText
-  //           label={message.createdAt}
-  //           textStyle={isUser ? styles.timerText : styles.timerText1}
-  //         />
-  //       </View>
   return (
-    <FlatList
-      data={messages}
-      renderItem={renderMessages}
-      style={styles.chat}
-      keyExtractor={item => item._id}
-      showsVerticalScrollIndicator={false}
-    />
+    <View style={{flex: 1, paddingBottom: 60}}>
+      <FlatList
+        data={messages}
+        renderItem={renderMessages}
+        style={styles.chat}
+        // initialScrollIndex={messages.length - 1}
+        keyExtractor={item => item._id}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
   );
 };
 
@@ -273,19 +399,13 @@ const styles = ScaledSheet.create({
     borderBottomLeftRadius: verticalScale(2),
     borderTopLeftRadius: verticalScale(15),
     borderBottomRightRadius: verticalScale(22),
-    // borderRadius: 20,
-    // flexDirection: "row",
-    // alignItems: "center",
+
     shadowColor: colors.gray,
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 5,
     shadowRadius: 3,
     elevation: 5,
-    // backgroundColor: "red",
-    // display:"flex",
-    // flexWrap: "wrap",
 
-    // width:"100%"
     maxWidth: '85%',
     // flexWrap:"wrap"
   },
@@ -293,5 +413,43 @@ const styles = ScaledSheet.create({
     fontSize: verticalScale(12),
     color: colors.black,
     fontFamily: 'ProximaNova-Regular',
+  },
+  imgGallery: {
+    width: '70%',
+    height: verticalScale(170),
+    backgroundColor: colors.primary,
+    overflow: 'hidden',
+    padding: 5,
+
+    borderRadius: 30,
+
+    shadowColor: colors.gray,
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 10,
+    shadowRadius: 3,
+    elevation: 5,
+    // backgroundColor: "red",
+    // display:"flex",
+    // flexWrap: "wrap",
+
+    // width:"100%"
+  },
+  imConatiner: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 25,
+  },
+  imgText: {
+    alignSelf: 'flex-end',
+    width: '100%',
+  },
+  imgReciver: {
+    width: '70%',
+    height: verticalScale(170),
+    backgroundColor: 'white',
+    overflow: 'hidden',
+    padding: 5,
+
+    borderRadius: 30,
   },
 });
