@@ -146,19 +146,19 @@ const Signup = ({navigation}) => {
         showPlayServicesUpdateDialog: true,
       });
       const userInfo = await GoogleSignin.signIn();
-      console.log('User Info --> ', userInfo);
+      console.log('User Info --> ', JSON.stringify(userInfo));
       // setUserInfo(userInfo);
     } catch (error) {
-      // console.log('Message', JSON.stringify(error));
-      // if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-      //   alert('User Cancelled the Login Flow');
-      // } else if (error.code === statusCodes.IN_PROGRESS) {
-      //   alert('Signing In');
-      // } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-      //   alert('Play Services Not Available or Outdated');
-      // } else {
-      //   alert(error.message);
-      // }
+      console.log('Message', JSON.stringify(error));
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        alert('User Cancelled the Login Flow');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        alert('Signing In');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        alert('Play Services Not Available or Outdated');
+      } else {
+        alert(error.message);
+      }
     }
 
     // setGettingLoginStatus(false);

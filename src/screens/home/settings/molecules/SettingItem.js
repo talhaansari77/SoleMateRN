@@ -4,12 +4,13 @@ import { colors } from "../../../../utils/Colors";
 import CustomText from "../../../../components/CustomText";
 import { scale, verticalScale } from "react-native-size-matters";
 
-const SettingItem = ({ name, icon, count, setCount, index, coming }) => {
+const SettingItem = ({ name, icon, count, setCount, index, coming,onPress }) => {
   return (
     <TouchableOpacity
       activeOpacity={name == "Video settings" ? 1 : 0.6}
       onPress={() => {
         // setIsSelected(!selected);
+        onPress();
         setCount(index);
       }}
     >

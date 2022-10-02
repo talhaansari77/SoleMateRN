@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import AuthStack from './AuthStack';
@@ -9,6 +9,7 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 
 const RootNavigator = () => {
+  
   const MyTheme = {
     ...DefaultTheme,
     colors: {
@@ -16,6 +17,7 @@ const RootNavigator = () => {
       background: '#ffff',
     },
   };
+ 
   // const handleDynamicLink = link => {
   //   // Handle dynamic link inside your own application
   //   console.log('this is DynamicLink-1:🖐', link);
@@ -39,7 +41,6 @@ const RootNavigator = () => {
     <NavigationContainer theme={MyTheme}>
       <Stack.Navigator
         screenOptions={{headerShown: false}}
-        // initialRouteName="SettingStack"
       >
         <Stack.Screen name="AuthStack" component={AuthStack} />
 

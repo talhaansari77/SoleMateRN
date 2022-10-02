@@ -72,13 +72,15 @@ const expectation = [
   {id: 7, title: 'Drinking', label: "5'6", icon: icons.drink},
   {id: 8, title: 'Smoking', label: 'English', icon: icons.smoking},
 ];
-const Profile = ({navigation, actions = false, getApp = false}) => {
+const Profile = ({navigation,route, actions = false, getApp = false}) => {
   const [authID, setAuthID] = useState('');
   const [authData, setAuthData] = useState([]);
   const [loading, setLoading] = useState(false);
 
   console.log('authData', authData?.images?.[0]);
-
+  console.log('Id From Link', route.params?.id);
+  
+ 
   var a = moment();
   var b = moment(authData.dob, 'YYYY');
   var age = a.diff(b, 'years');
