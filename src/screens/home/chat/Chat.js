@@ -80,6 +80,8 @@ const Chat = ({navigation, route}) => {
       route?.params?.otherUserId,
       messageData,
     );
+    
+
 
     setTextMessage('');
     setImage('');

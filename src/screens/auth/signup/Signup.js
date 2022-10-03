@@ -1,32 +1,32 @@
-import {View, Text} from 'react-native';
-import React, {useState, useEffect} from 'react';
+import { View, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import commonStyles from '../../../utils/CommonStyles';
 import SignupWithCon from './SignupWithCon';
 import CustomTextInput from '../../../components/CustomTextInput';
-import {Spacer} from '../../../components/Spacer';
-import {verticalScale, moderateScale} from 'react-native-size-matters';
+import { Spacer } from '../../../components/Spacer';
+import { verticalScale, moderateScale } from 'react-native-size-matters';
 import CustomText from '../../../components/CustomText';
 import ConditionPassCon from './molecules/ConditionPassCon';
 import CustomButton from '../../../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {colors} from '../../../utils/Colors';
+import { colors } from '../../../utils/Colors';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-
+import { LoginManager, AccessToken } from 'react-native-fbsdk';
 import {
   validateEmail,
   checkCharPassword,
   checkNum,
   checkSymbol,
 } from '../../../utils/Email_Password_Validation';
-import {ValidateInput} from './UseSignup';
-import {styles} from './styles';
-import {color} from 'react-native-elements/dist/helpers';
+import { ValidateInput } from './UseSignup';
+import { styles } from './styles';
+import { color } from 'react-native-elements/dist/helpers';
 // import {SignupEmailPassword} from '../../../services/FirebaseAuth';
 import auth from '@react-native-firebase/auth';
-const Signup = ({navigation}) => {
+const Signup = ({ navigation }) => {
   const [eyeClick, setEyeClick] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -65,13 +65,13 @@ const Signup = ({navigation}) => {
       color: !password
         ? colors.gray
         : !checkCharPassword(password)
-        ? colors.red
-        : colors.gray,
+          ? colors.red
+          : colors.gray,
       color2: !password
         ? colors.gray
         : password.search(/[!/>@<"#$%&()¥|?>|='+*:~^;]/) == -1
-        ? colors.red
-        : colors.gray,
+          ? colors.red
+          : colors.gray,
     },
     {
       id: 2,
@@ -81,8 +81,8 @@ const Signup = ({navigation}) => {
       color: !password
         ? colors.gray
         : !checkNum(password)
-        ? colors.red
-        : colors.gray,
+          ? colors.red
+          : colors.gray,
       onGetPassword: () => {
         getPassword();
       },
@@ -123,7 +123,7 @@ const Signup = ({navigation}) => {
           setLoading(false);
           navigation.reset({
             index: 0,
-            routes: [{name: 'EditProfile'}],
+            routes: [{ name: 'EditProfile' }],
           });
         }
       } catch (error) {
@@ -136,6 +136,51 @@ const Signup = ({navigation}) => {
       }
     }
   };
+
+  async function onFacebookButtonPress() {
+    // LoginManager.logInWithPermissions(["email", "public_profile", "user_friends"]).then(
+    //   function(result) {
+    //     if (result.isCancelled) {
+    //       alert("Login cancelled");
+    //     } else {
+    //       alert(
+    //         "Login success with permissions: " +
+    //           result.grantedPermissions.toString()
+    //       );
+    //     }
+    //   },
+    //   function(error) {
+    //     alert("Login fail with error: " + error);
+    //     console.log("Login fail with error: " + error);
+    //   }
+    // );
+    console.log('FacebookButtonPressed')
+    // Attempt login with permissions
+    try {
+      const result = await LoginManager.logInWithPermissions(["public_profile", "email", "user_friends"]);
+
+      if (result.isCancelled) {
+        alert('User cancelled the login process');
+      }
+
+      // Once signed in, get the users AccesToken
+      const data = await AccessToken.getCurrentAccessToken();
+
+      if (!data) {
+        alert('Something went wrong obtaining access token');
+      }
+
+      // Create a Firebase credential with the AccessToken
+      const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+
+      // Sign-in the user with the credential
+      const userInfo = auth().signInWithCredential(facebookCredential);
+      alert('FB User Info --> ', JSON.stringify(userInfo));
+    } catch (error) {
+      alert('Error', error);
+    }
+
+  }
   const handleGoogleSignup = async () => {
     try {
       await GoogleSignin.hasPlayServices({
@@ -143,8 +188,22 @@ const Signup = ({navigation}) => {
         // Always resolves to true on iOS
         showPlayServicesUpdateDialog: true,
       });
-      const userInfo = await GoogleSignin.signIn();
-      console.log('User Info --> ', JSON.stringify(userInfo));
+      // Get the users ID token
+      const { idToken } = await GoogleSignin.signIn();
+
+      // Create a Google credential with the token
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+      // Sign-in the user with the credential
+      auth().signInWithCredential(googleCredential).then((userInfo) => {
+        console.log('UserInfo --->', userInfo.user)
+        if (!userInfo.additionalUserInfo.isNewUser) {
+          alert("User Already Exist")
+        } else if (userInfo.user) {
+          navigation.navigate("MainStack", { screen: "Profile" })
+        }
+      })
+
       // setUserInfo(userInfo);
     } catch (error) {
       console.log('Message', JSON.stringify(error));
@@ -159,23 +218,7 @@ const Signup = ({navigation}) => {
       }
     }
 
-    // setGettingLoginStatus(false);
-    // try {
-    //   await GoogleSignin.hasPlayServices();
-    //   const userInfo = await GoogleSignin.signIn();
-    //   console.log('UserInfo', userInfo);
-    //   // this.setState({userInfo});
-    // } catch (error) {
-    //   if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-    //     // user cancelled the login flow
-    //   } else if (error.code === statusCodes.IN_PROGRESS) {
-    //     // operation (e.g. sign in) is in progress already
-    //   } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-    //     // play services not available or outdated
-    //   } else {
-    //     // some other error happened
-    //   }
-    // }
+
   };
   return (
     // <></>
@@ -198,6 +241,7 @@ const Signup = ({navigation}) => {
         onGoogle={() => {
           handleGoogleSignup();
         }}
+        onFacebook={() => { onFacebookButtonPress() }}
       />
       <Spacer height={verticalScale(20)} />
       <CustomTextInput
@@ -207,7 +251,7 @@ const Signup = ({navigation}) => {
         error={submitError.emailError}
         onChangeText={em => {
           setEmail(em.trim());
-          setSubmitError({...submitError, emailError: ''});
+          setSubmitError({ ...submitError, emailError: '' });
         }}
       />
       <Spacer height={verticalScale(15)} />
@@ -217,7 +261,7 @@ const Signup = ({navigation}) => {
         error={submitError.passwordError}
         onChangeText={pass => {
           setPassword(pass);
-          setSubmitError({...submitError, passwordError: ''});
+          setSubmitError({ ...submitError, passwordError: '' });
         }}
         password
         secureTextEntry={eyeClick}
@@ -232,7 +276,7 @@ const Signup = ({navigation}) => {
         error={submitError.confPasswordError}
         onChangeText={conpass => {
           setConfirmPass(conpass);
-          setSubmitError({...submitError, confPasswordError: ''});
+          setSubmitError({ ...submitError, confPasswordError: '' });
         }}
         password
         secureTextEntry={eyeClick}
