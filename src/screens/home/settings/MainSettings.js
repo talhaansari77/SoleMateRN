@@ -29,6 +29,8 @@ function MainSettings({navigation}) {
       icon: icons.logIcon,
       onPress: async () => {
         await AsyncStorage.removeItem('userAuth');
+        await AsyncStorage.removeItem('fcmToken');
+
 
         await signout();
         navigation.reset({

@@ -30,6 +30,8 @@ import PhotoContainer from './molecules/PhotoContainer';
 import {getAuthId, saveUser, uploadImage} from '../../../services/FirebaseAuth';
 import PictureBox from './molecules/PictureBox';
 import Loader from '../../../utils/Loader';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getCurrentFCMToken } from '../../../utils/PushNotification';
 
 const genders = [
   {id: 1, name: 'Male'},
@@ -70,8 +72,11 @@ const EditProfile = ({navigation}) => {
   const [personalityModal, setPersonalityModal] = useState(false);
   const [editLocation, setEditLocation] = useState('');
   const [authID, setAuthID] = useState('');
+  const [fcmToken, setFcmToken] = useState("")
 
-  console.log('imagesUri', images);
+  console.log('imagesUri', fcmToken);
+  console.log('imagesUri', birthday);
+
 
   const questions = [
     {id: 1, question: 'Want Kids', onValue: setWhatKids},
@@ -86,6 +91,20 @@ const EditProfile = ({navigation}) => {
   useEffect(() => {
     getCurrentID();
   }, []);
+  useEffect(() => {
+    getCurrentToken()
+    
+  
+  }, [])
+
+  const getCurrentToken=async()=>{
+
+    let fcmToken = await AsyncStorage.getItem('fcmToken');
+
+    setFcmToken(fcmToken)
+
+  }
+  
 
   const getCurrentID = async () => {
     await getAuthId().then(id => {
@@ -130,6 +149,7 @@ const EditProfile = ({navigation}) => {
       height: feetHeight,
       employment: employment,
       occupation: occupation,
+      fcmToken:fcmToken,
       religion: religion,
       religiousity: religiousity,
       prayerLevel: prayerLevel,
