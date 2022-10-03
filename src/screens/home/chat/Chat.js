@@ -51,6 +51,8 @@ import {uploadImage} from '../../../services/FirebaseAuth';
 import axios from 'axios';
 import {getCurrentFCMToken} from '../../../utils/PushNotification';
 
+import { NotificationSender } from '../../../services/SendNotification';
+
 const Chat = ({navigation, route}) => {
   const [textMessage, setTextMessage] = useState([]);
   const [settingModal, setSettingModal] = useState(false);
@@ -63,23 +65,22 @@ const Chat = ({navigation, route}) => {
   const [reactionModal, setReactionModal] = useState(false);
   const [reactionObject, setReactionObject] = useState({});
   const [otherUserData, setOtherUserData] = useState({});
-  console.log('OtherUserDat', otherUserData?.fcmToken);
-  const NotificationData = {
-    method: 'POST',
-    url: 'https://fcm.googleapis.com/fcm/send',
-    headers: {
-      Authorization:
-        'key=AAAAntfCcWI:APA91bGvB4v_-ERQEr5c9uAUbgB4OO5eqzGklQtRDSy0nuBCl488yFVTM0VqfjJKVfg21ABmip856AK_R9x8rYqvTq3AMowRdEqdYj9wrCDajnNUEkpeN0lpVo-lEptGSZ3WAqyIPLV_',
-      'Content-Type': 'application/json',
-    },
-    data: {
-      registration_ids: [
-        otherUserData?.fcmToken
-      ],
-      notification: {body: textMessage, title: otherUserData?.firstName},
-    },
-  };
+  const [getAuthData, setGetAuthData] = useState({});
+  // console.log('OtherUserDat', otherUserData?.fcmToken);
 
+  // const NotificationData = {
+  //   method: 'POST',
+  //   url: 'https://fcm.googleapis.com/fcm/send',
+  //   headers: {
+  //     Authorization:
+  //       'key=AAAAntfCcWI:APA91bGvB4v_-ERQEr5c9uAUbgB4OO5eqzGklQtRDSy0nuBCl488yFVTM0VqfjJKVfg21ABmip856AK_R9x8rYqvTq3AMowRdEqdYj9wrCDajnNUEkpeN0lpVo-lEptGSZ3WAqyIPLV_',
+  //     'Content-Type': 'application/json',
+  //   },
+  //   data: {
+  //     registration_ids: [otherUserData?.fcmToken],
+  //     notification: {body: textMessage, title: getAuthData?.firstName},
+  //   },
+  // };
   useEffect(() => {
     getUserFcm();
   }, []);
@@ -87,9 +88,12 @@ const Chat = ({navigation, route}) => {
   const getUserFcm = async () => {
     getSpecificeUser(route?.params?.otherUserId).then(data => {
       setOtherUserData(data);
-
       console.log('ReactionObject', data);
+    });
 
+    getSpecificeUser(route?.params?.authId).then(data => {
+      setGetAuthData(data);
+      console.log('ReactionObject', data);
     });
   };
 
@@ -115,18 +119,14 @@ const Chat = ({navigation, route}) => {
       route?.params?.otherUserId,
       messageData,
     );
+
+    // fcmToken,message,title
+    NotificationSender(otherUserData?.fcmToken,textMessage,getAuthData?.firstName )
     setTextMessage('');
     setImage('');
     // Sending Notifications
     console.log('Sending Notifications');
-    axios
-      .request(NotificationData)
-      .then(function (response) {
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
+   
   };
 
   const saveReaction = async reaction => {
