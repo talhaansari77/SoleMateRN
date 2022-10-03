@@ -68,13 +68,14 @@ const Request = ({navigation}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <HeaderConatiner label="Request" />
-      <View>
+      <View style={{height:300,}}>
         <FlatList
           data={requestData?.request}
           keyExtractor={item => item.id}
           renderItem={RequestDetail}
         />
       </View>
+      
     </SafeAreaView>
   );
 };

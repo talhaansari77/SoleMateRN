@@ -1,4 +1,11 @@
-import {StyleSheet, View, FlatList, Image, Text} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Image,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
 
 import {
@@ -19,9 +26,11 @@ import commonStyles from '../utils/CommonStyles';
 import icons from '../../assets/icons';
 import CustomImage from './CustomImage';
 import {Spacer} from './Spacer';
-import {getMessages} from '../services/chats';
+import {getMessages, updateMessage} from '../services/chats';
 import Component from './FastImage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {getUserID} from 'react-native-fbsdk/lib/commonjs/FBAppEventsLogger';
+import {getAuthId} from '../services/FirebaseAuth';
 // import colors from "../../Utils/colors";
 // import { getMessages } from "../Services/chats";
 export const ChatBody = ({
@@ -30,19 +39,45 @@ export const ChatBody = ({
   messageText,
   authId,
   otherId,
+  reactionModal,
+  setReactionModal,
+  setReactionObject,
 }) => {
   const [messages, setMessages] = useState([]);
 
+  console.log('statusMessage', messages);
+
   useEffect(() => {
     const messageSubscriber = getMessages(otherId, authId, setMessages);
+
     return () => messageSubscriber();
   }, [authId, otherId]);
 
-  console.log('AllMessage');
+  useEffect(() => {
+    changeMessageStatus();
+  }, [authId, otherId]);
+
+  const changeMessageStatus = async () => {
+    const id = await getAuthId();
+
+    // item.to == authId ? item.from : item.to
+
+    // console.log("MessageId"
+    if (messages)
+      messages.map(async item => {
+        const isUser = item.from == authId;
+        if (!isUser) {
+          await updateMessage(item._id, {
+            status: true,
+          });
+        }
+      });
+
+    console.log('messageStatusUpdate');
+  };
 
   const renderMessages = ({item: message}) => {
     const isUser = message?.from == authId;
-    console.log('ImageItem', message?.image);
     return (
       <View
         style={{
@@ -59,7 +94,13 @@ export const ChatBody = ({
               <></>
             ) : (
               <View>
-                <View style={styles.message1}>
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onLongPress={() => {
+                    setReactionObject(message);
+                    setReactionModal(true);
+                  }}
+                  style={styles.message1}>
                   <View>
                     <CustomText
                       label={message.text}
@@ -70,13 +111,58 @@ export const ChatBody = ({
                   <View
                     style={{
                       alignSelf: 'flex-end',
+                      flexDirection: 'row',
+                      alignItems: 'center',
                     }}>
                     <CustomText
                       label={message.createdAt}
                       textStyle={{...styles.timerText1, color: colors.white}}
                     />
+
+                    {/* <Text style={{alignSelf:"center"}}>c</Text> */}
+
+                    {/* <Ionicons
+                  name="ios-checkmark"
+                  size={moderateScale(20)}
+                  color={colors.primary}
+                /> */}
+                    <View style={{marginLeft: 5}}>
+                      <Ionicons
+                        name={
+                          message.status == true
+                            ? 'ios-checkmark-done-outline'
+                            : 'ios-checkmark'
+                        }
+                        size={moderateScale(15)}
+                        color={colors.white}
+                      />
+                    </View>
                   </View>
-                </View>
+                </TouchableOpacity>
+                {message.reaction ? (
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      alignSelf: 'flex-end',
+                      borderRadius: 100,
+                      marginTop: -10,
+                      width: 25,
+                      height: 25,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+
+                      shadowColor: colors.gray,
+                      shadowOffset: {width: 0, height: 2},
+                      shadowOpacity: 5,
+                      shadowRadius: 3,
+                      elevation: 5,
+                      marginRight: 5,
+                    }}>
+                    <Text>{message.reaction}</Text>
+                  </View>
+                ) : (
+                  <></>
+                )}
               </View>
             )}
 
@@ -106,13 +192,53 @@ export const ChatBody = ({
                     alignSelf="flex-end"
                     textStyle={{...styles.timerText1, color: colors.gr}}
                   /> */}
-                  <View style={styles.imgGallery}>
+                  <TouchableOpacity 
+                  activeOpacity={0.8}
+
+                  onLongPress={() => {
+                    setReactionObject(message);
+                    setReactionModal(true);
+                  }}
+
+                  style={styles.imgGallery}>
                     <Component
                       uri={Math.random()}
                       style={styles.imConatiner}
                       source={{uri: message?.image}}
                     />
-                  </View>
+
+
+                  </TouchableOpacity>
+
+
+{message.reaction ? (
+                    <View
+                      style={{
+                        backgroundColor: 'white',
+                        borderRadius: 100,
+                        marginTop: -15,
+                        width: 25,
+                        height: 25,
+                        // top:0,
+                        bottom:0,
+                        alignSelf:"flex-end",
+                        marginRight:40,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+
+                        shadowColor: colors.gray,
+                        shadowOffset: {width: 0, height: 2},
+                        shadowOpacity: 5,
+                        shadowRadius: 3,
+                        elevation: 5,
+                        // marginRight: 5,
+                        // marginLeft: 10,
+                      }}>
+                      <Text>{message.reaction}</Text>
+                    </View>
+                  ) : (
+                    <></>
+                  )}
                 </View>
               </View>
             )}
@@ -160,26 +286,52 @@ export const ChatBody = ({
               {message.text == '' ? (
                 <></>
               ) : (
-                <View style={styles.message2}>
-                  {/* <CustomText label={item.mess} textStyle={styles.messageText} timer={'10:50'} /> */}
+                <View>
+                  <View style={styles.message2}>
+                    {/* <CustomText label={item.mess} textStyle={styles.messageText} timer={'10:50'} /> */}
 
-                  {/* Testing Extra */}
-                  <View>
-                    <CustomText
-                      label={message.text}
-                      textStyle={styles.messageText}
-                      textAlign={'justify'}
-                    />
+                    {/* Testing Extra */}
+                    <View>
+                      <CustomText
+                        label={message.text}
+                        textStyle={styles.messageText}
+                        textAlign={'justify'}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        alignSelf: 'flex-end',
+                      }}>
+                      <CustomText
+                        label={message.createdAt}
+                        textStyle={styles.timerText1}
+                      />
+                    </View>
                   </View>
-                  <View
-                    style={{
-                      alignSelf: 'flex-end',
-                    }}>
-                    <CustomText
-                      label={message.createdAt}
-                      textStyle={styles.timerText1}
-                    />
-                  </View>
+                  {message.reaction ? (
+                    <View
+                      style={{
+                        backgroundColor: 'white',
+                        borderRadius: 100,
+                        marginTop: -15,
+                        width: 25,
+                        height: 25,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+
+                        shadowColor: colors.gray,
+                        shadowOffset: {width: 0, height: 2},
+                        shadowOpacity: 5,
+                        shadowRadius: 3,
+                        elevation: 5,
+                        marginRight: 5,
+                        marginLeft: 10,
+                      }}>
+                      <Text>{message.reaction}</Text>
+                    </View>
+                  ) : (
+                    <></>
+                  )}
                 </View>
               )}
 

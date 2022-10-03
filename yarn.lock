@@ -1401,6 +1401,14 @@
   resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-1.3.6.tgz#fa700318528db93f05144b1be4b691b9c1dd1abe"
   integrity sha512-pNJ8R9JMga6SXOw6wGVN0tjmE6vegwPmJBL45SEMX2fqTfAk2ykDnlJHodRpHpAgsv0DaI8qX76z3A+aqKSU0w==
 
+"@react-navigation/material-top-tabs@^6.2.4":
+  version "6.2.4"
+  resolved "https://registry.yarnpkg.com/@react-navigation/material-top-tabs/-/material-top-tabs-6.2.4.tgz#1db5a1bf32525e1c9dd8aa77cd549366034d4f77"
+  integrity sha512-Il9rPA3jXAFTPBzk88sjCbSRHRRrr1e6HFRx3G+ttSr6q5HQkasksQiEe28euouSwv8M7ChEbXnhNWIR+Sroqg==
+  dependencies:
+    color "^4.2.3"
+    warn-once "^0.1.0"
+
 "@react-navigation/native-stack@^6.9.0":
   version "6.9.0"
   resolved "https://registry.yarnpkg.com/@react-navigation/native-stack/-/native-stack-6.9.0.tgz#1e79e06da8b81f0368d3709aedca269947da3649"
@@ -6055,10 +6063,10 @@ react-native-modal@^13.0.1:
     prop-types "^15.6.2"
     react-native-animatable "1.3.3"
 
-react-native-pager-view@5.4.24:
-  version "5.4.24"
-  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-5.4.24.tgz#8626e757ddc55e41eca66d2f8a8a75aec54591ee"
-  integrity sha512-dRMB7i3B+mu4NCeIN6gqbR/kC/rr2wzqO0gisXDdJwJr78G24sWoTNpLEDFo3G8TFHY9nTMutVl5CUvkN2dp6g==
+react-native-pager-view@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-6.0.0.tgz#e3706da1bb7e55bcd2644d770d36c8dd14b48690"
+  integrity sha512-0qUMUmA/Lhv76F+fbCcYB+iuODH6Lp6E1EYlXw+GM3Ns3FaKFtBaVYXKQSfNhqnTUg9YEOY3HuX+ZMKBSHwNbA==
 
 react-native-ratings@8.0.4:
   version "8.0.4"
@@ -6130,6 +6138,11 @@ react-native-styled-components@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/react-native-styled-components/-/react-native-styled-components-2.1.0.tgz#355666b94d2f013197eb239823894964abd37634"
   integrity sha512-+BHBlDYeAsnrRajwmCkCpLlF18gK9RtA5cJxD32ilBTGBqpQAR5SPyibURPV+t5vSOEzFZsDGbVmNTSeYWx3Eg==
+
+react-native-tab-view@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-3.2.1.tgz#1da975203ef30996c412f9c2808bb81e12c3376f"
+  integrity sha512-/3htrnDJ8hXXO6M5tDKgGPan5NhiVG4oN6SH8LgQtbAO2y+YI104sjlbPOxhLUBpbj43tOQerUtJF7ENcHEPaw==
 
 react-native-uuid@^2.0.1:
   version "2.0.1"

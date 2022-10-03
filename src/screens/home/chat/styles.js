@@ -32,7 +32,6 @@ export const styles = ScaledSheet.create({
     borderWidth: 1,
     alignItems: 'center',
     paddingRight: 5,
-    paddingLeft: 5,
   },
   innerMainContainer: {
     flex: 1,

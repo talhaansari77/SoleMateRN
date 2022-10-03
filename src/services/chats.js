@@ -1,8 +1,9 @@
 import firestore from '@react-native-firebase/firestore';
 import uuid from 'react-native-uuid';
+import { reactionData } from '../utils/Data';
 import {chatFormat} from '../utils/Time';
 
-export const sendMessage = async (from, to, text, image, status) => {
+export const sendMessage = async (from, to, text, image, status,reaction) => {
   console.log('ImageData', status);
   const id =
     from > to
@@ -15,29 +16,17 @@ export const sendMessage = async (from, to, text, image, status) => {
     text,
     image: image ? image : '',
     status: status,
+    reaction:reaction?reaction:"",
 
     createdAt: new Date(),
   };
-
   await firestore().doc(`chats/${id}`).set(message, {merge: true});
   return {id, text, from, to, image, status};
 };
 
-export const sendMessageWithImage = async (from, to, image) => {
-  const id =
-    from > to
-      ? from + '__' + to + '__' + uuid.v4()
-      : to + '__' + from + '__' + uuid.v4();
-  const message = {
-    id,
-    from,
-    to,
-    image,
-    createdAt: new Date(),
-  };
+export const updateMessage = async (id,reactionData) => {
 
-  await firestore().doc(`chats/${id}`).set(message, {merge: true});
-  return {id, image, from, to};
+  await firestore().doc(`chats/${id}`).update(reactionData);
 };
 
 export const getMessages = (user1, user2, setMessages) => {
@@ -61,6 +50,8 @@ export const getMessages = (user1, user2, setMessages) => {
             to: message.to,
             from: message.from,
             image: message.image,
+            status:message.status,
+            reaction:message.reaction
           });
         }
       });

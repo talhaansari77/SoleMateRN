@@ -136,7 +136,6 @@ const Signup = ({navigation}) => {
       }
     }
   };
-
   const handleGoogleSignup = async () => {
     try {
       await GoogleSignin.hasPlayServices({

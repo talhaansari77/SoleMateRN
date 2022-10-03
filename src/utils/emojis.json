@@ -1,22 +1,5 @@
-//For new StoreKey
-//keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -storepass android -keypass android -keyalg RSA -validity 10000
-// "react-native-fbsdk-next": "^10.1.0",
-// specify the path with it
-// keytool -list -v -keystore ~/somefolder/mystore.keystore
-
-export const reactionData=[
-  "😀",
-  "😂",
-  "😘",
-  "❤️",
-  "😪",
-  "🤘🏼",
-  "😁",
-  "😅",
-
-
-]
-export const emojjisData = [
+{
+    "Smileys & Emotion": [
         {
             "char": "😀"
         },
@@ -510,7 +493,9 @@ export const emojjisData = [
         },
         {
             "char": "💤"
-        },
+        }
+    ],
+    "People & Body": [
         {
             "char": "👋"
         },
@@ -9207,7 +9192,9 @@ export const emojjisData = [
         },
         {
             "char": "👣"
-        },
+        }
+    ],
+    "Animals & Nature": [
         {
             "char": "🐵"
         },
@@ -9648,7 +9635,9 @@ export const emojjisData = [
         },
         {
             "char": "🍃"
-        },
+        }
+    ],
+    "Food & Drink": [
         {
             "char": "🍇"
         },
@@ -10041,7 +10030,9 @@ export const emojjisData = [
         },
         {
             "char": "🏺"
-        },
+        }
+    ],
+    "Travel & Places": [
         {
             "char": "🌍"
         },
@@ -10833,7 +10824,9 @@ export const emojjisData = [
         },
         {
             "char": "🌊"
-        },
+        }
+    ],
+    "Activities": [
         {
             "char": "🎃"
         },
@@ -11118,7 +11111,9 @@ export const emojjisData = [
         },
         {
             "char": "🪢"
-        },
+        }
+    ],
+    "Objects": [
         {
             "char": "👓"
         },
@@ -12015,7 +12010,9 @@ export const emojjisData = [
         },
         {
             "char": "🪧"
-        },
+        }
+    ],
+    "Symbols": [
         {
             "char": "🏧"
         },
@@ -12918,7 +12915,9 @@ export const emojjisData = [
         },
         {
             "char": "🔲"
-        },
+        }
+    ],
+    "Flags": [
         {
             "char": "🏁"
         },
@@ -13744,4 +13743,5 @@ export const emojjisData = [
         {
             "char": "🏴󠁧󠁢󠁷󠁬󠁳󠁿"
         }
-]
+    ]
+}
