@@ -83,7 +83,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
   const [otherID, setOtherId] = useState(route.params?.id);
 
   // console.log('authData', authData);
-  // console.log('Id From Link', route.params?.id);
+  console.log('Id From Link', route.params?.id);
 
   var a = moment();
   var b = moment(authData?.dob, 'YYYY');

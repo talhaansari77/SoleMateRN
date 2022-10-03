@@ -12,21 +12,25 @@ import {
 import React, {useState, useEffect} from 'react';
 import ProfileNav from '../profile/molecules/ProfileNav';
 import commonStyles from '../../../utils/CommonStyles';
-import { styles } from './styles';
+import {styles} from './styles';
 import CustomText from '../../../components/CustomText';
-import { verticalScale, moderateScale } from 'react-native-size-matters';
-import { Spacer } from '../../../components/Spacer';
-import { colors } from '../../../utils/Colors';
+import {verticalScale, moderateScale} from 'react-native-size-matters';
+import {Spacer} from '../../../components/Spacer';
+import {colors} from '../../../utils/Colors';
 import HeaderConatiner from './request/Molecules/HeaderConatiner';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { Divider } from 'react-native-elements';
-import { ChatBody } from '../../../components/ChatBody';
+import {Divider} from 'react-native-elements';
+import {ChatBody} from '../../../components/ChatBody';
 import CustomButton from '../../../components/CustomButton';
-import { sendMessage, sendMessageWithImage,updateMessage } from '../../../services/chats';
+import {
+  sendMessage,
+  sendMessageWithImage,
+  updateMessage,
+} from '../../../services/chats';
 import {
   updateLastMessage,
   updateLastMessagewithImage,
@@ -40,14 +44,14 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 // import emojis from '../../../utils/emojis.json';
 import {emojjisData} from '../../../utils/Data';
 import AddReaction from './molecules/AddReaction';
+import {getSpecificeUser} from '../../../services/FirebaseAuth';
 
 const Tab = createMaterialTopTabNavigator();
-import { uploadImage } from '../../../services/FirebaseAuth';
-import axios from "axios";
-import { getCurrentFCMToken } from '../../../utils/PushNotification';
+import {uploadImage} from '../../../services/FirebaseAuth';
+import axios from 'axios';
+import {getCurrentFCMToken} from '../../../utils/PushNotification';
 
-
-const Chat = ({ navigation, route }) => {
+const Chat = ({navigation, route}) => {
   const [textMessage, setTextMessage] = useState([]);
   const [settingModal, setSettingModal] = useState(false);
   const [documentsModal, setDocumentsModal] = useState(false);
@@ -55,28 +59,41 @@ const Chat = ({ navigation, route }) => {
   const [status, setStatus] = useState(false);
   const [showEmojis, setShowEmojis] = useState(false);
   const [emoji, setEmoji] = useState('');
-  const [reaction, setReaction] = useState('')
-  const [reactionModal,setReactionModal] = useState(false)
-  const [reactionObject, setReactionObject] = useState({})
-  // Send Notifications to YourSelf
-  // const myAppToken = getCurrentFCMToken();
-  // NotificationData
+  const [reaction, setReaction] = useState('');
+  const [reactionModal, setReactionModal] = useState(false);
+  const [reactionObject, setReactionObject] = useState({});
+  const [otherUserData, setOtherUserData] = useState({});
+  console.log('OtherUserDat', otherUserData?.fcmToken);
   const NotificationData = {
     method: 'POST',
     url: 'https://fcm.googleapis.com/fcm/send',
     headers: {
-      Authorization: 'key=AAAAntfCcWI:APA91bGvB4v_-ERQEr5c9uAUbgB4OO5eqzGklQtRDSy0nuBCl488yFVTM0VqfjJKVfg21ABmip856AK_R9x8rYqvTq3AMowRdEqdYj9wrCDajnNUEkpeN0lpVo-lEptGSZ3WAqyIPLV_',
-      'Content-Type': 'application/json'
+      Authorization:
+        'key=AAAAntfCcWI:APA91bGvB4v_-ERQEr5c9uAUbgB4OO5eqzGklQtRDSy0nuBCl488yFVTM0VqfjJKVfg21ABmip856AK_R9x8rYqvTq3AMowRdEqdYj9wrCDajnNUEkpeN0lpVo-lEptGSZ3WAqyIPLV_',
+      'Content-Type': 'application/json',
     },
     data: {
       registration_ids: [
-        'fvFIGkPqQPiWgI-VT-CJjv:APA91bHbN0ZnAvdI0cN8vlZxd-q44UPoGOU2j2ILyFaYN73a2Bv2cc9-bE2oz6VAm4PnbopQOcOZImoQ4gfe6PnPbuVEu5Pv482j5ncmH-8uRMHtDugqC-Wzi7hMqM-zjMo3d76IeEJO'
+        otherUserData?.fcmToken
       ],
-      notification: { body: textMessage, title: 'FCM Message' }
-    }
+      notification: {body: textMessage, title: otherUserData?.firstName},
+    },
   };
 
-  console.log("ReactionObject",reactionObject)
+  useEffect(() => {
+    getUserFcm();
+  }, []);
+
+  const getUserFcm = async () => {
+    getSpecificeUser(route?.params?.otherUserId).then(data => {
+      setOtherUserData(data);
+
+      console.log('ReactionObject', data);
+
+    });
+  };
+
+  console.log('ReactionObject', reactionObject);
 
   const onSend = async result => {
     console.log('Resimage', result);
@@ -85,37 +102,34 @@ const Chat = ({ navigation, route }) => {
       imgResponse = await uploadImage(result.uri, route.params?.authId);
       console.log('imageRes', imgResponse);
     }
-
     const messageData = await sendMessage(
       route.params?.authId,
       route?.params?.otherUserId,
       textMessage ? textMessage : '',
       imgResponse ? imgResponse : '',
       status,
-      reaction?reaction:''
+      reaction ? reaction : '',
     );
-
     updateLastMessage(
       route.params?.authId,
       route?.params?.otherUserId,
       messageData,
     );
-    
-
-
     setTextMessage('');
     setImage('');
     // Sending Notifications
-    console.log("Sending Notifications");
-    axios.request(NotificationData).then(function (response) {
-      console.log(response.data);
-    }).catch(function (error) {
-      console.error(error);
-    });
+    console.log('Sending Notifications');
+    axios
+      .request(NotificationData)
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
   };
 
-  const saveReaction= async(reaction)=>{
-
+  const saveReaction = async reaction => {
     // console.log("reactionObject",reactionObject._id)
     // reactionObject
 
@@ -127,16 +141,10 @@ const Chat = ({ navigation, route }) => {
     //     createdAt: firebase.firestore.Timestamp.now(),
     //   }),
 
-    await updateMessage(reactionObject._id,{
-
-      reaction:reaction
-
+    await updateMessage(reactionObject._id, {
+      reaction: reaction,
     });
-
-
-    
-
-  }
+  };
 
   const renderItem = ({item, index}) => {
     return (
@@ -146,7 +154,7 @@ const Chat = ({ navigation, route }) => {
           setTextMessage(...item.char);
         }}
         style={{padding: 15}}>
-        <Text style={{fontSize:14}} >{item.char}</Text>
+        <Text style={{fontSize: 14}}>{item.char}</Text>
       </TouchableOpacity>
     );
   };
@@ -168,9 +176,9 @@ const Chat = ({ navigation, route }) => {
         <Spacer height={verticalScale(1)} />
         <View style={styles.innerMainContainer}>
           <ChatBody
-          setReactionObject={setReactionObject}
-          reactionModal={reactionModal}
-          setReactionModal={setReactionModal}
+            setReactionObject={setReactionObject}
+            reactionModal={reactionModal}
+            setReactionModal={setReactionModal}
             authId={route.params?.authId}
             otherId={route?.params?.otherUserId}
           />
@@ -189,8 +197,8 @@ const Chat = ({ navigation, route }) => {
               color={colors.white}
             />
           </TouchableOpacity>
-          <View style={{ width: verticalScale(20) }} />
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{width: verticalScale(20)}} />
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <View style={styles.textInputContainer1}>
               <TextInput
                 placeholder="message"
@@ -217,7 +225,7 @@ const Chat = ({ navigation, route }) => {
                 />
               </TouchableOpacity>
             </View>
-            <View style={{ width: verticalScale(5) }} />
+            <View style={{width: verticalScale(5)}} />
             {textMessage ? (
               <TouchableOpacity
                 onPress={() => {
@@ -266,7 +274,7 @@ const Chat = ({ navigation, route }) => {
                   fontFamily="ProximaNova-Bold"
                 />
               </View>
-              <View style={{ width: '100%', alignItems: 'center' }}>
+              <View style={{width: '100%', alignItems: 'center'}}>
                 <CustomButton
                   backgroundColor={colors.darkOrange}
                   borderRadius={25}
@@ -362,11 +370,11 @@ const Chat = ({ navigation, route }) => {
         documentsModal={documentsModal}
         setDocumentsModal={setDocumentsModal}
       />
-      <AddReaction 
-      setReaction={setReaction}
-      reactionModal={reactionModal}
-      saveReaction={saveReaction}
-      setReactionModal={setReactionModal}
+      <AddReaction
+        setReaction={setReaction}
+        reactionModal={reactionModal}
+        saveReaction={saveReaction}
+        setReactionModal={setReactionModal}
       />
     </SafeAreaView>
     // </EmojiContext.Provider>
