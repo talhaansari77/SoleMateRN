@@ -1,4 +1,11 @@
-import {View, Text, Image, SafeAreaView, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  SafeAreaView,
+  TouchableOpacity,
+  Switch,
+} from 'react-native';
 import React, {useState} from 'react';
 // import SettingsArray from "./molecules/SettingsArray";
 import styled from 'react-native-styled-components';
@@ -10,23 +17,36 @@ import icons from '../../../../assets/icons';
 import {colors} from '../../../utils/Colors';
 import {Divider} from 'react-native-elements';
 
-
 function GeneralSettings({navigation}) {
-  
   const [isOn, setisOn] = useState({
     global: false,
     withProfile: false,
     withSticker: true,
   });
 
- 
-
   const toggleSwitch = () => setisOn(previousState => !previousState);
 
+  const onGlobal = () => {
+    setisOn({...isOn, global: !isOn.global});
+  };
+
+  const onViewProfile = () => {
+    setisOn({...isOn, withProfile: !isOn.withProfile});
+  };
+
+
+  const onWithSticker=()=>{
+
+    setisOn({...isOn, withSticker: !isOn.withSticker});
+
+
+  }
+
+  
   return (
     <SafeAreaView>
       <Container>
-        <TouchableOpacity onPress={() => console.log("Done")}>
+        {/* <TouchableOpacity onPress={() => console.log("Done")}>
           <View>
             <CustomText
               fontSize={14}
@@ -38,7 +58,7 @@ function GeneralSettings({navigation}) {
               Done
             </CustomText>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity>
           <View>
@@ -63,11 +83,11 @@ function GeneralSettings({navigation}) {
               Location
             </CustomText>
 
-            <View style={{width: '91%'}}>
+            <View style={{width: '90%'}}>
               <CustomText
                 fontSize={12}
                 color={colors.gray}
-                marginLeft={50}
+                marginLeft={30}
                 marginTop={-8}
                 fontFamily={'ProximaNova_Regular'}>
                 Cecilia Chapman 711-2880 Nulla St. Mankato Mississippi 96522
@@ -89,16 +109,24 @@ function GeneralSettings({navigation}) {
               Global
             </CustomText>
 
-            <ToggleSwitch
+            <Switch
+              value={isOn.global}
+              trackColor={{false: colors.switchGray, true: colors.darkOrange}}
+              thumbColor={colors.white}
+              style={{transform: [{scaleX: 1.1}, {scaleY: 1.1}]}}
+              onValueChange={onGlobal}
+            />
+
+            {/* <ToggleSwitch
               isOn={isOn.global}
               onColor={colors.primary}
               offColor={colors.switchGray}
               labelStyle={{color: 'black', fontWeight: '900'}}
-              size="large"
+              size="small"
               onToggle={() => {
                 setisOn({...isOn, global: !isOn.global});
               }}
-            />
+            /> */}
           </WithSwitch>
 
           <CustomText
@@ -122,7 +150,15 @@ function GeneralSettings({navigation}) {
               Show me with profile
             </CustomText>
 
-            <ToggleSwitch
+            <Switch
+              value={isOn.withProfile}
+              trackColor={{false: colors.switchGray, true: colors.darkOrange}}
+              thumbColor={colors.white}
+              style={{transform: [{scaleX: 1.1}, {scaleY: 1.1}]}}
+              onValueChange={onViewProfile}
+            />
+
+            {/* <ToggleSwitch
               isOn={isOn.withProfile}
               onColor={colors.primary}
               offColor={colors.switchGray}
@@ -131,7 +167,7 @@ function GeneralSettings({navigation}) {
               onToggle={() => {
                 setisOn({...isOn, withProfile: !isOn.withProfile});
               }}
-            />
+            /> */}
           </WithSwitch>
         </TouchableOpacity>
       </Container>
@@ -149,7 +185,16 @@ function GeneralSettings({navigation}) {
               Show me only with sticker
             </CustomText>
 
-            <ToggleSwitch
+
+            <Switch
+              value={isOn.withSticker}
+              trackColor={{false: colors.switchGray, true: colors.darkOrange}}
+              thumbColor={colors.white}
+              style={{transform: [{scaleX: 1.1}, {scaleY: 1.1}]}}
+              onValueChange={onWithSticker}
+            />
+
+            {/* <ToggleSwitch
               isOn={isOn.withSticker}
               onColor={colors.primary}
               offColor={colors.switchGray}
@@ -158,7 +203,7 @@ function GeneralSettings({navigation}) {
               onToggle={() => {
                 setisOn({...isOn, withSticker: !isOn.withSticker});
               }}
-            />
+            /> */}
           </WithSwitch>
           <CustomText
             fontFamily={'ProximaNova-Regular'}
@@ -174,7 +219,9 @@ function GeneralSettings({navigation}) {
 
       <Divider />
       <Container>
-        <TouchableOpacity onPress={() => navigation.navigate('MainSettings')}>
+        <TouchableOpacity 
+        activeOpacity={0.6}
+        onPress={() => navigation.navigate('MainSettings')}>
           <WithSwitch>
             <CustomText
               fontFamily={'ProximaNova_Bold'}

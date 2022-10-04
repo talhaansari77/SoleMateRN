@@ -54,6 +54,7 @@ function CustomButton({
           borderRadius: borderRadius || 8,
           borderWidth: borderWidth,
           opacity: opacity,
+          
           alignItems: alignItems || 'center',
           alignSelf: alignSelf || 'center',
           justifyContent: justifyContent || 'center',

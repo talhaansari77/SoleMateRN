@@ -78,3 +78,18 @@ export const updateLastMessagewithImage = async (from, to, lastMessage) => {
     console.log('updateLastMessage', error);
   }
 };
+
+export const deleteRequest = async (from, to,) => {
+  // console.log('fromLastMessage', from);
+  const id = from > to ? from + '__' + to : to + '__' + from;
+
+  // console.log("UserAllId",id)
+  try {
+    await firestore().doc(`request/${id}`).delete().then(()=>{
+
+      console.log("Delete Successfully")
+    })
+  } catch (error) {
+    console.log('updateLastMessage', error);
+  }
+};

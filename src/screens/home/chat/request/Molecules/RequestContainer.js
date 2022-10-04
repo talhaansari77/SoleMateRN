@@ -11,6 +11,7 @@ import CustomText from '../../../../../components/CustomText';
 import {colors} from '../../../../../utils/Colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {getSpecificeUser} from '../../../../../services/FirebaseAuth';
+import Component from '../../../../../components/FastImage';
 import moment from 'moment';
 
 const RequestContainer = ({
@@ -27,7 +28,6 @@ const RequestContainer = ({
   useEffect(() => {
     getUser();
   }, []);
-  console.log('UserData', userData);
 
   var a = moment();
   var b = moment(userData?.dob, 'YYYY');
@@ -53,11 +53,18 @@ const RequestContainer = ({
       style={styles.mainConatiner}>
       <View style={{flexDirection: 'row'}}>
         <View style={styles.imgContainer}>
-          <Image
+        <Component
+            // resizeMode="cover"
+
+            style={{height: '100%', width: '100%'}}
+            uniqueKey={Math.random()}
+            source={{uri:userData?.images?.[0]}}
+          />
+          {/* <Image
             resizeMode="cover"
             style={commonStyles.img}
             source={profileImages.man}
-          />
+          /> */}
         </View>
         <View style={styles.detailContainer}>
           <CustomText

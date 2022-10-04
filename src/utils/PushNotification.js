@@ -25,7 +25,7 @@ export const notificationServices = async () => {
     });
     // ForeGround
     messaging().onMessage(async remoteMessage => {
-        console.log(' new ForeGround message arrived!', JSON.stringify(remoteMessage));
+        // console.log(' new ForeGround message arrived!', JSON.stringify(remoteMessage));
     });
     // Check whether an initial notification is available
     messaging()

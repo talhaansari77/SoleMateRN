@@ -51,4 +51,18 @@ export const styles = ScaledSheet.create({
     borderRadius: moderateScale(8),
     left: 12,
   },
+  endConversion:{
+    width:"100%",height:"70%",position:"absolute",marginTop:verticalScale(45),
+  },
+  endHeader:{
+    width: '100%',
+    height: verticalScale(150),
+    backgroundColor: colors.white,
+    alignItems: 'center',
+  },
+  endBottom:{
+
+    width:"100%",height:"85%",backgroundColor:colors.gray,opacity:0.5
+
+  }
 });

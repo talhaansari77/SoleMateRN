@@ -25,6 +25,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Divider} from 'react-native-elements';
 import {ChatBody} from '../../../components/ChatBody';
+import CustomGradientButton from '../../../components/CustomGradientButton';
 import CustomButton from '../../../components/CustomButton';
 import {
   sendMessage,
@@ -51,11 +52,11 @@ import {uploadImage} from '../../../services/FirebaseAuth';
 import axios from 'axios';
 import {getCurrentFCMToken} from '../../../utils/PushNotification';
 
-import { NotificationSender } from '../../../services/SendNotification';
+import {NotificationSender} from '../../../services/SendNotification';
 
 const Chat = ({navigation, route}) => {
   const [textMessage, setTextMessage] = useState([]);
-  const [settingModal, setSettingModal] = useState(false);
+  const [showEndConversion, setShowEndConversion] = useState(false);
   const [documentsModal, setDocumentsModal] = useState(false);
   const [image, setImage] = useState('');
   const [status, setStatus] = useState(false);
@@ -66,21 +67,7 @@ const Chat = ({navigation, route}) => {
   const [reactionObject, setReactionObject] = useState({});
   const [otherUserData, setOtherUserData] = useState({});
   const [getAuthData, setGetAuthData] = useState({});
-  // console.log('OtherUserDat', otherUserData?.fcmToken);
-
-  // const NotificationData = {
-  //   method: 'POST',
-  //   url: 'https://fcm.googleapis.com/fcm/send',
-  //   headers: {
-  //     Authorization:
-  //       'key=AAAAntfCcWI:APA91bGvB4v_-ERQEr5c9uAUbgB4OO5eqzGklQtRDSy0nuBCl488yFVTM0VqfjJKVfg21ABmip856AK_R9x8rYqvTq3AMowRdEqdYj9wrCDajnNUEkpeN0lpVo-lEptGSZ3WAqyIPLV_',
-  //     'Content-Type': 'application/json',
-  //   },
-  //   data: {
-  //     registration_ids: [otherUserData?.fcmToken],
-  //     notification: {body: textMessage, title: getAuthData?.firstName},
-  //   },
-  // };
+  const [getAllChat, setGetAllChat] = useState([]);
   useEffect(() => {
     getUserFcm();
   }, []);
@@ -88,23 +75,23 @@ const Chat = ({navigation, route}) => {
   const getUserFcm = async () => {
     getSpecificeUser(route?.params?.otherUserId).then(data => {
       setOtherUserData(data);
-      console.log('ReactionObject', data);
+      // console.log('ReactionObject', data);
     });
 
     getSpecificeUser(route?.params?.authId).then(data => {
       setGetAuthData(data);
-      console.log('ReactionObject', data);
+      // console.log('ReactionObject', data);
     });
   };
 
-  console.log('ReactionObject', reactionObject);
+  // console.log('ReactionObject', getAllChat);
 
   const onSend = async result => {
-    console.log('Resimage', result);
+    // console.log('Resimage', result);
     let imgResponse = '';
     if (result) {
       imgResponse = await uploadImage(result.uri, route.params?.authId);
-      console.log('imageRes', imgResponse);
+      // console.log('imageRes', imgResponse);
     }
     const messageData = await sendMessage(
       route.params?.authId,
@@ -121,12 +108,15 @@ const Chat = ({navigation, route}) => {
     );
 
     // fcmToken,message,title
-    NotificationSender(otherUserData?.fcmToken,textMessage,getAuthData?.firstName )
+    NotificationSender(
+      otherUserData?.fcmToken,
+      textMessage,
+      getAuthData?.firstName,
+    );
     setTextMessage('');
     setImage('');
     // Sending Notifications
-    console.log('Sending Notifications');
-   
+    // console.log('Sending Notifications');
   };
 
   const saveReaction = async reaction => {
@@ -164,12 +154,12 @@ const Chat = ({navigation, route}) => {
     <SafeAreaView style={commonStyles.commonMain}>
       <View style={styles.mainContainer}>
         <HeaderConatiner
-          label="Samer"
+          label={otherUserData?.firstName}
           back={() => {
             navigation.goBack();
           }}
           setting={() => {
-            setSettingModal(!settingModal);
+            setShowEndConversion(!showEndConversion);
           }}
         />
 
@@ -181,6 +171,7 @@ const Chat = ({navigation, route}) => {
             setReactionModal={setReactionModal}
             authId={route.params?.authId}
             otherId={route?.params?.otherUserId}
+            setGetAllChat={setGetAllChat}
           />
         </View>
 
@@ -249,7 +240,69 @@ const Chat = ({navigation, route}) => {
             )}
           </View>
         </View>
-        {settingModal ? (
+        {showEndConversion ? (
+          <View style={styles.endConversion}>
+            <View style={styles.endHeader}>
+              <View style={{width: '100%', alignItems: 'center'}}>
+                <CustomButton
+                  title={"View Samer's Profile"}
+                  fontSize={verticalScale(18)}
+                  borderRadius={25}
+                  marginTop={20}
+                  onPress={() => {
+                    navigation.navigate('Profile', {
+                      otherId: route?.params?.otherUserId,
+                    });
+                  }}
+                  borderWidth={1.9}
+                  color={colors.primary}
+                  borderColor={colors.darkOrange}
+                  backgroundColor={colors.white}
+                  width="90%"
+                  fontFamily="ProximaNova-Bold"
+                />
+
+                <CustomGradientButton
+                  marginTop={40}
+                  height={50}
+                  width={390}
+                  fontFamily={'ProximaNova-Bold'}
+                  fontSize={20}
+                  title={'End Conversation'}
+                  backgroundColor={colors.darkOrange}
+                  borderRadius={50}
+                  onPress={() => {
+                    navigation.navigate('Report', {
+                      authData: getAuthData,
+                      otherData: otherUserData,
+                      allChat: getAllChat,
+                    });
+                  }}
+                />
+                {/* <CustomButton
+                    backgroundColor={colors.darkOrange}
+                    borderRadius={25}
+                    fontSize={verticalScale(18)}
+                    fontFamily="ProximaNova-Bold"
+                    onPress={() => {
+                      navigation.navigate('Report',{authData:getAuthData,otherData:otherUserData});
+                      setShowEndConversion(!showEndConversion)
+  
+                      // Report
+                    }}
+                    width="90%"
+                    title={'End Conversation'}
+                  /> */}
+              </View>
+            </View>
+
+            <View style={styles.endBottom}></View>
+          </View>
+        ) : (
+          <></>
+        )}
+
+        {/* {settingModal ? (
           <View>
             <View
               style={{
@@ -302,7 +355,7 @@ const Chat = ({navigation, route}) => {
           </View>
         ) : (
           <></>
-        )}
+        )} */}
 
         {/* <SettingModal  settingModal={settingModal}setSettingModal={setSettingModal}/> */}
       </View>

@@ -1,4 +1,4 @@
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, Platform} from 'react-native';
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import base from '../../screens/home/base';
@@ -25,17 +25,19 @@ const MainStack = () => {
         tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: '#fff',
-          height: verticalScale(50),
-          paddingHorizontal: scale(30),
+          height: verticalScale( Platform.OS=="ios"? 60:50),
+          paddingHorizontal: scale(20),
+          paddingTop:Platform.OS=="ios"?10:0
+    
         },
         tabBarIcon: ({focused, size, color}) => {
           let iconName;
           if (route.name === 'Profile') {
             iconName = 'user';
-            size = focused ? 25 : 22;
+            size = focused ? 27 : 25;
           } else if (route.name === 'MessagingStack') {
             iconName = 'message1';
-            size = focused ? 25 : 22;
+            size = focused ? 27 : 25;
             return (
               <AntDesign
                 name={iconName}
@@ -45,7 +47,7 @@ const MainStack = () => {
             );
           } else if (route.name === 'Settings') {
             iconName = 'settings';
-            size = focused ? 25 : 22;
+            size = focused ? 27 : 25;
           }
 
           return (

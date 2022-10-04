@@ -1,19 +1,33 @@
-import {View, Text, SafeAreaView} from 'react-native';
+import {View, Text, SafeAreaView,TouchableOpacity} from 'react-native';
 import React from 'react';
 import styled from 'react-native-styled-components';
-import {moderateScale} from 'react-native-size-matters';
+import {moderateScale, verticalScale} from 'react-native-size-matters';
 import CustomText from '../../../components/CustomText';
 import {colors} from '../../../utils/Colors';
 import CustomImage from '../../../components/CustomImage';
+import Ionicons from "react-native-vector-icons/Ionicons"
 import profileImages from '../../../../assets/Profile_images';
 
-const Reported = () => {
+const Reported = ({navigation}) => {
   return (
+  <View style={{flex:1}}>
+    <TouchableOpacity 
+    onPress={()=>{
+      navigation.navigate("Request")
+
+    }}
+    style={{width:40,height:40,margin:20}}>
+    <Ionicons name='ios-chevron-back-outline' size={moderateScale(22)} color={colors.primary}/>
+
+
+    </TouchableOpacity>
+
+
+    
     <Container>
       <SafeAreaView>
-        <View>
+        <View style={{marginHorizontal:20}}>
           <CustomText
-            marginTop={35}
             fontFamily={'ProximaNova-Bold'}
             fontSize={20}
             textAlign={'center'}
@@ -22,7 +36,7 @@ const Reported = () => {
             We sent Samer the reason you end the conversation!
           </CustomText>
         </View>
-        <View>
+        <View style={{marginTop:verticalScale(20)}}>
           <CustomImage
             height={290}
             width={260}
@@ -42,12 +56,14 @@ const Reported = () => {
         </CustomText>
       </SafeAreaView>
     </Container>
+    </View>
+
   );
 };
 
 const Container = styled(View, {
   width: '100%',
-  padding: moderateScale(40),
+  padding: moderateScale(20),
   flex: 1,
 });
 

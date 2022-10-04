@@ -1,9 +1,9 @@
 import firestore from '@react-native-firebase/firestore';
 import uuid from 'react-native-uuid';
-import { reactionData } from '../utils/Data';
+import {reactionData} from '../utils/Data';
 import {chatFormat} from '../utils/Time';
 
-export const sendMessage = async (from, to, text, image, status,reaction) => {
+export const sendMessage = async (from, to, text, image, status, reaction) => {
   console.log('ImageData', status);
   const id =
     from > to
@@ -16,7 +16,7 @@ export const sendMessage = async (from, to, text, image, status,reaction) => {
     text,
     image: image ? image : '',
     status: status,
-    reaction:reaction?reaction:"",
+    reaction: reaction ? reaction : '',
 
     createdAt: new Date(),
   };
@@ -24,12 +24,43 @@ export const sendMessage = async (from, to, text, image, status,reaction) => {
   return {id, text, from, to, image, status};
 };
 
-export const updateMessage = async (id,reactionData) => {
-
+export const updateMessage = async (id, reactionData) => {
   await firestore().doc(`chats/${id}`).update(reactionData);
 };
 
-export const getMessages = (user1, user2, setMessages) => {
+export const deleteChat = async (id) => {
+  // const id =
+  //   user1 > user2 ? user1 + '__' + user2 + '__' : user2 + '__' + user1 + '__';
+
+  //     console.log("UserAllIdChat",id)
+
+   // console.log("UserAllId",id)
+   try {
+    await firestore().doc(`chats/${id}`).delete().then(()=>{
+
+      console.log("Delete Successfully")
+    })
+  } catch (error) {
+    console.log('updateLastMessage', error);
+  }
+
+
+  // try {
+  //   await firestore()
+  //     .collection('chats')
+      
+  //     .startAt(id)
+  //     .endAt(id + '~')
+  //     .delete()
+  //     .then(() => {
+  //       console.log('Delete Successfully');
+  //     });
+  // } catch (error) {
+  //   console.log('updateLastMessage', error);
+  // }
+};
+
+export const getMessages = (user1, user2, setMessages,setGetAllChat) => {
   const id =
     user1 > user2 ? user1 + '__' + user2 + '__' : user2 + '__' + user1 + '__';
   return firestore()
@@ -50,11 +81,12 @@ export const getMessages = (user1, user2, setMessages) => {
             to: message.to,
             from: message.from,
             image: message.image,
-            status:message.status,
-            reaction:message.reaction
+            status: message.status,
+            reaction: message.reaction,
           });
         }
       });
+      setGetAllChat(messages)
       setMessages(
         messages.sort((a, b) => a?.date?.seconds - b?.date?.seconds || 0),
       );

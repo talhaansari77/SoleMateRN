@@ -42,13 +42,16 @@ export const ChatBody = ({
   reactionModal,
   setReactionModal,
   setReactionObject,
+  setGetAllChat
 }) => {
   const [messages, setMessages] = useState([]);
 
-  console.log('statusMessage', messages);
+  // console.log('statusMessage', messages);
 
   useEffect(() => {
-    const messageSubscriber = getMessages(otherId, authId, setMessages);
+    const messageSubscriber = getMessages(otherId, authId, setMessages,setGetAllChat);
+
+    console.log("messageSubscriber",messageSubscriber)
 
     return () => messageSubscriber();
   }, [authId, otherId]);
@@ -391,23 +394,23 @@ export const ChatBody = ({
                 </View>
               )}
 
-              <View style={{justifyContent: 'center', marginLeft: scale(10)}}>
-                {/* <CustomImage
+              {/* <View style={{justifyContent: 'center', marginLeft: scale(10)}}>
+                <CustomImage
                   src={icons.orangeTickReadIcon}
                   height={15}
                   width={15}
-                /> */}
-                {/* <Ionicons
+                />
+                <Ionicons
                   name="ios-checkmark"
                   size={moderateScale(20)}
                   color={colors.primary}
-                /> */}
+                />
                 <Ionicons
                   name="ios-checkmark-done-outline"
                   size={moderateScale(20)}
                   color={colors.orange}
                 />
-              </View>
+              </View> */}
             </View>
           </View>
         )}

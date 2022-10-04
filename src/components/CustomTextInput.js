@@ -72,9 +72,9 @@ const CustomTextInput = ({
               marginLeft: props.inputLeftMargin || 10,
               paddingRight: props.paddingRight || 10,
               paddingHorizontal: props.paddingHorizontal,
-              fontFamily: 'ProximaNova-Bold',
+              fontFamily:   props.textFamily|| 'ProximaNova-Bold',
               fontSize: verticalScale(13),
-              color:colors.black
+              color: props.textColor  || colors.black 
             },
           ]}
           onChangeText={props.onChangeText}

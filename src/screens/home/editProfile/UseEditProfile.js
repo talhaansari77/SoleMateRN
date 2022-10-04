@@ -3,9 +3,8 @@ import Toast from 'react-native-simple-toast';
 
 export const EditValidate = (data, submitError, setSubmitError) => {
   console.log('BCJDBJC', data);
-  if (data.images.length < 2) {
+  if (data.images.length < 5) {
     // Toast.show('This is a toast.');
-
     Toast.show('All images are required');
     return;
   }
@@ -150,35 +149,30 @@ export const EditValidate = (data, submitError, setSubmitError) => {
     });
     return;
   }
-  // whatKids:whatKids,
-  // hasKids:hasKids,
-  // willRelocate:willRelocate,
-  // jobStatus:jobStatus,
-  // drinking:drinking,
-  // smoking:smoking,
-  if (!data.whatKids) {
-    Toast.show('Whats Kids is required');
-    return;
-  }
-  if (!data.hasKids) {
-    Toast.show('Has Kids is required');
-    return;
-  }
-  if (!data.willRelocate) {
-    Toast.show('willing Relocate is required');
-    return;
-  }
-  if (!data.jobStatus) {
-    Toast.show('Job Status is required');
-    return;
-  }
-  if (!data.drinking) {
-    Toast.show('Drinking is required');
-    return;
-  }
-  if (!data.smoking) {
-    Toast.show('Smoking is required');
-    return;
-  }
+
+  // if (!data.whatKids) {
+  //   Toast.show('Whats Kids is required');
+  //   return;
+  // }
+  // if (!data.hasKids) {
+  //   Toast.show('Has Kids is required');
+  //   return;
+  // }
+  // if (!data.willRelocate) {
+  //   Toast.show('willing Relocate is required');
+  //   return;
+  // }
+  // if (!data.jobStatus) {
+  //   Toast.show('Job Status is required');
+  //   return;
+  // }
+  // if (!data.drinking) {
+  //   Toast.show('Drinking is required');
+  //   return;
+  // }
+  // if (!data.smoking) {
+  //   Toast.show('Smoking is required');
+  //   return;
+  // }
   return true;
 };

@@ -45,6 +45,7 @@ export const saveUser = async (authId, data) => {
   }
 };
 export const uploadImage = async (uri, path) => {
+  console.log("ImagrAndPath",uri,path)
   try {
     const response = await fetch(uri);
     const blob = await response.blob();
@@ -66,16 +67,16 @@ export const uploadImage = async (uri, path) => {
   } catch (err) {
     console.log('uploadImage error: ' + err.message);
   }
-  // try {
-  //   const response = await fetch(uri);
-  //   const blob = await response.blob();
-  //   const filename = uri.substring(uri.lastIndexOf('/') + 1);
-  //   const ref = storage().ref().child(filename).put(blob);
-  //   const link = await (await ref).ref.getDownloadURL();
-  //   return link;
-  // } catch (error) {
-  //   // console.log("upload error", error);
-  // }
+  try {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const filename = uri.substring(uri.lastIndexOf('/') + 1);
+    const ref = storage().ref().child(filename).put(blob);
+    const link = await (await ref).ref.getDownloadURL();
+    return link;
+  } catch (error) {
+    // console.log("upload error", error);
+  }
 };
 
 // export const addUserData = async (id, phone, email, name, image) => {

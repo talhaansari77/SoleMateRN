@@ -1,4 +1,11 @@
-import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Platform,
+} from 'react-native';
 import React from 'react';
 import CustomModal from '../../../../components/CustomModal';
 import {
@@ -14,6 +21,9 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CustomText from '../../../../components/CustomText';
 import icons from '../../../../../assets/icons';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import DocumentPicker from 'react-native-document-picker';
+// import RNFetchBlob from 'rn-fetch-blob'
+import RNFetchBlob from 'rn-fetch-blob';
 
 const AddDocuments = ({
   documentsModal,
@@ -22,6 +32,53 @@ const AddDocuments = ({
   setImage,
   onSend,
 }) => {
+  // choose all type of file
+  const ChooseFile = async () => {
+    // pick the single file
+
+    try {
+      const res = await DocumentPicker.pickMultiple({
+        type: [DocumentPicker.types.allFiles],
+      });
+      console.log(
+        'ResType',
+
+        res.uri,
+        res.type,
+        res.name,
+        res.size,
+      );
+
+      // const path=NormalizedPath(res.uri)
+      // console.log("PathData",path)
+
+      // const result=await RNFetchBlob.fs.readFile(path,"base64")
+
+      // console.log("PathDataResult",result)
+    } catch (error) {
+      if (DocumentPicker.isCancel(error)) {
+      } else {
+        throw error;
+      }
+    }
+  };
+
+  // set prefix in ios from path
+  const NormalizedPath = path => {
+    if (Platform.OS == 'ios' || Platform.OS == 'android') {
+      const filePrefix = 'file://';
+
+      if (path.startsWith(filePrefix)) {
+        path = path.substring(filePrefix.length);
+
+        try {
+          path = decodeURI(path);
+        } catch (error) {}
+      }
+    }
+    return path;
+  };
+
   const takePhotoFromLibrary = async () => {
     try {
       const options = {
@@ -110,10 +167,15 @@ const AddDocuments = ({
         <CustomText label="Photo Library" fontSize={13} marginLeft={10} />
       </TouchableOpacity>
       <View style={styles.line} />
-      <TouchableOpacity activeOpacity={0.6} style={styles.cameraContainer}>
+      <TouchableOpacity
+        activeOpacity={0.6}
+        onPress={() => {
+          ChooseFile();
+        }}
+        style={styles.cameraContainer}>
         <Image source={icons.document} style={{width: 25, height: 25}} />
         {/* <Feather name="camera" size={24} color={colors.primary} /> */}
-        <CustomText label="Document" fontSize={13} marginLeft={10} />
+        <CustomText label="Choose Files" fontSize={13} marginLeft={10} />
       </TouchableOpacity>
     </CustomModal>
   );

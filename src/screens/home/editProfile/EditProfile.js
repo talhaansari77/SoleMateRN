@@ -31,7 +31,8 @@ import {getAuthId, saveUser, uploadImage} from '../../../services/FirebaseAuth';
 import PictureBox from './molecules/PictureBox';
 import Loader from '../../../utils/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getCurrentFCMToken } from '../../../utils/PushNotification';
+import HeaderConatiner from '../chat/request/Molecules/HeaderConatiner';
+import {getCurrentFCMToken} from '../../../utils/PushNotification';
 
 const genders = [
   {id: 1, name: 'Male'},
@@ -72,11 +73,10 @@ const EditProfile = ({navigation}) => {
   const [personalityModal, setPersonalityModal] = useState(false);
   const [editLocation, setEditLocation] = useState('');
   const [authID, setAuthID] = useState('');
-  const [fcmToken, setFcmToken] = useState("")
+  const [fcmToken, setFcmToken] = useState('');
 
-  console.log('imagesUri', fcmToken);
+  console.log('imagesUri', images);
   console.log('imagesUri', birthday);
-
 
   const questions = [
     {id: 1, question: 'Want Kids', onValue: setWhatKids},
@@ -92,19 +92,14 @@ const EditProfile = ({navigation}) => {
     getCurrentID();
   }, []);
   useEffect(() => {
-    getCurrentToken()
-    
-  
-  }, [])
+    getCurrentToken();
+  }, []);
 
-  const getCurrentToken=async()=>{
-
+  const getCurrentToken = async () => {
     let fcmToken = await AsyncStorage.getItem('fcmToken');
 
-    setFcmToken(fcmToken)
-
-  }
-  
+    setFcmToken(fcmToken);
+  };
 
   const getCurrentID = async () => {
     await getAuthId().then(id => {
@@ -149,7 +144,8 @@ const EditProfile = ({navigation}) => {
       height: feetHeight,
       employment: employment,
       occupation: occupation,
-      fcmToken:fcmToken,
+      fcmToken: fcmToken,
+      id: authID,
       religion: religion,
       religiousity: religiousity,
       prayerLevel: prayerLevel,
@@ -167,15 +163,15 @@ const EditProfile = ({navigation}) => {
     if (response) {
       console.log('data');
       setLoading(true);
-
       try {
-        // let imageLink = [];
-        // for (let index = 0; index < data.images.length; index++) {
-        //   const element = data.images[index];
-        //   const link = await uploadImage(element.uri, authID);
-        //   imageLink.push(link);
-        // }
-        // data.images = imageLink; 
+        let imageLink = [];
+        for (let index = 0; index < data.images.length; index++) {
+          const element = data.images[index];
+          console.log("EmelemtIndex",element)
+          const link = await uploadImage(element, authID);
+          imageLink.push(link);
+        }
+        data.images = imageLink;
 
         if (authID) {
           await saveUser(authID, data);
@@ -230,20 +226,19 @@ const EditProfile = ({navigation}) => {
   };
   return (
     <View style={{flex: 1}}>
-      <Container>
+      <Header
+        handleSubmit={onHandleSubmit}
+        handleCancel={() => {
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'MainStack'}],
+          });
+        }}
+        navigation={navigation}
+      />
+
         {/* Header */}
-        <Header
-          handleSubmit={onHandleSubmit}
-          handleCancel={() => {
-            navigation.reset({
-              index: 0,
-              routes: [{name: 'MainStack'}],
-            });
-          }}
-          navigation={navigation}
-        />
-        <Divider />
-        <Spacer height={10} />
+
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.imageView}>
             {data.map((item, index) => (
@@ -258,10 +253,10 @@ const EditProfile = ({navigation}) => {
               />
             ))}
           </View>
+          <View style={{flex:1,paddingHorizontal:20}}>
 
-          {/* <PhotoContainer images={images} setImages={setImages}/> */}
-          {/* <PictureBox /> */}
-          {/* <Spacer height={10}/> */}
+
+         
 
           <View style={{padding: moderateScale(5)}}>
             <CustomText
@@ -720,6 +715,8 @@ const EditProfile = ({navigation}) => {
               </View>
             </View>
           </View>
+          </View>
+
         </ScrollView>
         {/* <View style={{marginBottom: verticalScale(10)}}>
         <CustomButton
@@ -740,7 +737,6 @@ const EditProfile = ({navigation}) => {
         // backgroundColor={colors.primary}
       /> */}
         {/* </View> */}
-      </Container>
       <Loader
         loading={loading}
         file={require('../../../../assets/loader/heartLoading.json')}

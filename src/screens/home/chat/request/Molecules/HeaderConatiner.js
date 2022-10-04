@@ -24,7 +24,9 @@ const HeaderConatiner = ({label, back, setting}) => {
         },
       ]}>
       {back ? (
-        <TouchableOpacity activeOpacity={0.6} onPress={back}>
+        <TouchableOpacity activeOpacity={0.6}
+        style={styles.btnCon}
+         onPress={back}>
           <MaterialIcons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
       ) : (
@@ -39,7 +41,8 @@ const HeaderConatiner = ({label, back, setting}) => {
       />
       {setting ? (
         <TouchableOpacity
-          // activeOpacity={0.6}
+        style={styles.btnCon}
+          activeOpacity={0.6}
           onPress={setting}>
           <MaterialCommunityIcons
             name="dots-vertical"
@@ -58,19 +61,23 @@ export default HeaderConatiner;
 
 const styles = ScaledSheet.create({
   mainContainer: {
-    // shadowColor: colors.gray,
-    // shadowOffset: {width: 0, height: 10},
+    shadowColor: colors.gray,
+    shadowOffset: {width: 0, height: 1.5},
     shadowOpacity: 5,
     // shadowRadius: 10,
     elevation: 15,
     flexDirection: 'row',
     backgroundColor: colors.white,
     height: '35@vs',
+    alignItems:"center",
     width: '100%',
     alignItems: 'center',
     // backgroundColor: 'red',
     width: '100%',
     marginBottom: 5,
-    marginTop: verticalScale(5),
+    // marginTop: verticalScale(5),
   },
+  btnCon:{
+    width:30,height:30,marginTop:5
+  }
 });

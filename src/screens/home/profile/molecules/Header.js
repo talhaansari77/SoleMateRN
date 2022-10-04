@@ -19,7 +19,7 @@ const Header = ({navigation}) => {
             <CustomText
               fontSize={13}
               color={colors.black}
-              fontFamily={'ProximaNova-Bold'}
+              fontFamily={'ProximaNova-Regular'}
               marginRight={20}>
               Edit Profile
             </CustomText>

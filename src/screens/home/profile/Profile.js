@@ -1,10 +1,13 @@
-import {View, ScrollView, TouchableOpacity} from 'react-native';
+import {View, ScrollView, TouchableOpacity, Platform} from 'react-native';
 import React, {useEffect, useState} from 'react';
 // import { BlurView } from "expo-blur";
 import {colors} from '../../../utils/Colors';
 import styled from 'react-native-styled-components';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import moment from 'moment';
+import { useIsFocused,useFocusEffect } from "@react-navigation/native";
+
+
 
 import profileImages from '../../../../assets/Profile_images';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -80,10 +83,16 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
   const [authID, setAuthID] = useState('');
   const [authData, setAuthData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [otherID, setOtherId] = useState(route.params?.id);
+  const [requestId, setRequestId] = useState(route.params?.id);
+  const isFocused = useIsFocused();
+
+  const [otherProfileID, setOtherProfileId] = useState();
+
+
+
 
   // console.log('authData', authData);
-  console.log('Id From Link', route.params?.id);
+  console.log('otherProfile', otherProfileID);
 
   var a = moment();
   var b = moment(authData?.dob, 'YYYY');
@@ -91,14 +100,29 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
 
   useEffect(() => {
     getAuthData();
-  }, []);
+  }, [route.params?.otherId,route.params?.id,]);
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     if(!otherProfileID){
+  //       setOtherProfileId(route.params?.otherId)
+
+
+  //     }
+  //     else{
+  //       setOtherProfileId("")
+
+  //     }
+     
+  //   }, [])
+  // );
 
   const getAuthData = async () => {
     setLoading(true);
     await getAuthId().then(id => {
       setAuthID(id);
 
-      getSpecificeUser(route.params?.id ? route.params?.id : id).then(data => {
+      getSpecificeUser(requestId?requestId:otherProfileID?otherProfileID:id).then(data => {
         setAuthData(data);
         setLoading(false);
       });
@@ -107,8 +131,8 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
   const onCancel = () => {
     setLoading(true);
     try {
-      if (otherID) {
-        setOtherId('');
+      if (requestId) {
+        setRequestId('');
         setLoading(false);
       }
     } catch (error) {}
@@ -137,7 +161,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
     <View style={{flex: 1}}>
       <View
         style={{
-          paddingVertical: verticalScale(25),
+          paddingVertical: verticalScale(Platform.OS=="ios"? 25:0),
           paddingBottom: 0,
           flex: 1,
         }}>
@@ -177,7 +201,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
           {/* Ice Break Question*/}
           <IceBreakQ />
           <Divider />
-          <ProfileImage src={{uri: authData?.images?.[2]}} loading={loading} />
+          <ProfileImage src={{uri: authData?.images?.[1]}} loading={loading} />
           {/* Tags */}
           <ProfileTags title={'Personality'} data={authData?.personality} />
           <Divider />
@@ -204,7 +228,9 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
             infoList={basicInfo}
           />
           {/*ProfileImage*/}
-          <ProfileImage src={profileImages.prettyFace} showName={false} />
+          <ProfileImage src={{uri: authData?.images?.[2]}} loading={loading} />
+
+          {/* <ProfileImage src={profileImages.prettyFace} showName={false} /> */}
           {/* favorite food */}
           <FavFoodText />
           <Divider />
@@ -223,7 +249,9 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
           />
 
           {/* ProfileImage */}
-          <ProfileImage src={profileImages.prettyFace} showName={false} />
+          <ProfileImage src={{uri: authData?.images?.[3]}} loading={loading} />
+
+          {/* <ProfileImage src={profileImages.prettyFace} showName={false} /> */}
 
           {/* Religiousness */}
           <Spacer height={20} />

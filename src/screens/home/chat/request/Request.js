@@ -47,7 +47,6 @@ const Request = ({navigation}) => {
     });
   };
   const RequestDetail = ({item, index}) => {
-    console.log('Itemdata', item.from);
     return (
       <View>
         <RequestContainer
