@@ -100,7 +100,6 @@ const EditProfile = ({navigation}) => {
 
     setFcmToken(fcmToken);
   };
-
   const getCurrentID = async () => {
     await getAuthId().then(id => {
       setAuthID(id);

@@ -168,6 +168,7 @@ const Chat = ({navigation, route}) => {
           <ChatBody
             setReactionObject={setReactionObject}
             reactionModal={reactionModal}
+            otherUserData={otherUserData}
             setReactionModal={setReactionModal}
             authId={route.params?.authId}
             otherId={route?.params?.otherUserId}
@@ -269,7 +270,7 @@ const Chat = ({navigation, route}) => {
                   fontFamily={'ProximaNova-Bold'}
                   fontSize={20}
                   title={'End Conversation'}
-                  backgroundColor={colors.darkOrange}
+                  backgroundColor={colors.primary}
                   borderRadius={50}
                   onPress={() => {
                     navigation.navigate('Report', {
@@ -279,20 +280,7 @@ const Chat = ({navigation, route}) => {
                     });
                   }}
                 />
-                {/* <CustomButton
-                    backgroundColor={colors.darkOrange}
-                    borderRadius={25}
-                    fontSize={verticalScale(18)}
-                    fontFamily="ProximaNova-Bold"
-                    onPress={() => {
-                      navigation.navigate('Report',{authData:getAuthData,otherData:otherUserData});
-                      setShowEndConversion(!showEndConversion)
-  
-                      // Report
-                    }}
-                    width="90%"
-                    title={'End Conversation'}
-                  /> */}
+            
               </View>
             </View>
 
@@ -373,46 +361,7 @@ const Chat = ({navigation, route}) => {
             numColumns={8}
             renderItem={renderItem}
           />
-          {/* <FlatList
-            // style={styles.container}
-            data={emojjisData}
-            keyExtractor={item => item.char}
-            // numColumns={8}
-            renderItem={item => {
-              return (
-                <TouchableOpacity>
-                  <Text>{item.char}</Text>
-                </TouchableOpacity>
-              );
-            }}
-          /> */}
-          {/* <ScrollView horizontal>
-            <View
-              style={{
-                flexDirection: 'row',
-              }}>
-              {emojjisData.map(item => {
-                return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setShowEmojis(!showEmojis);
-                      setTextMessage(...item.char);
-                    }}
-                    style={{padding: 20}}>
-                    <Text>{item.char}</Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          </ScrollView> */}
-
-          {/* <Tab.Navigator>
-              {Object.keys(emojis).map(key => (
-                <Tab.Screen key={key} name={emojis[key][0].char}>
-                  {() => <EmojisTab emojis={emojis[key]} />}
-                </Tab.Screen>
-              ))}
-            </Tab.Navigator> */}
+         
         </View>
       )}
 

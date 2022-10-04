@@ -108,7 +108,7 @@ const RequestContainer = ({
         <Ionicons
           name="play-circle"
           size={moderateScale(25)}
-          color={colors.primary}
+          color={colors.darkOrange}
         />
       </View>
     </TouchableOpacity>

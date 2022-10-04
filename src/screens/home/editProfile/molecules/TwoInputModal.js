@@ -17,7 +17,6 @@ const TwoInputModal = ({
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState('')
   const onSaveIceBreakerQ = () => {
-    
     const newQuestionList = iceBreakerQ.filter((q) => {
       if (q.id == questionIndex) {
         q.id = questionIndex;

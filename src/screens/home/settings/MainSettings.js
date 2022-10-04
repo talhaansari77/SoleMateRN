@@ -7,7 +7,7 @@ import {colors} from '../../../utils/Colors';
 import {verticalScale, scale, moderateScale} from 'react-native-size-matters';
 import icons from '../../../../assets/icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import  Ionicons from "react-native-vector-icons/Ionicons"
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {signout} from '../../../services/FirebaseAuth';
 function MainSettings({navigation}) {
@@ -28,29 +28,24 @@ function MainSettings({navigation}) {
       id: 3,
       name: 'Log Out',
       icon: icons.logIcon,
-      onPress: ()=> {
-        onLogout()
-       
+      onPress: () => {
+        onLogout();
       },
     },
   ];
 
-  const onLogout= async()=>{
-     await AsyncStorage.removeItem('userAuth');
-        await AsyncStorage.removeItem('fcmToken');
+  const onLogout = async () => {
+    await AsyncStorage.removeItem('userAuth');
+    await AsyncStorage.removeItem('fcmToken');
 
-
-        await signout();
-        navigation.reset({
-          index: 0,
-          routes: [{name: 'AuthStack'}],
-        });
-
-  }
+    await signout();
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'AuthStack'}],
+    });
+  };
   return (
     <Container>
-
-      
       {/* <TouchableOpacity>
         <View>
           <CustomText
@@ -66,56 +61,50 @@ function MainSettings({navigation}) {
         </View>
       </TouchableOpacity> */}
 
-          {/* <CustomText fontSize={30} fontWeight={'700'} marginLeft={18}  marginBottom={35} marginTop={20}  > */}
+     
+      <View style={{padding: 20}}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}
+          style={{width: 40, height: 40}}>
+          <Ionicons
+            name="ios-chevron-back-outline"
+            size={moderateScale(22)}
+            color={colors.primary}
+          />
+        </TouchableOpacity>
 
-          {/* <CustomText
-            fontFamily={'ProximaNova-Bold'}
-            fontSize={30}
-            fontWeight={'700'}
-            marginLeft={18}
-            marginBottom={35}
-            marginTop={20}>
-            Settings
-          </CustomText> */}
-                    <View style={{padding:20}}>
+        <CustomText
+          fontSize={22}
+          fontWeight={'700'}
+          marginBottom={35}
+          marginTop={17}
+          fontFamily={'ProximaNova_Bold'}>
+          Settings
+        </CustomText>
 
-                    <TouchableOpacity 
-    onPress={()=>{
-      navigation.goBack()
-
-    }}
-    style={{width:40,height:40,}}>
-    <Ionicons name='ios-chevron-back-outline' size={moderateScale(22)} color={colors.primary}/>
-
-
-    </TouchableOpacity>
-
-           <CustomText
-              fontSize={22}
-              fontWeight={'700'}
-              marginBottom={35}
-              marginTop={17}
-              fontFamily={'ProximaNova_Bold'}>
-              Settings
-            </CustomText>
-
-      {MainSettingsArray.map((settings, index) => {
-        return (
-          // onPress={() => navigation.navigate("MainSettings")}
-          <TouchableOpacity onPress={settings.onPress} key={index}>
-            <View
-              style={{flexDirection: 'row', paddingBottom: 40,alignItems:"center"}}>
-              <Image
-                style={{marginRight: scale(10)}}
-                source={settings.icon}
-              />
-              <CustomText fontFamily={'ProximaNova_Regular'} fontSize={15}>
-                {settings.name}
-              </CustomText>
-            </View>
-          </TouchableOpacity>
-        );
-      })}
+        {MainSettingsArray.map((settings, index) => {
+          return (
+            // onPress={() => navigation.navigate("MainSettings")}
+            <TouchableOpacity onPress={settings.onPress} key={index}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  paddingBottom: 40,
+                  alignItems: 'center',
+                }}>
+                <Image
+                  style={{marginRight: scale(10)}}
+                  source={settings.icon}
+                />
+                <CustomText fontFamily={'ProximaNova_Regular'} fontSize={15}>
+                  {settings.name}
+                </CustomText>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
       </View>
     </Container>
   );

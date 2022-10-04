@@ -42,7 +42,8 @@ export const ChatBody = ({
   reactionModal,
   setReactionModal,
   setReactionObject,
-  setGetAllChat
+  setGetAllChat,
+  otherUserData
 }) => {
   const [messages, setMessages] = useState([]);
 
@@ -273,11 +274,19 @@ export const ChatBody = ({
                   overflow: 'hidden',
                   marginRight: scale(10),
                 }}>
-                <Image
+                  {/* otherUserData */}
+                  <Component
+            // resizeMode="cover"
+
+            style={{height: '100%', width: '100%'}}
+            uniqueKey={Math.random()}
+            source={{uri:otherUserData?.images?.[0]}}
+          />
+                {/* <Image
                   source={profileImages.profile01}
                   resizeMode="cover"
                   style={commonStyles.img}
-                />
+                /> */}
               </View>
             </View>
             <View

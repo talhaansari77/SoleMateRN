@@ -85,7 +85,7 @@ const ReportReason = ({navigation, route}) => {
 
             setTimeout(() => {
               setLoading(false);
-              navigation.navigate('Reported');
+              navigation.navigate('Reported',{otherUserData:route?.params?.otherUser});
             }, 2000);
           });
         }
@@ -105,7 +105,7 @@ const ReportReason = ({navigation, route}) => {
               fontSize={18}
               textAlign={'center'}
               alignSelf={'center'}
-              color={colors.darkOrange}>
+              color={colors.primary}>
               Let {route?.params?.otherUser?.firstName} know your reason for
               ending the conversation?
             </CustomText>

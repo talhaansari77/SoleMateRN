@@ -3,16 +3,18 @@ import React from 'react';
 import CustomText from '../../../components/CustomText';
 import {colors} from '../../../utils/Colors';
 import styled from 'react-native-styled-components';
-import {moderateScale} from 'react-native-size-matters';
+import {moderateScale, verticalScale} from 'react-native-size-matters';
 import profileImages from '../../../../assets/Profile_images';
 import CustomImage from '../../../components/CustomImage';
 import {color} from 'react-native-elements/dist/helpers';
 import CustomButton from '../../../components/CustomButton';
 import CustomGradientButton from '../../../components/CustomGradientButton';
+import commonStyles from '../../../utils/CommonStyles';
+import Component from '../../../components/FastImage';
 
 const Report = ({navigation,route}) => {
 
-  console.log("RoutesData",route?.params?.allChat)
+  console.log("RoutesData",route?.params?.otherData)
   return (
     <Container>
       <SafeAreaView>
@@ -27,19 +29,13 @@ const Report = ({navigation,route}) => {
             Are you sure you want to end conversation with {route?.params?.otherData?.firstName}?
           </CustomText>
         </View>
-        <View>
-          <CustomImage
-            height={290}
-            width={260}
-            alignSelf={'center'}
-            src={profileImages.reportImage}
-          />
-          {/* <CustomImage
-            height={250}
-            width={260}
-            alignSelf={"center"}
-            src={profileImages.reportimage}
-          /> */}
+        <View style={{width:moderateScale(300),height:verticalScale(240),borderRadius:20,overflow:"hidden",marginVertical:20}}>
+        <Component
+                        uri={Math.random()}
+                        style={commonStyles.img}
+                        source={{uri: route?.params?.otherData?.images?.[0]}}
+                      />
+        
         </View>
         {/* <View
           style={{
