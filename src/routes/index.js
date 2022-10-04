@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
-import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import AuthStack from './AuthStack';
 import MainStack from './MainStack';
 import SettingStack from './SettingStack';
@@ -17,27 +17,33 @@ const RootNavigator = () => {
     },
   };
 
-  // const handleDynamicLink = link => {
-  //   // Handle dynamic link inside your own application
-  //   console.log('this is DynamicLink-1:🖐', link);
-  //   if (link.url == 'http://getsolemate.com') {
-  //     // ...navigate to your offers screen
-  //     console.log('this is DynamicLink-2:🖐', link.url);
+  const handleDynamicLink = link => {
+    // Handle dynamic link inside your own application
+    console.log('ForeGround DynamicLink-1:🖐', link);
+    if (link?.url) {
+      const id = link.url?.split('=').pop();
+      const screenName = link.url?.split('&')[0].split('=').pop();
+      const wihApp = link.url?.split('&')[1].split('=').pop();
+      console.log('user Id:', id);
+      console.log('screenName:', screenName);
+      console.log('wihApp:', wihApp);
+      // if (screenName === 'Profile')
+      //   navigation.navigate('MainStack', {screen: 'Profile', params: {id: id}});
+    }
 
-  //   }
-  // };
+  };
 
-  // useEffect(() => {
+  useEffect(() => {
 
-  //   const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
-  //   // When the component is unmounted, remove the listener
-  //   return () => unsubscribe();
-  // }, []);
+    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    // When the component is unmounted, remove the listener
+    return () => unsubscribe();
+  }, []);
 
   const Stack = createStackNavigator();
   return (
     <NavigationContainer theme={MyTheme}>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="AuthStack" component={AuthStack} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
 

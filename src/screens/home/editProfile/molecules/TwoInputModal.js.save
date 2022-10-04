@@ -1,4 +1,4 @@
-import { View, Text, Modal, StyleSheet } from "react-native";
+rimport { View, Text, Modal, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import CustomTextInput from "../../../../components/CustomTextInput";
 import { Spacer } from "../../../../components/Spacer";
@@ -13,9 +13,8 @@ const TwoInputModal = ({
   setIceBreakerQ,
   questionIndex
 }) => {
-  // const currentQuestion=iceBreakerQ.filter((q) => q.id === questionIndex)
-  const [question, setQuestion] = useState('')
-  const [answer, setAnswer] = useState('')
+  const [question, setQuestion] = useState(iceBreakerQ[questionIndex].question)
+  const [answer, setAnswer] = useState(iceBreakerQ[questionIndex].answer)
   const onSaveIceBreakerQ = () => {
     
     const newQuestionList = iceBreakerQ.filter((q) => {

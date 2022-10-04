@@ -172,6 +172,7 @@ const EditProfile = ({navigation}) => {
           imageLink.push(link);
         }
         data.images = imageLink;
+        setLoading(false)
 
         if (authID) {
           await saveUser(authID, data);
