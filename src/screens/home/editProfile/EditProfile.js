@@ -33,6 +33,8 @@ import Loader from '../../../utils/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import HeaderConatiner from '../chat/request/Molecules/HeaderConatiner';
 import {getCurrentFCMToken} from '../../../utils/PushNotification';
+import TwoInputModal from './molecules/TwoInputModal';
+import {getSpecificeUser} from '../../../services/FirebaseAuth';
 
 const genders = [
   {id: 1, name: 'Male'},
@@ -40,31 +42,36 @@ const genders = [
 ];
 
 const EditProfile = ({navigation}) => {
+  const [authData, setAuthData] = useState({});
   const [isSelect, setIsSelect] = useState(-1);
   const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [aboutMe, setAboutMe] = useState('');
-  const [familyOrigin, setfamilyOrigin] = useState('');
-  const [language, setLanguage] = useState('');
-  const [employment, setEmployment] = useState('');
-  const [occupation, setOccupation] = useState('');
-  const [religion, setReligion] = useState('');
-  const [religiousity, setReligiousity] = useState('');
-  const [prayerLevel, setPrayerLevel] = useState('');
-  const [sector, setSector] = useState('');
-  const [martialHistory, setMartialHistory] = useState('');
-  const [martialTimming, setMartialTimming] = useState('');
+  const [lastName, setLastName] = useState(authData?.lastName);
+  const [aboutMe, setAboutMe] = useState(authData?.aboutMe);
+  const [familyOrigin, setfamilyOrigin] = useState(authData?.familyOrigin);
+  const [language, setLanguage] = useState(authData?.language);
+  const [employment, setEmployment] = useState(authData?.employment);
+  const [occupation, setOccupation] = useState(authData?.occupation);
+  const [religion, setReligion] = useState(authData?.religion);
+  const [religiousity, setReligiousity] = useState(authData?.religiousity);
+  const [prayerLevel, setPrayerLevel] = useState(authData?.prayerLevel);
+  const [sector, setSector] = useState(authData?.sector);
+  const [martialHistory, setMartialHistory] = useState(
+    authData?.martialHistory,
+  );
+  const [martialTimming, setMartialTimming] = useState(
+    authData?.martialTimming,
+  );
   const [loading, setLoading] = useState(false);
-  const [birthday, setBirthday] = useState('');
-  const [gender, setGender] = useState('');
-  const [feetHeight, setFeetHeight] = useState('');
-  const [inchesHeight, setInchesHeight] = useState('');
-  const [whatKids, setWhatKids] = useState('');
-  const [hasKids, setHasKids] = useState('');
-  const [willRelocate, setWillRelocate] = useState('');
-  const [jobStatus, setJobStatus] = useState('');
-  const [drinking, setDrinking] = useState('');
-  const [smoking, setSmoking] = useState('');
+  const [birthday, setBirthday] = useState(authData?.birthday);
+  const [gender, setGender] = useState(authData?.gender);
+  const [feetHeight, setFeetHeight] = useState(authData?.feetHeight);
+  const [inchesHeight, setInchesHeight] = useState(authData?.inchesHeight);
+  const [whatKids, setWhatKids] = useState(authData?.whatKids);
+  const [hasKids, setHasKids] = useState(authData?.hasKids);
+  const [willRelocate, setWillRelocate] = useState(authData?.willRelocate);
+  const [jobStatus, setJobStatus] = useState(authData?.jobStatus);
+  const [drinking, setDrinking] = useState(authData?.drinking);
+  const [smoking, setSmoking] = useState(authData?.smoking);
   const [addMore, setAddMore] = useState('');
   const [personality, setPersonality] = useState([]);
   const [characteristics, setcharacteristics] = useState([]);
@@ -72,10 +79,10 @@ const EditProfile = ({navigation}) => {
   const [images, setImages] = useState([]);
   const [personalityModal, setPersonalityModal] = useState(false);
   const [editLocation, setEditLocation] = useState('');
-  const [authID, setAuthID] = useState('');
   const [fcmToken, setFcmToken] = useState('');
+  const [authID, setAuthID] = useState('');
 
-  console.log('imagesUri', images);
+  console.log('imagesUri', firstName);
   console.log('imagesUri', birthday);
 
   const questions = [
@@ -92,9 +99,22 @@ const EditProfile = ({navigation}) => {
     getCurrentID();
   }, []);
   useEffect(() => {
+    getAuthData();
     getCurrentToken();
   }, []);
 
+  const getAuthData = async () => {
+    setLoading(true);
+    const id = await getAuthId();
+    try {
+      getSpecificeUser(id).then(data => {
+        console.log('UserData:', data);
+        setFirstName(data?.firstName);
+        setAuthData(data);
+      });
+      setLoading(false);
+    } catch (error) {}
+  };
   const getCurrentToken = async () => {
     let fcmToken = await AsyncStorage.getItem('fcmToken');
 
@@ -166,12 +186,12 @@ const EditProfile = ({navigation}) => {
         let imageLink = [];
         for (let index = 0; index < data.images.length; index++) {
           const element = data.images[index];
-          console.log("EmelemtIndex",element)
+          console.log('EmelemtIndex', element);
           const link = await uploadImage(element, authID);
           imageLink.push(link);
         }
         data.images = imageLink;
-        setLoading(false)
+        setLoading(false);
 
         if (authID) {
           await saveUser(authID, data);
@@ -224,8 +244,41 @@ const EditProfile = ({navigation}) => {
       setPersonalityModal(false);
     }
   };
+
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [iceBreakerQ, setIceBreakerQ] = useState([
+    {
+      id: 1,
+      question: '',
+      answer: '',
+      placeholder: 'What ice breaker question would you like to answer',
+    },
+    {
+      id: 2,
+      question: '',
+      answer: '',
+      placeholder: 'What ice breaker question would you like to answer',
+    },
+    {
+      id: 3,
+      question: '',
+      answer: '',
+      placeholder: 'What ice breaker question would you like to answer',
+    },
+  ]);
+
+  const [questionIndex, setQuestionIndex] = useState('');
+
   return (
     <View style={{flex: 1}}>
+      <TwoInputModal
+        setModalVisible={setModalVisible}
+        modalVisible={modalVisible}
+        iceBreakerQ={iceBreakerQ}
+        questionIndex={questionIndex}
+        setIceBreakerQ={setIceBreakerQ}
+      />
       <Header
         handleSubmit={onHandleSubmit}
         handleCancel={() => {
@@ -237,27 +290,23 @@ const EditProfile = ({navigation}) => {
         navigation={navigation}
       />
 
-        {/* Header */}
+      {/* Header */}
 
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.imageView}>
-            {data.map((item, index) => (
-              <PhotoContainer
-                key={index}
-                index={index}
-                label={item}
-                images={images}
-                setImages={setImages}
-                width={moderateScale(100)}
-                height={verticalScale(95)}
-              />
-            ))}
-          </View>
-          <View style={{flex:1,paddingHorizontal:20}}>
-
-
-         
-
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.imageView}>
+          {data.map((item, index) => (
+            <PhotoContainer
+              key={index}
+              index={index}
+              label={item}
+              images={images}
+              setImages={setImages}
+              width={moderateScale(100)}
+              height={verticalScale(95)}
+            />
+          ))}
+        </View>
+        <View style={{flex: 1, paddingHorizontal: 20}}>
           <View style={{padding: moderateScale(5)}}>
             <CustomText
               label={'Bio'}
@@ -307,11 +356,9 @@ const EditProfile = ({navigation}) => {
               <Spacer height={20} />
               {/* Ice Breaker Question */}
               <IceBreakQField
-              // addIceBreaker={addIceBreaker}
-              // setAddIceBreaker= {setAddIceBreaker}
-              // iceBreaker={iceBreaker}
-
-              // onSaveIceBreaker={onSaveIceBreaker()}
+                setModalVisible={setModalVisible}
+                iceBreakerQ={iceBreakerQ}
+                setQuestionIndex={setQuestionIndex}
               />
               {/* Personality */}
               <Spacer height={10} />
@@ -715,10 +762,9 @@ const EditProfile = ({navigation}) => {
               </View>
             </View>
           </View>
-          </View>
-
-        </ScrollView>
-        {/* <View style={{marginBottom: verticalScale(10)}}>
+        </View>
+      </ScrollView>
+      {/* <View style={{marginBottom: verticalScale(10)}}>
         <CustomButton
           title="Save"
           loading={loading}
@@ -736,7 +782,7 @@ const EditProfile = ({navigation}) => {
         }}
         // backgroundColor={colors.primary}
       /> */}
-        {/* </View> */}
+      {/* </View> */}
       <Loader
         loading={loading}
         file={require('../../../../assets/loader/heartLoading.json')}

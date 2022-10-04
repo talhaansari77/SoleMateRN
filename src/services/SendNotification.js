@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 export const NotificationSender = (fcmToken, message, title) => {
   console.log('FcmAohter', fcmToken, message, title);
 
