@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   package="com.SolMate">
 
-    
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
       android:name=".MainApplication"
@@ -9,11 +10,7 @@
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
-      android:theme="@style/AppTheme">
-
-      <provider android:authorities="com.facebook.app.FacebookContentProvider1275225653331121"
-        android:name="com.facebook.FacebookContentProvider"
-        android:exported="true" />
+      android:theme="@style/AppTheme">    
 
       <activity
         android:name=".MainActivity"
@@ -26,6 +23,10 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
+
+        <provider android:authorities="com.facebook.app.FacebookContentProvider1275225653331121"
+        android:name="com.facebook.FacebookContentProvider"
+        android:exported="true" />
 
         <intent-filter android:autoVerify="true">
             <action android:name="android.intent.action.VIEW" />
@@ -56,7 +57,7 @@
       <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
     </application>
 
-      <uses-permission android:name="android.permission.INTERNET" />
+    
 
         
 </manifest>
