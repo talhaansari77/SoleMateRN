@@ -123,6 +123,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		3C2BE00108B84B2683368DAC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Resources;
+			path = "";
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -179,14 +187,6 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
-		};
-		3C2BE00108B84B2683368DAC /* Resources */ = {
-			isa = "PBXGroup";
-			children = (
-			);
-			name = Resources;
-			sourceTree = "<group>";
-			path = "";
 		};
 /* End PBXGroup section */
 

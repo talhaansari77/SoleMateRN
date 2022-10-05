@@ -18,6 +18,7 @@ import {verticalScale, moderateScale} from 'react-native-size-matters';
 import {Spacer} from '../../../components/Spacer';
 import {colors} from '../../../utils/Colors';
 import HeaderConatiner from './request/Molecules/HeaderConatiner';
+import moment from 'moment';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
@@ -84,9 +85,13 @@ const Chat = ({navigation, route}) => {
     });
   };
 
-  // console.log('ReactionObject', getAllChat);
+  // console.log('ReactionObject', );
 
   const onSend = async result => {
+
+    // let newDate=new Date()
+
+    // let orginalDate=moment(newDate).format("YYYY-MM-DD")
     // console.log('Resimage', result);
     let imgResponse = '';
     if (result) {

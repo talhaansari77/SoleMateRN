@@ -2,8 +2,9 @@ import firestore from '@react-native-firebase/firestore';
 import uuid from 'react-native-uuid';
 import {reactionData} from '../utils/Data';
 import {chatFormat} from '../utils/Time';
+import moment from 'moment';
 
-export const sendMessage = async (from, to, text, image, status, reaction) => {
+export const sendMessage = async (from, to, text, image, status, reaction,date) => {
   console.log('ImageData', status);
   const id =
     from > to
@@ -17,6 +18,7 @@ export const sendMessage = async (from, to, text, image, status, reaction) => {
     image: image ? image : '',
     status: status,
     reaction: reaction ? reaction : '',
+    // date:date,
 
     createdAt: new Date(),
   };
@@ -61,6 +63,9 @@ export const deleteChat = async (id) => {
 };
 
 export const getMessages = (user1, user2, setMessages,setGetAllChat) => {
+  const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+  
   const id =
     user1 > user2 ? user1 + '__' + user2 + '__' : user2 + '__' + user1 + '__';
   return firestore()
@@ -79,7 +84,12 @@ export const getMessages = (user1, user2, setMessages,setGetAllChat) => {
             date: message.createdAt,
             createdAt: chatFormat(message.createdAt, 'HH:mm A'),
             to: message.to,
+            // date:message?.date,
             from: message.from,
+            days:moment(message.createdAt).format("MM-DD"),
+            // days:month(message.createdAt.getMonth()),
+
+
             image: message.image,
             status: message.status,
             reaction: message.reaction,
