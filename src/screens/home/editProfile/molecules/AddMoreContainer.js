@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: scale(5),
+    marginTop:verticalScale(12) 
   },
   addContainer: {
     backgroundColor: colors.primary,

@@ -1,9 +1,9 @@
-import {View, Text, TextInput} from 'react-native';
+import { View, Text, TextInput } from 'react-native';
 import React from 'react';
 import CustomText from '../../../../components/CustomText';
-import {colors} from '../../../../utils/Colors';
-import {Spacer} from '../../../../components/Spacer';
-import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
+import { colors } from '../../../../utils/Colors';
+import { Spacer } from '../../../../components/Spacer';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 const HeightField = ({
@@ -16,7 +16,7 @@ const HeightField = ({
 }) => {
   return (
     <>
-      <View style={{paddingHorizontal: scale(10)}}>
+      <View style={{ paddingHorizontal: scale(10) }}>
         <CustomText
           label={'Height'}
           color={colors.darkOrange}
@@ -32,8 +32,8 @@ const HeightField = ({
             paddingHorizontal: scale(20),
             // justifyContent: "space-between",
           }}>
-          <View style={{flex: 1}}>
-            <CustomText color={colors.gray} marginLeft={verticalScale(5)}>
+          <View style={{ flex: 1 }}>
+            <CustomText color={colors.gray} marginLeft={scale(5)}>
               Feet
             </CustomText>
             <View
@@ -41,35 +41,36 @@ const HeightField = ({
                 borderWidth: 1,
                 padding: moderateScale(2),
                 borderRadius: moderateScale(7),
-                height: verticalScale(25),
+                // paddingVertical: verticalScale(-25),
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'center',
               }}>
-              <View style={{width: '80%', alignItems: 'center'}}>
+              <View style={{ width: '80%', alignItems: 'center' }}>
                 <TextInput
                   value={feetHeight}
                   onChangeText={feet => {
-                    setSubmitError({...submitError, heightError: ''});
+                    setSubmitError({ ...submitError, heightError: '' });
 
                     setFeetHeight(feet);
                   }}
                   placeholder={'6'}
-                  style={{marginLeft: scale(20)}}
+                  placeholderTextColor={{ color: colors.gray }}
+                  style={{ marginLeft: scale(20), color: colors.black,padding:0 }}
                 />
               </View>
-              <View style={{paddingRight: 5}}>
-                <FontAwesomeIcon name="chevron-down" />
+              <View style={{ paddingRight: 5 }}>
+                <FontAwesomeIcon name="chevron-down" color={colors.gray} />
               </View>
             </View>
           </View>
 
           <Spacer width={10} />
-          <View style={{flex: 1}}>
+          <View style={{ flex: 1 }}>
             <CustomText
               color={colors.gray}
               fontFamily="ProximaNova-Regular"
-              marginLeft={verticalScale(5)}>
+              marginLeft={scale(5)}>
               Inches
             </CustomText>
             <View
@@ -77,25 +78,27 @@ const HeightField = ({
                 borderWidth: 1,
                 padding: moderateScale(2),
                 borderRadius: moderateScale(7),
-                height: verticalScale(25),
+                // height: verticalScale(25),
 
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'center',
               }}>
-              <View style={{width: '80%', alignItems: 'center'}}>
+              <View style={{ width: '80%', alignItems: 'center' }}>
                 <TextInput
                   value={inchesHeight}
                   onChangeText={inches => {
-                    setSubmitError({...submitError, heightError: ''});
+                    setSubmitError({ ...submitError, heightError: '' });
                     setInchesHeight(inches);
                   }}
                   placeholder={'6 '}
-                  style={{marginLeft: scale(20)}}
+                  placeholderTextColor={{ color: colors.gray }}
+
+                  style={{ marginLeft: scale(20), color: colors.black,padding:0 }}
                 />
               </View>
-              <View style={{paddingRight: 5}}>
-                <FontAwesomeIcon name="chevron-down" />
+              <View style={{ paddingRight: 5 }}>
+                <FontAwesomeIcon name="chevron-down" color={colors.gray} />
               </View>
             </View>
           </View>

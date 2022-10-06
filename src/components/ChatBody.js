@@ -34,6 +34,7 @@ import Component from './FastImage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {getUserID} from 'react-native-fbsdk/lib/commonjs/FBAppEventsLogger';
 import {getAuthId} from '../services/FirebaseAuth';
+import { useIsFocused } from '@react-navigation/native';
 // import colors from "../../Utils/colors";
 // import { getMessages } from "../Services/chats";
 export const ChatBody = ({
@@ -49,6 +50,7 @@ export const ChatBody = ({
   otherUserData,
 }) => {
   const [messages, setMessages] = useState([]);
+  const isFocused = useIsFocused();
   const month = [
     'January',
     'February',
@@ -80,7 +82,7 @@ export const ChatBody = ({
 
   useEffect(() => {
     changeMessageStatus();
-  }, [authId, otherId]);
+  }, [authId, otherId,isFocused]);
 
   const changeMessageStatus = async () => {
     const id = await getAuthId();
@@ -649,8 +651,6 @@ export const ChatBody = ({
                           <TouchableOpacity
                           activeOpacity={0.5}
                             onPress={() => {
-                              console.log("cdbcdkjb")
-                              // console.log("itemFile",item.fielUrl)
                               checkPermission(item.fielUrl)
                             }}
                             style={{
