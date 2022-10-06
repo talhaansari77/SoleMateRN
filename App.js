@@ -8,6 +8,7 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 import Share from 'react-native-share';
 import { useEffect } from 'react';
 import SplashScreen from 'react-native-splash-screen'
+import { notificationServices, requestUserPermission } from './src/utils/PushNotification';
 
 LogBox.ignoreLogs(['VirtualizedLists', 'Warning:...']);
 LogBox.ignoreAllLogs();
@@ -15,6 +16,8 @@ LogBox.ignoreAllLogs();
 export default function App() {
   useEffect(() => {
     SplashScreen.hide();
+    requestUserPermission();
+    notificationServices();
   }, [])
 
   return (
