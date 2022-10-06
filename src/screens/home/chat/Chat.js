@@ -87,17 +87,40 @@ const Chat = ({navigation, route}) => {
 
   // console.log('ReactionObject', );
 
-  const onSend = async result => {
+  const onSend = async (result,file) => {
+    console.log("fileData",file)
+
+    const tempFile=[]
+
+
+    
 
     // let newDate=new Date()
 
     // let orginalDate=moment(newDate).format("YYYY-MM-DD")
     // console.log('Resimage', result);
     let imgResponse = '';
-    if (result) {
-      imgResponse = await uploadImage(result.uri, route.params?.authId);
-      // console.log('imageRes', imgResponse);
+
+    if(file){
+
+      tempFile.push({
+
+        fileName:file.name,
+        type:file.type,
+        fileSize:file.size,
+        fielUrl:result
+
+      })
+
     }
+  else if(result){
+   imgResponse = await uploadImage(result.uri, route.params?.authId);
+
+
+  }
+    // if (result) {
+    //   imgResponse = await uploadImage(result.uri, route.params?.authId);
+    // }
     const messageData = await sendMessage(
       route.params?.authId,
       route?.params?.otherUserId,
@@ -105,6 +128,8 @@ const Chat = ({navigation, route}) => {
       imgResponse ? imgResponse : '',
       status,
       reaction ? reaction : '',
+      tempFile?tempFile:''
+      
     );
     updateLastMessage(
       route.params?.authId,

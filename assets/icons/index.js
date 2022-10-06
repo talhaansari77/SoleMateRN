@@ -57,6 +57,10 @@ const icons = {
   resizeHeight: require('./open-resize-height.png'),
   tickPurple: require('./tickPurple.png'),
   document: require('./document.png'),
+  download: require('./download.png'),
+
+
+  
 };
 
 export default icons;
