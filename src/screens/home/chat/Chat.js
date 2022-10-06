@@ -89,8 +89,61 @@ const Chat = ({navigation, route}) => {
 
   const onSend = async (result,file) => {
     console.log("fileData",file)
+    console.log("")
+    let imgResponse = '';
+
 
     const tempFile=[]
+ 
+
+      if(file){
+
+        tempFile.push({
+  
+          fileName:file.name,
+          type:file.type,
+          fileSize:file.size,
+          fielUrl:result
+  
+        })
+  
+      }
+    else if(result){
+     imgResponse = await uploadImage(result.uri, route.params?.authId);
+  
+  
+    }
+      // if (result) {
+      //   imgResponse = await uploadImage(result.uri, route.params?.authId);
+      // }
+      const messageData = await sendMessage(
+        route.params?.authId,
+        route?.params?.otherUserId,
+        textMessage ? textMessage : '',
+        imgResponse ? imgResponse : '',
+        status,
+        reaction ? reaction : '',
+        tempFile?tempFile:''
+        
+      );
+      updateLastMessage(
+        route.params?.authId,
+        route?.params?.otherUserId,
+        messageData,
+      );
+  
+      // fcmToken,message,title
+      NotificationSender(
+        otherUserData?.fcmToken,
+        textMessage,
+        getAuthData?.firstName,
+      );
+      setTextMessage('');
+      setImage('');
+      // Sending Notifications
+      // console.log('Sending Notifications');
+
+  
 
 
     
@@ -99,54 +152,8 @@ const Chat = ({navigation, route}) => {
 
     // let orginalDate=moment(newDate).format("YYYY-MM-DD")
     // console.log('Resimage', result);
-    let imgResponse = '';
 
-    if(file){
-
-      tempFile.push({
-
-        fileName:file.name,
-        type:file.type,
-        fileSize:file.size,
-        fielUrl:result
-
-      })
-
-    }
-  else if(result){
-   imgResponse = await uploadImage(result.uri, route.params?.authId);
-
-
-  }
-    // if (result) {
-    //   imgResponse = await uploadImage(result.uri, route.params?.authId);
-    // }
-    const messageData = await sendMessage(
-      route.params?.authId,
-      route?.params?.otherUserId,
-      textMessage ? textMessage : '',
-      imgResponse ? imgResponse : '',
-      status,
-      reaction ? reaction : '',
-      tempFile?tempFile:''
-      
-    );
-    updateLastMessage(
-      route.params?.authId,
-      route?.params?.otherUserId,
-      messageData,
-    );
-
-    // fcmToken,message,title
-    NotificationSender(
-      otherUserData?.fcmToken,
-      textMessage,
-      getAuthData?.firstName,
-    );
-    setTextMessage('');
-    setImage('');
-    // Sending Notifications
-    // console.log('Sending Notifications');
+  
   };
 
   const saveReaction = async reaction => {

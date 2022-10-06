@@ -180,22 +180,24 @@ export const ChatBody = ({
   };
   const renderMessages = ({ item: message, index }) => {
     const isUser = message?.from == authId;
+
+    console.log("MessageDays",message.days)
     // let Today = moment().format('MMM-DD');
     // Today= moment(message.days).diff(moment(Today), "days") >= 0
     // let chatDate = Number(message.days.split("-").pop());
     // chatDate = Number(moment().format('DD')) == chatDate ? '' : message.days
-    let chatDate;
-    if (index == 0) {
-      chatDate = messages[index].days
-    } else {
-      if (index < messages.length-1) {
-        if (messages[index].days !== messages[index + 1].days) {
-          chatDate = messages[index + 1].days
-        } else if (messages[index].days === messages[index + 1].days) {
-          chatDate = ''
-        }
-      }
-    }
+    // let chatDate;
+    // if (index == 0) {
+    //   chatDate = messages[index].days
+    // } else {
+    //   if (index < messages.length-1) {
+    //     if (messages[index].days !== messages[index + 1].days) {
+    //       chatDate = messages[index + 1].days
+    //     } else if (messages[index].days === messages[index + 1].days) {
+    //       chatDate = ''
+    //     }
+    //   }
+    // }
     // const tempFile=[message.file]
     // console.log("FileName",message.file?.length)
 
@@ -207,7 +209,7 @@ export const ChatBody = ({
           flex: 1,
         }}>
         <View style={{ paddingBottom: verticalScale(15) }}>
-          <CustomText label={chatDate} textStyle={styles.timerText} />
+          <CustomText label={message.days} textStyle={styles.timerText} />
         </View>
 
         {isUser ? (
