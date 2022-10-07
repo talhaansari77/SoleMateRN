@@ -8,6 +8,9 @@ import {
   Keyboard,
   FlatList,
   ScrollView,
+  Pressable,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ProfileNav from '../profile/molecules/ProfileNav';
@@ -28,6 +31,17 @@ import {Divider} from 'react-native-elements';
 import {ChatBody} from '../../../components/ChatBody';
 import CustomGradientButton from '../../../components/CustomGradientButton';
 import CustomButton from '../../../components/CustomButton';
+import uuid from 'react-native-uuid';
+import storage from '@react-native-firebase/storage';
+import AudioRecorderPlayer, {
+  AVEncoderAudioQualityIOSType,
+  AVEncodingOption,
+  AudioEncoderAndroidType,
+  AudioSet,
+  AudioSourceAndroidType,
+  PlayBackType,
+  RecordBackType,
+} from 'react-native-audio-recorder-player';
 import {
   sendMessage,
   sendMessageWithImage,
@@ -54,9 +68,13 @@ import axios from 'axios';
 import {getCurrentFCMToken} from '../../../utils/PushNotification';
 
 import {NotificationSender} from '../../../services/SendNotification';
+import RNFetchBlob from 'rn-fetch-blob';
+
+const audioRecorderPlayer = new AudioRecorderPlayer();
+
 
 const Chat = ({navigation, route}) => {
-  const [textMessage, setTextMessage] = useState([]);
+  const [textMessage, setTextMessage] = useState('');
   const [showEndConversion, setShowEndConversion] = useState(false);
   const [documentsModal, setDocumentsModal] = useState(false);
   const [image, setImage] = useState('');
@@ -69,9 +87,34 @@ const Chat = ({navigation, route}) => {
   const [otherUserData, setOtherUserData] = useState({});
   const [getAuthData, setGetAuthData] = useState({});
   const [getAllChat, setGetAllChat] = useState([]);
+
+  const [state, setState] = useState({
+    recordSecs: 0,
+    recordTime: '00:00:00',
+    currentPositionSec: 0,
+    currentDurationSec: 0,
+    playTime: '00:00:00',
+    duration: '00:00:00',
+    recorderState: 'init',
+  });
   useEffect(() => {
     getUserFcm();
   }, []);
+
+  const onStopPlay = async () => {
+    console.log("onStopPlay");
+    audioRecorderPlayer.stopPlayer();
+    audioRecorderPlayer.removePlayBackListener();
+    setState({ ...state, recorderState: "stopPlayer" });
+  };
+
+  // useEffect(() => {
+  //   if (state.duration == state.playTime && state.recorderState != 'init') {
+  //     onStopPlay();
+  //   }
+  // }, [state.playTime]);
+
+  console.log("TextMessage",textMessage)
 
   const getUserFcm = async () => {
     getSpecificeUser(route?.params?.otherUserId).then(data => {
@@ -87,73 +130,229 @@ const Chat = ({navigation, route}) => {
 
   // console.log('ReactionObject', );
 
-  const onSend = async (result,file) => {
-    console.log("fileData",file)
-    console.log("")
+  const onSend = async (result, file,audioUri) => {
+    console.log('fileData', file,result,audioUri);
     let imgResponse = '';
+    const tempAudio=[]
+   const tempFile = [];
+   if(result==0 || file==0){
+     console.log("audio")
+
+    tempAudio.push({
+
+      recordSecs:state.recordSecs,
+      recordTime:state.recordTime,
+      currentPositionSec: state.currentPositionSec,
+      currentDurationSec:state.currentDurationSec,
+      playTime: state.playTime,
+      duration:state.duration,
+      recorderState:state.recorderState,
+      audioUri:audioUri,
+
+    })
+   }
+   else if(file){
+    console.log("fileData")
 
 
-    const tempFile=[]
- 
 
-      if(file){
+       tempFile.push({
+        fileName: file.name,
+        type: file.type,
+        fileSize: file.size,
+        fielUrl: result,
+      });
 
-        tempFile.push({
-  
-          fileName:file.name,
-          type:file.type,
-          fileSize:file.size,
-          fielUrl:result
-  
-        })
-  
-      }
-    else if(result){
+   }
+   else if(result){
+    console.log("imageData")
+
+
      imgResponse = await uploadImage(result.uri, route.params?.authId);
-  
-  
-    }
-      // if (result) {
-      //   imgResponse = await uploadImage(result.uri, route.params?.authId);
-      // }
-      const messageData = await sendMessage(
-        route.params?.authId,
-        route?.params?.otherUserId,
-        textMessage ? textMessage : '',
-        imgResponse ? imgResponse : '',
-        status,
-        reaction ? reaction : '',
-        tempFile?tempFile:''
-        
-      );
-      updateLastMessage(
-        route.params?.authId,
-        route?.params?.otherUserId,
-        messageData,
-      );
-  
-      // fcmToken,message,title
-      NotificationSender(
-        otherUserData?.fcmToken,
-        textMessage,
-        getAuthData?.firstName,
-      );
-      setTextMessage('');
-      setImage('');
-      // Sending Notifications
-      // console.log('Sending Notifications');
-
-  
 
 
+   }
+
+  
+    const messageData = await sendMessage(
+      route.params?.authId,
+      route?.params?.otherUserId,
+      textMessage ? textMessage : '',
+      imgResponse ? imgResponse : '',
+      status,
+      reaction ? reaction : '',
+      tempFile ? tempFile : '',
+      tempAudio?tempAudio:'',
     
+    );
+    updateLastMessage(
+      route.params?.authId,
+      route?.params?.otherUserId,
+      messageData,
+    );
+
+    // fcmToken,message,title
+    NotificationSender(
+      otherUserData?.fcmToken,
+      textMessage,
+      getAuthData?.firstName,
+    );
+    setTextMessage('');
+    setImage('');
+    // Sending Notifications
+    // console.log('Sending Notifications');
 
     // let newDate=new Date()
 
     // let orginalDate=moment(newDate).format("YYYY-MM-DD")
     // console.log('Resimage', result);
+  };
 
+  const onStartRecord = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const grants = await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        ]);
+
+        console.log('write external stroage', grants);
+
+        if (
+          grants['android.permission.WRITE_EXTERNAL_STORAGE'] ===
+            PermissionsAndroid.RESULTS.GRANTED &&
+          grants['android.permission.READ_EXTERNAL_STORAGE'] ===
+            PermissionsAndroid.RESULTS.GRANTED &&
+          grants['android.permission.RECORD_AUDIO'] ===
+            PermissionsAndroid.RESULTS.GRANTED
+        ) {
+          console.log('permissions granted');
+        } else {
+          console.log('All required permissions not granted');
+          return;
+        }
+      } catch (err) {
+        console.warn(err);
+        return;
+      }
+    }
+
+    const audioSet = {
+      AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
+      AudioSourceAndroid: AudioSourceAndroidType.MIC,
+      AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
+      AVNumberOfChannelsKeyIOS: 2,
+      AVFormatIDKeyIOS: AVEncodingOption.aac,
+    };
+    const uri = await audioRecorderPlayer.startRecorder(undefined, audioSet);
+    audioRecorderPlayer.addRecordBackListener(e => {
+      setState({
+        ...state,
+        recordSecs: e.currentPosition,
+        recordTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
+        recorderState: 'recordStart',
+      });
+    });
+
+    console.log(`uri: ${uri}`);
+    ChooseFile(uri)
+  };
+
+
+  const ChooseFile = async (uri) => {
+    // pick the single file
+
+    try {
+      
+
+      const path=NormalizedPath(uri)
+      console.log("PathData",path)
+
+      const result=await RNFetchBlob.fs.readFile(path,"base64")
+      UploadFileToFirebaseStorage(result, uri)
+      // const response = await readFile(path, "base64");
+
+
+      console.log("PathDataResult",result)
+    } catch (error) {
+
+      console.log("error",error)
+      
+    }
+  };
+
+  const NormalizedPath = path => {
+    if (Platform.OS == 'ios' || Platform.OS == 'android') {
+      const filePrefix = 'file://';
+
+      if (path.startsWith(filePrefix)) {
+        path = path.substring(filePrefix.length);
+
+        try {
+          path = decodeURI(path);
+        } catch (error) {}
+      }
+    }
+    return path;
+  };
   
+  const UploadFileToFirebaseStorage=async (result,file)=>{
+    const resData=0;
+    const fileData=0;
+
+    const uploadFile=  storage().ref(`audioFiles/${uuid.v4()}`).putString(result,'base64');
+    uploadFile.on('state_changed', 
+    (snapshot) => {
+      // Observe state change events such as progress, pause, and resume
+      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log('Upload is ' + progress + '% done');
+      switch (snapshot.state) {
+        case storage.TaskState.PAUSED: // or 'paused'
+          console.log('Upload is paused');
+          break;
+        case storage.TaskState.RUNNING: // or 'running'
+          console.log('Upload is running');
+          break;
+      }
+    }, 
+    (error) => {
+      // Handle unsuccessful uploads
+    }, 
+    () => {
+      // Handle successful uploads on complete
+      // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+      uploadFile.snapshot.ref.getDownloadURL().then((downloadURL) => {
+        // console.log('File available at', downloadURL);
+        setDocumentsModal(false);
+        console.log("DowloadUrl",downloadURL)
+        onSend(resData,fileData,downloadURL);
+      });
+    }
+  );
+
+
+
+
+    
+  
+  }
+
+  const onStopRecord = async () => {
+    try {
+      const result = await audioRecorderPlayer.stopRecorder();
+      console.log('onStopRecord try', result);
+
+      audioRecorderPlayer.removeRecordBackListener();
+      setState({
+        ...state,
+        recordSecs: 0,
+        recorderState: 'recordStop',
+      });
+    } catch (error) {
+      console.log('onStopRecord catch', error);
+    }
   };
 
   const saveReaction = async reaction => {
@@ -186,6 +385,8 @@ const Chat = ({navigation, route}) => {
     );
   };
 
+
+
   return (
     // <EmojiContext.Provider value={{emoji, setEmoji}}>
     <SafeAreaView style={commonStyles.commonMain}>
@@ -212,48 +413,61 @@ const Chat = ({navigation, route}) => {
             setGetAllChat={setGetAllChat}
           />
         </View>
-
         <View style={styles.textInputContainer}>
+        {
+          state.recorderState === 'recordStart' ?(
+            <View>
+           <Text>Recording {state?.recordTime}</Text>
+            </View>
+          ):
           <TouchableOpacity
-            activeOpacity={0.6}
-            onPress={() => {
-              setDocumentsModal(true);
-            }}
-            style={styles.addContainer}>
-            <Feather
-              name="plus"
-              size={moderateScale(18)}
-              color={colors.white}
-            />
-          </TouchableOpacity>
+          activeOpacity={0.6}
+          onPress={() => {
+            setDocumentsModal(true);
+          }}
+          style={styles.addContainer}>
+          <Feather
+            name="plus"
+            size={moderateScale(18)}
+            color={colors.white}
+          />
+        </TouchableOpacity>
+            }
           <View style={{width: verticalScale(20)}} />
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <View style={styles.textInputContainer1}>
-              <TextInput
-                placeholder="message"
-                multiline={true}
-                placeholderTextColor="#667085"
-                style={{
-                  fontSize: verticalScale(12),
-                  width: '90%',
-                  color: colors.black,
-                  paddingLeft: 10,
-                }}
-                value={textMessage}
-                onChangeText={value => setTextMessage(value)}
-              />
-              <TouchableOpacity
-                onPress={() => {
-                  setShowEmojis(!showEmojis);
-                }}
-                activeOpacity={0.6}>
-                <SimpleLineIcons
-                  name="emotsmile"
-                  size={moderateScale(25)}
-                  color={colors.primary}
-                />
-              </TouchableOpacity>
+          {
+          state.recorderState === 'recordStart' ?(
+            <View style={{    width: '66%',backgroundColor:"red"
+          }}>
             </View>
+          ):
+          <View style={styles.textInputContainer1}>
+          <TextInput
+            placeholder="message"
+            multiline={true}
+            placeholderTextColor="#667085"
+            style={{
+              fontSize: verticalScale(12),
+              width: '90%',
+              color: colors.black,
+              paddingLeft: 10,
+            }}
+            value={textMessage}
+            onChangeText={value => setTextMessage(value)}
+          />
+          <TouchableOpacity
+            onPress={() => {
+              setShowEmojis(!showEmojis);
+            }}
+            activeOpacity={0.6}>
+            <SimpleLineIcons
+              name="emotsmile"
+              size={moderateScale(25)}
+              color={colors.primary}
+            />
+          </TouchableOpacity>
+        </View>
+}
             <View style={{width: verticalScale(5)}} />
             {textMessage ? (
               <TouchableOpacity
@@ -268,13 +482,19 @@ const Chat = ({navigation, route}) => {
                 />
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity activeOpacity={0.6}>
+              <Pressable 
+              onLongPress={onStartRecord}
+              onPressOut={
+                onStopRecord
+
+              }              // activeOpacity={0.6}
+              >
                 <MaterialCommunityIcons
                   name="microphone-outline"
                   size={moderateScale(30)}
                   color={colors.primary}
                 />
-              </TouchableOpacity>
+              </Pressable>
             )}
           </View>
         </View>
@@ -317,7 +537,6 @@ const Chat = ({navigation, route}) => {
                     });
                   }}
                 />
-            
               </View>
             </View>
 
@@ -398,7 +617,6 @@ const Chat = ({navigation, route}) => {
             numColumns={8}
             renderItem={renderItem}
           />
-         
         </View>
       )}
 

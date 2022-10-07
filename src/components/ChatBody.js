@@ -82,8 +82,10 @@ export const ChatBody = ({
   }, [authId, otherId]);
 
   useEffect(() => {
-    changeMessageStatus();
-  }, [authId, otherId, isFocused]);
+    if (isFocused){
+      changeMessageStatus();
+    }
+  }, [authId, otherId, isFocused,messages]);
 
   const changeMessageStatus = async () => {
     const id = await getAuthId();
@@ -186,18 +188,18 @@ export const ChatBody = ({
     // Today= moment(message.days).diff(moment(Today), "days") >= 0
     // let chatDate = Number(message.days.split("-").pop());
     // chatDate = Number(moment().format('DD')) == chatDate ? '' : message.days
-    // let chatDate;
-    // if (index == 0) {
-    //   chatDate = messages[index].days
-    // } else {
-    //   if (index < messages.length-1) {
-    //     if (messages[index].days !== messages[index + 1].days) {
-    //       chatDate = messages[index + 1].days
-    //     } else if (messages[index].days === messages[index + 1].days) {
-    //       chatDate = ''
-    //     }
-    //   }
-    // }
+    let chatDate;
+    if (index == 0) {
+      chatDate = messages[index].days
+    } else {
+      if (index < messages.length-1) {
+        if (messages[index].days !== messages[index - 1].days) {
+          chatDate = messages[index].days
+        } else  {
+          chatDate = ''
+        }
+      }
+    }
     // const tempFile=[message.file]
     // console.log("FileName",message.file?.length)
 
@@ -209,7 +211,7 @@ export const ChatBody = ({
           flex: 1,
         }}>
         <View style={{ paddingBottom: verticalScale(15) }}>
-          <CustomText label={message.days} textStyle={styles.timerText} />
+          <CustomText label={chatDate} textStyle={styles.timerText} />
         </View>
 
         {isUser ? (

@@ -6,7 +6,7 @@ import moment from 'moment';
 
 
 
-export const sendMessage = async (from, to, text, image, status, reaction,file) => {
+export const sendMessage = async (from, to, text, image, status, reaction,file,audio) => {
   console.log('ImageData', status);
   const id =
     from > to
@@ -20,13 +20,14 @@ export const sendMessage = async (from, to, text, image, status, reaction,file) 
     image: image ? image : '',
     status: status,
     reaction: reaction ? reaction : '',
-    file:file,
+    file:file? file:'',
+    audio:audio?audio:'',
     // date:date,
 
     createdAt: new Date(),
   };
   await firestore().doc(`chats/${id}`).set(message, {merge: true});
-  return {id, text, from, to, image, status,file};
+  return {id, text, from, to, image, status,file,audio};
 };
 
 export const updateMessage = async (id, reactionData) => {
@@ -89,9 +90,10 @@ export const getMessages = (user1, user2, setMessages,setGetAllChat) => {
             createdAt: chatFormat(message.createdAt, 'HH:mm A'),
             to: message.to,
             file:message.file,
+            audio:message.audio,
             // date:message?.date,
             from: message.from,
-            days:moment(message.createdAt).format("MMM-DD"),
+            days: chatFormat(message.createdAt,"MMM-DD"),
             // days:month(message.createdAt.getMonth()),
 
 
