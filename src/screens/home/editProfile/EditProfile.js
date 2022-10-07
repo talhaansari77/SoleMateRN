@@ -77,9 +77,11 @@ const EditProfile = ({ navigation }) => {
   const [editLocation, setEditLocation] = useState('');
   const [fcmToken, setFcmToken] = useState('');
   const [authID, setAuthID] = useState('');
+  const [isEditPhoto, setIsEditPhoto] = useState(false)
 
-  console.log('imagesUri', firstName);
+  console.log('imagesUri', images);
   console.log('imagesUri', birthday);
+
 
   const questions = [
     { id: 1, question: 'Want Kids', onValue: setWhatKids, state: whatKids },
@@ -111,6 +113,7 @@ const EditProfile = ({ navigation }) => {
         const furls = [];
         data?.images.map(item => furls.push({ uri: item }))
         console.log("furls",furls)
+        setIsEditPhoto(true)
         // console.log('UserData:', data);
         setImages(furls);
         setFirstName(data?.firstName);
@@ -332,9 +335,14 @@ const EditProfile = ({ navigation }) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.imageView}>
           {data.map((item, index) => (
+
+          
+            
             <PhotoContainer
               key={index}
               index={index}
+              itemUri={item.uri}
+              isEditPhoto={isEditPhoto}
               label={item}
               images={images}
               setImages={setImages}

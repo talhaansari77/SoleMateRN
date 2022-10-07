@@ -18,10 +18,12 @@ const PhotoContainer = ({
   width,
   height,
   item,
+  itemUri,
+  isEditPhoto ,
   label,
 }) => {
   const [uri, setUri] = useState(item ? item.uri : '');
-  console.log('===item', images.uri);
+  // console.log('===item',  item.uri);
   const onClickImage = async () => {
     try {
       const result = await launchImageLibrary({
@@ -32,20 +34,41 @@ const PhotoContainer = ({
         console.log('ImagesDetail✌', result.assets[0].uri);
         // setUri(result);
         setUri(result.assets[0].uri);
-        const itemIndex = images.findIndex(item => item.index === index);
+
+        let itemIndex = -1;
+        if(isEditPhoto){
+          itemIndex = images.findIndex((item) => item.uri === uri);
+          console.log("====itemIndex",itemIndex)
+        }else{
+           itemIndex= images.findIndex((item) => item.index === index);
+        }
         if (itemIndex === -1) {
           setImages([
             ...images,
             {
               index,
-              uri: result.assets[0].uri,
-            },
+         uri: result.assets[0].uri,
+      },
           ]);
         } else {
           const temp = [...images];
-          temp[itemIndex] = {...temp[itemIndex], uri: result.assets[0].uri};
-          setImages(temp);
+         temp[itemIndex] = {...temp[itemIndex], uri: result.assets[0].uri};
+        setImages(temp);
         }
+        // const itemIndex = images.findIndex(item => item.index === index);
+        // if (itemIndex === -1) {
+        //   setImages([
+        //     ...images,
+        //     {
+        //       index,
+        //       uri: result.assets[0].uri,
+        //     },
+        //   ]);
+        // } else {
+        //   const temp = [...images];
+        //   temp[itemIndex] = {...temp[itemIndex], uri: result.assets[0].uri};
+        //   setImages(temp);
+        // }
       } else {
         setUri('');
       }
