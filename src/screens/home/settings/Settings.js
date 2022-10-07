@@ -22,7 +22,7 @@ const Settings = () => {
     try {
       var link = await dynamicLinks().buildShortLink(
         {
-          link: `https://getsolemate.page.link/EwdR?screen=Profile&id=${id}`,
+          link: `https://getsolemate.page.link/EwdR?screen=Profile&withApp=true&id=${id}`,
           domainUriPrefix: 'https://getsolemate.page.link',
           android: {
             packageName: 'com.Solmate',

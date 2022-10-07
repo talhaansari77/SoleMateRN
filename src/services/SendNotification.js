@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const NotificationSender=({fcmToken,message,title})=>{
+export const NotificationSender=(fcmToken,message,title)=>{
 
     const NotificationData = {
         method: 'POST',
