@@ -35,7 +35,18 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getUserID } from 'react-native-fbsdk/lib/commonjs/FBAppEventsLogger';
 import { getAuthId } from '../services/FirebaseAuth';
 import { useIsFocused } from '@react-navigation/native';
+import * as Progress from 'react-native-progress';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+// import profileImages from '../../../../assets/Profile_images';
+
+
+
 import moment from 'moment';
+import CustomAudio from './CustomAudio';
+
+const audioRecorderPlayer = new AudioRecorderPlayer();
+
 // import colors from "../../Utils/colors";
 // import { getMessages } from "../Services/chats";
 export const ChatBody = ({
@@ -49,9 +60,12 @@ export const ChatBody = ({
   setReactionObject,
   setGetAllChat,
   otherUserData,
+  playing,
+  setPlaying
 }) => {
   const [messages, setMessages] = useState([]);
   const isFocused = useIsFocused();
+
   const month = [
     'January',
     'February',
@@ -87,6 +101,17 @@ export const ChatBody = ({
     }
   }, [authId, otherId, isFocused,messages]);
 
+  useEffect(() => {
+
+    messages.map(item=>{
+      if (item.currentPositionSec / item.currentDurationSec === 1) {
+        setPlaying(false)
+    }
+
+    })
+  
+}, []);
+
   const changeMessageStatus = async () => {
     const id = await getAuthId();
 
@@ -108,7 +133,6 @@ export const ChatBody = ({
 
   const downloadFile = file => {
     console.log('FileName', file);
-
     // Get today's date to add the time suffix in filename
     let date = new Date();
     // File URL which we want to download
@@ -116,9 +140,7 @@ export const ChatBody = ({
     console.log('FILEURL', file);
     // Function to get extention of the file url
     let file_ext = getFileExtention(FILE_URL);
-
     file_ext = '.' + file_ext[0];
-
     // config: To get response by passing the downloading related options
     // fs: Root directory path to download
     const { config, fs } = RNFetchBlob;
@@ -150,7 +172,6 @@ export const ChatBody = ({
     // To get the file extension
     return /[.]/.exec(fileUrl) ? /[^.]+$/.exec(fileUrl) : undefined;
   };
-
   const checkPermission = async file => {
     console.log('CheckFile', file);
 
@@ -180,6 +201,33 @@ export const ChatBody = ({
       }
     }
   };
+
+ const onStartPlay = async (item) => {
+    console.log('onStartPlay',item[0]?.audioUri);
+    if (!playing) {
+        setPlaying(!playing)
+        const dirs = RNFetchBlob.fs.dirs;
+// const path = Platform.select({
+//   ios: item[0]?.audioUri,
+//   android: `${dirs.CacheDir}/${item[0]?.audioUri} `,
+// });
+
+const uri = await audioRecorderPlayer.startPlay(item[0]?.audioUri);
+
+        // const msg = await audioRecorderPlayer.startPlayer(item[0]?.audioUri);
+        console.log(uri);
+      ;
+    } else {
+        setPlaying(!playing)
+        onStopPlay()
+    }
+};
+ 
+  const onStopPlay = async () => {
+  console.log('onStopPlay');
+  audioRecorderPlayer.stopPlayer();
+  audioRecorderPlayer.removePlayBackListener();
+};
   const renderMessages = ({ item: message, index }) => {
     const isUser = message?.from == authId;
 
@@ -440,6 +488,23 @@ export const ChatBody = ({
                 })}
               </View>
             )}
+
+{message.audio == undefined || message?.audio?.length == 0 ? (
+                <></>
+              ):
+              <View>
+                <CustomAudio  
+                startPlay={()=>{
+                  onStartPlay(message.audio)
+
+                }}
+                playing={playing}
+                message={message.audio}
+                />
+
+              </View>
+            
+            }
           </View>
         ) : (
           <View
@@ -927,3 +992,52 @@ const styles = ScaledSheet.create({
     borderTopRightRadius: verticalScale(20),
   },
 });
+
+{/* <View
+style={{
+    padding: 10,
+    height: 80,
+    width: '80%',
+    borderRadius: 20,
+    backgroundColor: colors.placeholder,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row'
+}}> */}
+{/* <TouchableOpacity style={{
+    flex: 1, padding: 10,
+    alignItems: 'center',
+}}
+ onPress={()=>{
+  onStartPlay(message.audio)
+
+ }}>
+    <FontAwesome5Icon name={playing ? 'pause' : 'play'} size={20} />
+</TouchableOpacity> */}
+
+{/* <View style={{
+    flex: 7, paddingHorizontal: 10,
+    justifyContent: 'center',
+    marginTop: verticalScale(10)
+}}>
+    <Progress.Bar
+        progress={message.playTime ? (message?.currentPositionSec / message?.currentDurationSec) : (1)}
+        height={3}
+        color={colors.white}
+        width={scale(155)}
+    />
+    <Spacer height={10} />
+    <View style={{ flexDirection: 'row', justifyContent: "space-between", marginHorizontal: scale(2) }}>
+        <CustomText label={message.recordTime ? message.recordTime : message.playTime} color={colors.white} />
+        <CustomText label={'Oct-7'} color={colors.white} />
+    </View>
+</View>
+<View style={{
+    flex: 2, justifyContent: 'center',
+    alignItems: 'center',
+}}>
+    <View style={{ height: 50, width: 50, overflow: 'hidden', borderRadius: 25 }}>
+        <Image source={profileImages.profile01} resizeMode="contain" />
+    </View>
+</View> */}
+// </View>

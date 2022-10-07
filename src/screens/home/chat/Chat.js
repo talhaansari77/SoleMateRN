@@ -87,6 +87,8 @@ const Chat = ({navigation, route}) => {
   const [otherUserData, setOtherUserData] = useState({});
   const [getAuthData, setGetAuthData] = useState({});
   const [getAllChat, setGetAllChat] = useState([]);
+  const [playing, setPlaying] = useState(false);
+
 
   const [state, setState] = useState({
     recordSecs: 0,
@@ -407,6 +409,9 @@ const Chat = ({navigation, route}) => {
             setReactionObject={setReactionObject}
             reactionModal={reactionModal}
             otherUserData={otherUserData}
+            playing={playing}
+            setPlaying={setPlaying}
+
             setReactionModal={setReactionModal}
             authId={route.params?.authId}
             otherId={route?.params?.otherUserId}
