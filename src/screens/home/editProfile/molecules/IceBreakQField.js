@@ -1,24 +1,19 @@
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import React, {useState} from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
 import CustomText from '../../../../components/CustomText';
-import {colors} from '../../../../utils/Colors';
-import {Spacer} from '../../../../components/Spacer';
-import {moderateScale, verticalScale} from 'react-native-size-matters';
+import { colors } from '../../../../utils/Colors';
+import { Spacer } from '../../../../components/Spacer';
+import { moderateScale, verticalScale } from 'react-native-size-matters';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import TwoInputModal from './TwoInputModal';
 import CustomTextInput from '../../../../components/CustomTextInput';
 import CustomButton from '../../../../components/CustomButton';
 
-const IceBreakQField = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  // const questions = [1, 2, 3];
+const IceBreakQField = ({ iceBreakerQ, setQuestionIndex, ...props }) => {
 
-  const [iceBreakerQ, setIceBreakerQ] = useState([1, 2, 3]);
 
-  const [iceBreakerA, setIceBreakerA] = useState([1, 2, 3]);
 
-  const [addIceBreakerQ, setAddIceBreakerQ] = useState('');
-  const [addIceBreakerA, setAddIceBreakerA] = useState('');
 
   return (
     <>
@@ -41,47 +36,51 @@ const IceBreakQField = () => {
                   borderWidth: 1,
                   padding: moderateScale(15),
                   borderRadius: moderateScale(10),
-                  borderStyle: 'dashed',
+                  borderStyle: q.question ? 'solid' : 'dashed',                
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   alignItems: 'center',
+                  borderColor: q.question ? colors.black : colors.primary,
+                
+                  
                 }}
-                onPress={() => setModalVisible(true)}>
-                <View style={{width: '80%'}}>
+              >
+                <View style={{
+                  width: '80%'
+                }}>
                   <CustomText
                     fontSize={12}
-                    label={q.iceBreakerQ}
-                    color={colors.primary}>
-                    {/* The last time I cried was */}
-                  </CustomText>
-                  <CustomText color={colors.gray} label={q.iceBreakerA}>
-                    {/* The Last Time I Cried My Heat Out! */}
-                  </CustomText>
+                    label={q.question ? q.question : q.placeholder}
+                    color={q.question ? colors.black : colors.primary} />
+                  {/* The last time I cried was */}
+                  {q.question ? <CustomText color={colors.gray} label={q.answer} /> : <></>}
+
+                  {/* The Last Time I Cried My Heat Out! */}
                 </View>
-                <View
+
+                <TouchableOpacity
+                  activeOpacity={0.8}
                   style={{
-                    backgroundColor: colors.primary,
-                    height: 20,
-                    width: 20,
-                    borderRadius: 10,
+                    backgroundColor: q.question ? colors.white : colors.primary,
+                    height: 30,
+                    width: 30,
+                    borderRadius: 15,
                     justifyContent: 'center',
                     alignItems: 'center',
+                    elevation: 5
+                  }}
+                  onPress={() => {
+                    props.setModalVisible(true)
+                    setQuestionIndex(index+1)
                   }}>
-                  <FontAwesomeIcon name="plus" color={colors.white} />
-                </View>
+                  {q.question ? <FontAwesome5 name="pen" color={colors.black} /> :
+                    <FontAwesomeIcon name="plus" color={colors.white} />}
+
+                </TouchableOpacity>
               </TouchableOpacity>
               <Spacer height={10} />
 
-              <TwoInputModal
-                setModalVisible={setModalVisible}
-                modalVisible={modalVisible}
-                addIceBreakerQ={addIceBreakerQ}
-                setAddIceBreakerQ={setAddIceBreakerQ}
-                iceBreakerQ={iceBreakerQ}
-                iceBreakerA={iceBreakerA}
-                addIceBreakerA={addIceBreakerA}
-                setAddIceBreakerA={setAddIceBreakerA}
-              />
+
             </View>
           ))}
         </View>

@@ -5,13 +5,13 @@ import {
   Modal,
   StyleSheet,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
-import {Container} from '../profile/Profile';
-import {Spacer} from '../../../components/Spacer';
+import React, { useState, useEffect } from 'react';
+import { Container } from '../profile/Profile';
+import { Spacer } from '../../../components/Spacer';
 import CustomText from '../../../components/CustomText';
-import {colors} from '../../../utils/Colors';
-import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
-import {Divider, ListItem} from 'react-native-elements';
+import { colors } from '../../../utils/Colors';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
+import { Divider, ListItem } from 'react-native-elements';
 import GenderContainer from '../../auth/AdditionInfo/molecules/GenderContainer';
 import Header from './molecules/Header';
 import InputField from './molecules/InputField';
@@ -23,47 +23,49 @@ import HeightField from './molecules/HeightField';
 import TextArea from './molecules/TextArea';
 import styled from 'react-native-styled-components';
 import CustomButton from '../../../components/CustomButton';
-import {EditValidate} from './UseEditProfile';
+import { EditValidate } from './UseEditProfile';
 import PersonalityModal from './molecules/PersonalityModal';
 import AddMoreContainer from './molecules/AddMoreContainer';
 import PhotoContainer from './molecules/PhotoContainer';
-import {getAuthId, saveUser, uploadImage} from '../../../services/FirebaseAuth';
+import { getAuthId, getSpecificeUser, saveUser, uploadImage } from '../../../services/FirebaseAuth';
 import PictureBox from './molecules/PictureBox';
 import Loader from '../../../utils/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getCurrentFCMToken } from '../../../utils/PushNotification';
+import TwoInputModal from './molecules/TwoInputModal';
 
 const genders = [
-  {id: 1, name: 'Male'},
-  {id: 2, name: 'Female'},
+  { id: 1, name: 'Male' },
+  { id: 2, name: 'Female' },
 ];
 
-const EditProfile = ({navigation}) => {
+const EditProfile = ({ navigation }) => {
+  const [authData, setAuthData] = useState({});
   const [isSelect, setIsSelect] = useState(-1);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [aboutMe, setAboutMe] = useState('');
-  const [familyOrigin, setfamilyOrigin] = useState('');
-  const [language, setLanguage] = useState('');
-  const [employment, setEmployment] = useState('');
-  const [occupation, setOccupation] = useState('');
-  const [religion, setReligion] = useState('');
-  const [religiousity, setReligiousity] = useState('');
-  const [prayerLevel, setPrayerLevel] = useState('');
-  const [sector, setSector] = useState('');
-  const [martialHistory, setMartialHistory] = useState('');
-  const [martialTimming, setMartialTimming] = useState('');
+  const [firstName, setFirstName] = useState(authData?.firstName); 
+  const [lastName, setLastName] = useState(authData?.lastName);
+  const [aboutMe, setAboutMe] = useState(authData?.aboutMe);
+  const [familyOrigin, setfamilyOrigin] = useState(authData?.familyOrigin); 
+  const [language, setLanguage] = useState(authData?.language);
+  const [employment, setEmployment] = useState(authData?.employment);
+  const [occupation, setOccupation] = useState(authData?.occupation);
+  const [religion, setReligion] = useState(authData?.religion);
+  const [religiousity, setReligiousity] = useState(authData?.religiousity);
+  const [prayerLevel, setPrayerLevel] = useState(authData?.prayerLevel);
+  const [sector, setSector] = useState(authData?.sector);
+  const [martialHistory, setMartialHistory] = useState(authData?.martialHistory);
+  const [martialTimming, setMartialTimming] = useState(authData?.martialTimming);
   const [loading, setLoading] = useState(false);
-  const [birthday, setBirthday] = useState('');
-  const [gender, setGender] = useState('');
-  const [feetHeight, setFeetHeight] = useState('');
-  const [inchesHeight, setInchesHeight] = useState('');
-  const [whatKids, setWhatKids] = useState('');
-  const [hasKids, setHasKids] = useState('');
-  const [willRelocate, setWillRelocate] = useState('');
-  const [jobStatus, setJobStatus] = useState('');
-  const [drinking, setDrinking] = useState('');
-  const [smoking, setSmoking] = useState('');
+  const [birthday, setBirthday] = useState(authData?.birthday);
+  const [gender, setGender] = useState(authData?.gender);
+  const [feetHeight, setFeetHeight] = useState(authData?.feetHeight);
+  const [inchesHeight, setInchesHeight] = useState(authData?.inchesHeight);
+  const [whatKids, setWhatKids] = useState(authData?.whatKids);
+  const [hasKids, setHasKids] = useState(authData?.hasKids);
+  const [willRelocate, setWillRelocate] = useState(authData?.willRelocate);
+  const [jobStatus, setJobStatus] = useState(authData?.jobStatus);
+  const [drinking, setDrinking] = useState(authData?.drinking);
+  const [smoking, setSmoking] = useState(authData?.smoking);
   const [addMore, setAddMore] = useState('');
   const [personality, setPersonality] = useState([]);
   const [characteristics, setcharacteristics] = useState([]);
@@ -79,12 +81,12 @@ const EditProfile = ({navigation}) => {
 
 
   const questions = [
-    {id: 1, question: 'Want Kids', onValue: setWhatKids},
-    {id: 2, question: 'Has Kids', onValue: setHasKids},
-    {id: 3, question: 'Willing Relocate', onValue: setWillRelocate},
-    {id: 4, question: 'Job Status', onValue: setJobStatus},
-    {id: 5, question: 'Drinking', onValue: setDrinking},
-    {id: 6, question: 'Smoking', onValue: setSmoking},
+    { id: 1, question: 'Want Kids', onValue: setWhatKids },
+    { id: 2, question: 'Has Kids', onValue: setHasKids },
+    { id: 3, question: 'Willing Relocate', onValue: setWillRelocate },
+    { id: 4, question: 'Job Status', onValue: setJobStatus },
+    { id: 5, question: 'Drinking', onValue: setDrinking },
+    { id: 6, question: 'Smoking', onValue: setSmoking },
   ];
   const [data] = useState([1, 2, 3, 4, 5, 6]);
 
@@ -92,19 +94,25 @@ const EditProfile = ({navigation}) => {
     getCurrentID();
   }, []);
   useEffect(() => {
-    getCurrentToken()
-    
-  
-  }, [])
+    getAuthData();
+    getCurrentToken();
+  }, []); 
 
-  const getCurrentToken=async()=>{
+  const getAuthData = async () => {
+    getSpecificeUser(authID).then(data => {
+      console.log("UserData:", data);
+      setAuthData(data);
+    });
+  };
+
+  const getCurrentToken = async () => {
 
     let fcmToken = await AsyncStorage.getItem('fcmToken');
 
     setFcmToken(fcmToken)
 
   }
-  
+
 
   const getCurrentID = async () => {
     await getAuthId().then(id => {
@@ -149,7 +157,7 @@ const EditProfile = ({navigation}) => {
       height: feetHeight,
       employment: employment,
       occupation: occupation,
-      fcmToken:fcmToken,
+      fcmToken: fcmToken,
       religion: religion,
       religiousity: religiousity,
       prayerLevel: prayerLevel,
@@ -187,7 +195,7 @@ const EditProfile = ({navigation}) => {
           console.log('dataSave');
           navigation.reset({
             index: 0,
-            routes: [{name: 'MainStack'}],
+            routes: [{ name: 'MainStack' }],
           });
         }
       } catch (error) {
@@ -208,7 +216,7 @@ const EditProfile = ({navigation}) => {
       };
       characteristics.push(data);
       setAddMore('');
-      setSubmitError({...submitError, characterError: ''});
+      setSubmitError({ ...submitError, characterError: '' });
       setCharacterModal(false);
     }
   };
@@ -224,12 +232,29 @@ const EditProfile = ({navigation}) => {
       };
       personality.push(data);
       setAddMore('');
-      setSubmitError({...submitError, addPersonalityError: ''});
+      setSubmitError({ ...submitError, addPersonalityError: '' });
       setPersonalityModal(false);
     }
   };
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [iceBreakerQ, setIceBreakerQ] = useState([
+    { id: 1, question: "The Last Time I Cried Was", answer: "When I was a baby", placeholder: "What ice breaker question would you like to answer" },
+    { id: 2, question: "", answer: "", placeholder: "What ice breaker question would you like to answer" },
+    { id: 3, question: "", answer: "", placeholder: "What ice breaker question would you like to answer" },
+  ]);
+
+  const [questionIndex, setQuestionIndex] = useState('');
+
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
+      <TwoInputModal
+        setModalVisible={setModalVisible}
+        modalVisible={modalVisible}
+        iceBreakerQ={iceBreakerQ}
+        questionIndex={questionIndex}
+        setIceBreakerQ={setIceBreakerQ}
+      />
       <Container>
         {/* Header */}
         <Header
@@ -237,7 +262,7 @@ const EditProfile = ({navigation}) => {
           handleCancel={() => {
             navigation.reset({
               index: 0,
-              routes: [{name: 'MainStack'}],
+              routes: [{ name: 'MainStack' }],
             });
           }}
           navigation={navigation}
@@ -263,7 +288,7 @@ const EditProfile = ({navigation}) => {
           {/* <PictureBox /> */}
           {/* <Spacer height={10}/> */}
 
-          <View style={{padding: moderateScale(5)}}>
+          <View style={{ padding: moderateScale(5) }}>
             <CustomText
               label={'Bio'}
               color={colors.darkOrange}
@@ -273,7 +298,7 @@ const EditProfile = ({navigation}) => {
             />
             <Spacer height={10} />
 
-            <View style={{padding: moderateScale(5)}}>
+            <View style={{ padding: moderateScale(5) }}>
               {/* First Name */}
               <InputField
                 label={'First Name'}
@@ -281,7 +306,7 @@ const EditProfile = ({navigation}) => {
                 value={firstName}
                 onChangeText={nam => {
                   setFirstName(nam),
-                    setSubmitError({...submitError, firstNameError: ''});
+                    setSubmitError({ ...submitError, firstNameError: '' });
                 }}
                 error={submitError.firstNameError}
               />
@@ -293,7 +318,7 @@ const EditProfile = ({navigation}) => {
                 value={lastName}
                 onChangeText={last => {
                   setLastName(last),
-                    setSubmitError({...submitError, lastNameError: ''});
+                    setSubmitError({ ...submitError, lastNameError: '' });
                 }}
                 error={submitError.lastNameError}
               />
@@ -305,18 +330,16 @@ const EditProfile = ({navigation}) => {
                 value={aboutMe}
                 onChangeText={about => {
                   setAboutMe(about),
-                    setSubmitError({...submitError, aboutError: ''});
+                    setSubmitError({ ...submitError, aboutError: '' });
                 }}
                 error={submitError.aboutError}
               />
               <Spacer height={20} />
               {/* Ice Breaker Question */}
               <IceBreakQField
-              // addIceBreaker={addIceBreaker}
-              // setAddIceBreaker= {setAddIceBreaker}
-              // iceBreaker={iceBreaker}
-
-              // onSaveIceBreaker={onSaveIceBreaker()}
+                setModalVisible={setModalVisible}
+                iceBreakerQ={iceBreakerQ}
+                setQuestionIndex={setQuestionIndex}
               />
               {/* Personality */}
               <Spacer height={10} />
@@ -328,8 +351,8 @@ const EditProfile = ({navigation}) => {
           /> */}
               <CustomText label="personality" color={colors.primary} />
               <View
-                style={{width: '100%', flexDirection: 'row', flexWrap: 'wrap'}}>
-                <View style={{marginTop: 8}}>
+                style={{ width: '100%', flexDirection: 'row', flexWrap: 'wrap' }}>
+                <View style={{ marginTop: 8 }}>
                   <Spacer width={5} />
                   <View
                     style={{
@@ -338,17 +361,17 @@ const EditProfile = ({navigation}) => {
                       flexDirection: 'row',
                       alignItems: 'center',
                     }}>
-                    <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                       {personality.map(item => {
                         return (
                           <TagsField
                             label={item.personality}
-                            //  addItems.={addItems}
+                          //  addItems.={addItems}
                           />
                         );
                       })}
                     </View>
-                    <View style={{marginTop: verticalScale(15)}}>
+                    <View style={{ marginTop: verticalScale(15) }}>
                       <AddMoreContainer
                         onAddMore={() => {
                           setPersonalityModal(true);
@@ -365,7 +388,7 @@ const EditProfile = ({navigation}) => {
                     value={addMore}
                     onChange={add => {
                       setAddMore(add);
-                      setSubmitError({...submitError, addPersonalityError: ''});
+                      setSubmitError({ ...submitError, addPersonalityError: '' });
                     }}
                     error={submitError.addPersonalityError}
                     onSaveData={() => {
@@ -386,17 +409,17 @@ const EditProfile = ({navigation}) => {
                       flexDirection: 'row',
                       alignItems: 'center',
                     }}>
-                    <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                       {characteristics.map(item => {
                         return (
                           <TagsField
                             label={item.characteristics}
-                            //  addItems.={addItems}
+                          //  addItems.={addItems}
                           />
                         );
                       })}
                     </View>
-                    <View style={{marginTop: verticalScale(15)}}>
+                    <View style={{ marginTop: verticalScale(15) }}>
                       <AddMoreContainer
                         onAddMore={() => {
                           setCharacterModal(true);
@@ -413,7 +436,7 @@ const EditProfile = ({navigation}) => {
                     value={addMore}
                     onChange={add => {
                       setAddMore(add);
-                      setSubmitError({...submitError, characterError: ''});
+                      setSubmitError({ ...submitError, characterError: '' });
                     }}
                     error={submitError.characterError}
                     onSaveData={() => {
@@ -449,7 +472,7 @@ const EditProfile = ({navigation}) => {
                         value={familyOrigin}
                         onChangeText={family => {
                           setfamilyOrigin(family),
-                            setSubmitError({...submitError, familyError: ''});
+                            setSubmitError({ ...submitError, familyError: '' });
                         }}
                         error={submitError.familyError}
                       />
@@ -462,7 +485,7 @@ const EditProfile = ({navigation}) => {
                         value={language}
                         onChangeText={lang => {
                           setLanguage(lang),
-                            setSubmitError({...submitError, languageError: ''});
+                            setSubmitError({ ...submitError, languageError: '' });
                         }}
                         error={submitError.languageError}
                       />
@@ -608,7 +631,7 @@ const EditProfile = ({navigation}) => {
                         label={'Religion'}
                         onChangeText={rel => {
                           setReligion(rel),
-                            setSubmitError({...submitError, religionError: ''});
+                            setSubmitError({ ...submitError, religionError: '' });
                         }}
                         error={submitError.religionError}
                       />
@@ -650,7 +673,7 @@ const EditProfile = ({navigation}) => {
                         label={'Sector'}
                         onChangeText={sec => {
                           setSector(sec),
-                            setSubmitError({...submitError, sectorError: ''});
+                            setSubmitError({ ...submitError, sectorError: '' });
                         }}
                         error={submitError.sectorError}
                       />
