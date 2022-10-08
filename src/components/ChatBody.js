@@ -43,16 +43,24 @@ export const ChatBody = ({
   setReactionModal,
   setReactionObject,
   setGetAllChat,
-  otherUserData
+  otherUserData,
 }) => {
   const [messages, setMessages] = useState([]);
+  const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
 
   // console.log('statusMessage', messages);
+  console.log('messageSubscriber', messages?.date);
+
 
   useEffect(() => {
-    const messageSubscriber = getMessages(otherId, authId, setMessages,setGetAllChat);
+    const messageSubscriber = getMessages(
+      otherId,
+      authId,
+      setMessages,
+      setGetAllChat,
+    );
 
-    console.log("messageSubscriber",messageSubscriber)
 
     return () => messageSubscriber();
   }, [authId, otherId]);
@@ -82,6 +90,11 @@ export const ChatBody = ({
 
   const renderMessages = ({item: message}) => {
     const isUser = message?.from == authId;
+
+    // let name = month[message.days.getMonth()];
+
+    
+
     return (
       <View
         style={{
@@ -89,7 +102,7 @@ export const ChatBody = ({
           flex: 1,
         }}>
         <View style={{paddingBottom: verticalScale(15)}}>
-          <CustomText label="January, 21" textStyle={styles.timerText} />
+          <CustomText label={message.days} textStyle={styles.timerText}/>
         </View>
 
         {isUser ? (
@@ -178,6 +191,8 @@ export const ChatBody = ({
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   width: '100%',
+                  // paddingBottom:10
+                  height: verticalScale(185),
                 }}>
                 <View />
                 <View style={{width: 200, flexDirection: 'row'}}>
@@ -186,6 +201,7 @@ export const ChatBody = ({
                       styles.timerText1,
                       {
                         alignSelf: 'flex-end',
+                        marginBottom: verticalScale(10),
                       },
                     ]}>
                     {message.createdAt}
@@ -196,37 +212,32 @@ export const ChatBody = ({
                     alignSelf="flex-end"
                     textStyle={{...styles.timerText1, color: colors.gr}}
                   /> */}
-                  <TouchableOpacity 
-                  activeOpacity={0.8}
-
-                  onLongPress={() => {
-                    setReactionObject(message);
-                    setReactionModal(true);
-                  }}
-
-                  style={styles.imgGallery}>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onLongPress={() => {
+                      setReactionObject(message);
+                      setReactionModal(true);
+                    }}
+                    style={styles.imgGallery}>
                     <Component
                       uri={Math.random()}
                       style={styles.imConatiner}
                       source={{uri: message?.image}}
                     />
-
-
                   </TouchableOpacity>
 
-
-{message.reaction ? (
+                  {message.reaction ? (
                     <View
                       style={{
                         backgroundColor: 'white',
                         borderRadius: 100,
-                        marginTop: -15,
+                        // marginTop: -15,
                         width: 25,
                         height: 25,
                         // top:0,
-                        bottom:0,
-                        alignSelf:"flex-end",
-                        marginRight:40,
+                        // bottom: 0,
+                        alignSelf: 'flex-end',
+                        // marginRight: 40,
                         alignItems: 'center',
                         justifyContent: 'center',
 
@@ -235,8 +246,9 @@ export const ChatBody = ({
                         shadowOpacity: 5,
                         shadowRadius: 3,
                         elevation: 5,
-                        // marginRight: 5,
-                        // marginLeft: 10,
+                        marginBottom: 10,
+                        // marginRight: 100,
+                        marginLeft: verticalScale(-40),
                       }}>
                       <Text>{message.reaction}</Text>
                     </View>
@@ -274,14 +286,14 @@ export const ChatBody = ({
                   overflow: 'hidden',
                   marginRight: scale(10),
                 }}>
-                  {/* otherUserData */}
-                  <Component
-            // resizeMode="cover"
+                {/* otherUserData */}
+                <Component
+                  // resizeMode="cover"
 
-            style={{height: '100%', width: '100%'}}
-            uniqueKey={Math.random()}
-            source={{uri:otherUserData?.images?.[0]}}
-          />
+                  style={{height: '100%', width: '100%'}}
+                  uniqueKey={Math.random()}
+                  source={{uri: otherUserData?.images?.[0]}}
+                />
                 {/* <Image
                   source={profileImages.profile01}
                   resizeMode="cover"
@@ -289,6 +301,7 @@ export const ChatBody = ({
                 /> */}
               </View>
             </View>
+
             <View
               style={{
                 flex: 1,
@@ -299,7 +312,13 @@ export const ChatBody = ({
                 <></>
               ) : (
                 <View>
-                  <View style={styles.message2}>
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onLongPress={() => {
+                      setReactionObject(message);
+                      setReactionModal(true);
+                    }}
+                    style={styles.message2}>
                     {/* <CustomText label={item.mess} textStyle={styles.messageText} timer={'10:50'} /> */}
 
                     {/* Testing Extra */}
@@ -314,12 +333,14 @@ export const ChatBody = ({
                       style={{
                         alignSelf: 'flex-end',
                       }}>
+                      {/* <Text>jjjjjjjjjj</Text> */}
+
                       <CustomText
                         label={message.createdAt}
                         textStyle={styles.timerText1}
                       />
                     </View>
-                  </View>
+                  </TouchableOpacity>
                   {message.reaction ? (
                     <View
                       style={{
@@ -352,8 +373,9 @@ export const ChatBody = ({
               ) : (
                 <View
                   style={{
-                    flexDirection: 'row',
+                    // flexDirection: 'row',
                     width: '100%',
+                    height: verticalScale(180),
                   }}>
                   <View
                     style={{
@@ -366,14 +388,50 @@ export const ChatBody = ({
                       shadowRadius: 3,
                       elevation: 5,
                     }}>
-                    <View style={styles.imgReciver}>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onLongPress={() => {
+                        setReactionObject(message);
+                        setReactionModal(true);
+                      }}
+                      style={styles.imgReciver}>
                       <Component
                         uri={Math.random()}
                         style={styles.imConatiner}
                         source={{uri: message?.image}}
                       />
-                    </View>
-                    <View style={{justifyContent: 'space-between'}} />
+
+                
+                    </TouchableOpacity>
+                    {message.reaction ? (
+                        <View
+                          style={{
+                            backgroundColor: 'white',
+                            borderRadius: 100,
+                            marginTop:verticalScale(157) ,
+                            width: 25,
+
+                            height: 25,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            // alignSelf:"flex-end",
+                            position:"absolute",
+                            // bottom:0,
+
+                            shadowColor: colors.gray,
+                            shadowOffset: {width: 0, height: 2},
+                            shadowOpacity: 5,
+                            shadowRadius: 3,
+                            elevation: 5,
+                            marginRight: 5,
+                            marginLeft: 20,
+                          }}>
+                          <Text>{message.reaction}</Text>
+                        </View>
+                      ) : (
+                        <></>
+                      )}
+                    {/* <View style={{justifyContent: 'space-between'}} />
 
                     <View
                       style={{
@@ -387,14 +445,14 @@ export const ChatBody = ({
                         height={15}
                         width={15}
                       />
-                    </View>
+                    </View> */}
 
                     <Text
                       style={[
                         styles.timerText1,
                         {
                           alignSelf: 'flex-end',
-                          marginLeft: -20,
+                          marginLeft: 10,
                         },
                       ]}>
                       {message.createdAt}
@@ -553,10 +611,10 @@ const styles = ScaledSheet.create({
     backgroundColor: colors.white,
     // width: 'auto',
     //  alignSelf: "flex-start",
-    paddingHorizontal: verticalScale(7),
+    paddingHorizontal: verticalScale(15),
     // paddingTop: verticalScale(10),
     // paddingBottom: verticalScale(5),
-    paddingVertical: verticalScale(5),
+    paddingVertical: verticalScale(10),
     paddingLeft: 15,
     marginLeft: scale(5),
     borderTopRightRadius: verticalScale(22),
@@ -571,6 +629,8 @@ const styles = ScaledSheet.create({
     elevation: 5,
 
     maxWidth: '85%',
+    minWidth: '37%',
+    minHeight: 60,
     // flexWrap:"wrap"
   },
   messageText: {

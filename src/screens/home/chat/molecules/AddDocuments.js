@@ -21,7 +21,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CustomText from '../../../../components/CustomText';
 import icons from '../../../../../assets/icons';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import DocumentPicker from 'react-native-document-picker';
+// import  DocumentPickerOptions  from 'react-native-document-picker';
+import DocumentPicker from "react-native-document-picker"
 // import RNFetchBlob from 'rn-fetch-blob'
 import RNFetchBlob from 'rn-fetch-blob';
 
@@ -37,7 +38,7 @@ const AddDocuments = ({
     // pick the single file
 
     try {
-      const res = await DocumentPicker.pickMultiple({
+      const res = await DocumentPicker.pick({
         type: [DocumentPicker.types.allFiles],
       });
       console.log(
