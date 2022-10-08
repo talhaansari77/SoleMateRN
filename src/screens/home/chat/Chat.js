@@ -197,7 +197,7 @@ const Chat = ({navigation, route}) => {
     // fcmToken,message,title
     NotificationSender(
       otherUserData?.fcmToken,
-      textMessage,
+      textMessage?textMessage:file?file.name:result!=0?"Photo":audioUri?"Voice message":null,
       getAuthData?.firstName,
     );
     setTextMessage('');

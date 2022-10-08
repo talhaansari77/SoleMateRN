@@ -62,7 +62,7 @@ export const ChatBody = ({
   playing,
   setPlaying,
   getAuthData,
-  navigation
+  navigation,
 }) => {
   const [messages, setMessages] = useState([]);
   const isFocused = useIsFocused();
@@ -370,34 +370,37 @@ export const ChatBody = ({
                   height: verticalScale(185),
                 }}>
                 <View />
-                <View style={{width: 200, flexDirection: 'row',marginHorizontal:20,marginTop:10}}>
-                  <View style={{alignSelf:"flex-end",flexDirection:"row"}}>
-                  <Text
-                    style={[
-                      styles.timerText1,
-                      {
-                        alignSelf: 'flex-end',
-                        marginBottom: verticalScale(10),
-                      },
-                    ]}>
-                    {message.createdAt}
-                  </Text>
+                <View
+                  style={{
+                    width: 200,
+                    flexDirection: 'row',
+                    marginHorizontal: 20,
+                    marginTop: 10,
+                  }}>
+                  <View style={{alignSelf: 'flex-end', flexDirection: 'row'}}>
+                    <Text
+                      style={[
+                        styles.timerText1,
+                        {
+                          alignSelf: 'flex-end',
+                          marginBottom: verticalScale(10),
+                        },
+                      ]}>
+                      {message.createdAt}
+                    </Text>
 
-                   <View style={{marginBottom:10}}>
-                    <Ionicons
-                      name={
-                        message.status == true
-                          ? 'ios-checkmark-done-outline'
-                          : 'ios-checkmark'
-                      }
-                      size={moderateScale(15)}
-                      color={colors.primary}
-                    />
+                    <View style={{marginBottom: 10}}>
+                      <Ionicons
+                        name={
+                          message.status == true
+                            ? 'ios-checkmark-done-outline'
+                            : 'ios-checkmark'
+                        }
+                        size={moderateScale(15)}
+                        color={colors.primary}
+                      />
+                    </View>
                   </View>
-                    
-                  </View>
-                
-                 
 
                   {/* <CustomText
                     label={message.createdAt}
@@ -471,25 +474,33 @@ export const ChatBody = ({
                 {message.file.map(item => {
                   return (
                     <TouchableOpacity
-                    onPress={()=>{
-                      navigation.navigate("viewFile",{fileData:message.file})
-                    
-                    }}
-                    activeOpacity={0.6}
-                     style={styles.senderFile}>
-                      <View style={{width:"100%",height:"70%",backgroundColor:"red",justifyContent:"center",padding:7,backgroundColor:"#6c757d",
-                    
-                      borderRadius:5}}>
-                      <CustomText
-                        label={item.fileName}
-                        color={colors.white}
-                        numberOfLines={1}
-                        fontSize={12}
-                        textAlign={'justify'}
-                      />
+                      onPress={() => {
+                        navigation.navigate('viewFile', {
+                          fileData: message.file,
+                        });
+                      }}
+                      activeOpacity={0.6}
+                      style={styles.senderFile}>
+                      <View
+                        style={{
+                          width: '100%',
+                          height: '70%',
+                          backgroundColor: 'red',
+                          justifyContent: 'center',
+                          padding: 7,
+                          backgroundColor: '#6c757d',
 
+                          borderRadius: 5,
+                        }}>
+                        <CustomText
+                          label={item.fileName}
+                          color={colors.white}
+                          numberOfLines={1}
+                          fontSize={12}
+                          textAlign={'justify'}
+                        />
                       </View>
-                   
+
                       <View
                         style={{
                           flexDirection: 'row',
@@ -772,19 +783,28 @@ export const ChatBody = ({
                 <View>
                   {message.file.map(item => {
                     return (
-                      <View style={styles.message2}>
-                        <CustomText
+                      <View style={styles.receiverFile}>
+                        <View style={styles.receiverCon}>
+                          <CustomText
+                            label={item.fileName}
+                            color={colors.white}
+                            numberOfLines={1}
+                            fontSize={12}
+                            textAlign={'justify'}
+                          />
+                        </View>
+                        {/* <CustomText
                           label={item.fileName}
                           color={colors.black}
                           numberOfLines={1}
                           fontSize={12}
                           textAlign={'justify'}
-                        />
+                        /> */}
                         <View
                           style={{
                             flexDirection: 'row',
                             justifyContent: 'space-between',
-                            marginTop: 10,
+                            marginTop: 5,
                             alignItems: 'center',
                           }}>
                           <CustomText
@@ -1043,15 +1063,44 @@ const styles = ScaledSheet.create({
   senderFile: {
     // alignSelf:"flex-end",
     // backgroundColor:"red",
-    width: '60%',
-    height: verticalScale(60),
+    width: '70%',
+    height: verticalScale(55),
 
     backgroundColor: colors.primary,
     alignSelf: 'flex-end',
-    padding:moderateScale(10),
-  
-    borderRadius:15,
-  
+    padding: moderateScale(10),
+
+    borderRadius: 15,
+    shadowColor: colors.gray,
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 10,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  receiverFile: {
+    width: '100%',
+    height: verticalScale(60),
+
+    backgroundColor: colors.white,
+    alignSelf: 'flex-end',
+    padding: moderateScale(10),
+
+    borderRadius: 15,
+    shadowColor: colors.gray,
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 10,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  receiverCon: {
+    width: '100%',
+    height: '70%',
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    padding: 7,
+    backgroundColor: '#6c757d',
+
+    borderRadius: 5,
   },
 });
 

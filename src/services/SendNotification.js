@@ -1,4 +1,6 @@
 import axios from 'axios';
+import messaging from '@react-native-firebase/messaging';
+
 export const NotificationSender = (fcmToken, message, title) => {
   console.log('FcmAohter', fcmToken, message, title);
 
@@ -13,6 +15,7 @@ export const NotificationSender = (fcmToken, message, title) => {
     data: {
       registration_ids: [fcmToken],
       notification: {body: message, title: title},
+    
     },
   };
 
@@ -29,3 +32,20 @@ export const NotificationSender = (fcmToken, message, title) => {
     console.log('NotificationError', error);
   }
 };
+export const getNewFcmToken = async (setToken) => {
+  // console.log("Old FCM Token:✌", fcmToken)
+
+      try {
+          const fcmToken = await messaging().getToken();
+
+          setToken(fcmToken)
+
+          if (fcmToken) {
+              console.log("newLoginToken:🖐", fcmToken)
+          }
+      } catch (error) {
+          console.log(error)
+      }
+  
+
+}

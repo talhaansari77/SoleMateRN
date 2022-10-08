@@ -9,9 +9,6 @@ import { useEffect } from 'react';
 import SplashScreen from 'react-native-splash-screen'
 import { requestUserPermission,notificationServices } from './src/utils/PushNotification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
-
 LogBox.ignoreLogs(['VirtualizedLists', 'Warning:...']);
 LogBox.ignoreAllLogs();
 
@@ -42,10 +39,6 @@ export default function App() {
     }
 
   };
-
-
-
-
   useEffect(() => {
     SplashScreen.hide();
     requestUserPermission();
