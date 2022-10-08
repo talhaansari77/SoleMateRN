@@ -1,16 +1,20 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { scale, ScaledSheet, verticalScale } from "react-native-size-matters";
 import CustomText from "../../../../components/CustomText";
 import { colors } from "../../../../utils/Colors";
 import icons from "../../../../../assets/icons";
 import { Spacer } from "../../../../components/Spacer";
 
-const GenderContainer = ({ index, txt, isSelect, setIsSelect,  setGender,error,
+const GenderContainer = ({ index, txt, isSelect, setIsSelect,  setGender,gender,error,
   setSubmitError,
   submitError,
 }) => {
 
+  useEffect(() => {
+    setIsSelect(gender == "Male" ? 0 : gender == "Female"?1:-1);
+
+  }, [gender])
   return (
     <TouchableOpacity
       activeOpacity={0.6}

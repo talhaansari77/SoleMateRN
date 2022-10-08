@@ -15,4 +15,6 @@ export const colors = {
   switchGray: "#E2E2E2",
   halfGray:"#9F9F9F",
   lightBlack:"#707070",
+  placeholder:"#5B5B5B",
+  
 };

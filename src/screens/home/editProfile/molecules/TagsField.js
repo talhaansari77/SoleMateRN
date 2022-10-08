@@ -22,12 +22,12 @@ const TagsField = ({title, label, addItems, item}) => {
       <View>
         <Spacer height={10} />
         <View
-        // style={{
-        //   display: "flex",
-        //   justifyContent: "space-around",
-        //   flexWrap: "wrap",
-        //   flexDirection: "row",
-        // }}
+        style={{
+          display: "flex",
+          justifyContent: "space-around",
+          flexWrap: "wrap",
+          flexDirection: "row",
+        }}
         >
           {label ? (
             <TouchableOpacity

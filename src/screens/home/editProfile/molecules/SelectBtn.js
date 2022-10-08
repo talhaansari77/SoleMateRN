@@ -1,15 +1,26 @@
-import {View, Text, TouchableOpacity, Image} from 'react-native';
-import React, {useState} from 'react';
-import {colors} from '../../../../utils/Colors';
-import {Spacer} from '../../../../components/Spacer';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { colors } from '../../../../utils/Colors';
+import { Spacer } from '../../../../components/Spacer';
 import GenderContainer from '../../../auth/AdditionInfo/molecules/GenderContainer';
 import CustomText from '../../../../components/CustomText';
-import {scale, ScaledSheet, verticalScale} from 'react-native-size-matters';
+import { scale, ScaledSheet, verticalScale } from 'react-native-size-matters';
 import icons from '../../../../../assets/icons';
-
-const SelectBtn = ({label, txt1, txt2, index, onValue}) => {
+const SelectBtn = ({ label, txt1, txt2, index, onValue,state }) => {
   const [status, setStatus] = useState(-1); //yes or no
   const [isSelect, setIsSelect] = useState(-1); //multiple
+
+  useEffect(() => {
+    // setIsSelect(gender == "Male" ? 0 : gender == "Female"?1:-1);
+    if (state == "Yes") {
+      setIsSelect(index)
+      setStatus(state == "Yes"?1:0) 
+    }else{
+      setIsSelect(index)
+      setStatus(state == "Yes"?1:0) 
+    }
+console.log('data Loaded');
+  }, [state])
   return (
     <>
       <Spacer height={10} />
@@ -46,7 +57,7 @@ const SelectBtn = ({label, txt1, txt2, index, onValue}) => {
                 flexDirection: 'row',
               },
             ]}>
-            <View style={{flex: 7, alignItems: 'center'}}>
+            <View style={{ flex: 7, alignItems: 'center' }}>
               <CustomText
                 label={txt1}
                 color={
@@ -58,10 +69,10 @@ const SelectBtn = ({label, txt1, txt2, index, onValue}) => {
               />
             </View>
             {isSelect == index && status ? (
-              <View style={{flex: 3, alignItems: 'center'}}>
+              <View style={{ flex: 3, alignItems: 'center' }}>
                 <Image
                   source={icons.tickPurple}
-                  style={{height: verticalScale(20), width: scale(20)}}
+                  style={{ height: verticalScale(20), width: scale(20) }}
                   resizeMode={'contain'}
                 />
               </View>
@@ -92,7 +103,7 @@ const SelectBtn = ({label, txt1, txt2, index, onValue}) => {
               },
             ]}>
             <View
-              style={{flex: 7, alignItems: 'center', justifyContent: 'center'}}>
+              style={{ flex: 7, alignItems: 'center', justifyContent: 'center' }}>
               <CustomText
                 label={txt2}
                 color={
@@ -106,10 +117,10 @@ const SelectBtn = ({label, txt1, txt2, index, onValue}) => {
               />
             </View>
             {isSelect == index && !status ? (
-              <View style={{flex: 3, alignItems: 'center'}}>
+              <View style={{ flex: 3, alignItems: 'center' }}>
                 <Image
                   source={icons.tickPurple}
-                  style={{height: verticalScale(20), width: scale(20)}}
+                  style={{ height: verticalScale(20), width: scale(20) }}
                   resizeMode={'contain'}
                 />
               </View>
