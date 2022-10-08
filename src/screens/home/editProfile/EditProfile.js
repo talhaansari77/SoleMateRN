@@ -108,8 +108,11 @@ const EditProfile = ({ navigation }) => {
         data?.personality.map(item => pTags.push({ personality: item }))
         const cTags = [];
         data?.characteristics.map(item => cTags.push({ characteristics: item }))
-        // console.log("personality",pTags)
-        console.log('UserData:', data);
+        const furls = [];
+        data?.images.map(item => furls.push({ uri: item }))
+        console.log("furls",furls)
+        // console.log('UserData:', data);
+        setImages(furls);
         setFirstName(data?.firstName);
         setLastName(data?.lastName);
         setAboutMe(data?.aboutMe);
@@ -135,7 +138,7 @@ const EditProfile = ({ navigation }) => {
         setSmoking(data?.smoking);
         setEditLocation(data?.location);
         setFeetHeight(data?.height.split(" ")[0])
-        setInchesHeight(data?.height.split(" ")[1])
+        setInchesHeight(data?.height.split(" ")[1])        
         // setBirthday()   
         setPersonality(pTags)
         setcharacteristics(cTags)

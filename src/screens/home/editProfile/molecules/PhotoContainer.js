@@ -64,8 +64,8 @@ const PhotoContainer = ({
         },
       ]}
       activeOpacity={0.6}>
-      {uri ? (
-        <Image source={{uri}} style={styles.img} />
+      {uri || images[index]?.uri? (
+        <Image source={{uri:images[index]?.uri||uri}} style={styles.img} /> 
       ) : (
         <Entypo name="plus" size={moderateScale(20)} color={colors.black} />
         // <Image source={{ uri: images ?.[0]}} style={styles.img} />
