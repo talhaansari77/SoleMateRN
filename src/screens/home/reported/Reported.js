@@ -1,4 +1,10 @@
-import {View, Text, SafeAreaView, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 import React from 'react';
 import styled from 'react-native-styled-components';
 import {moderateScale, verticalScale} from 'react-native-size-matters';
@@ -12,7 +18,11 @@ import commonStyles from '../../../utils/CommonStyles';
 
 const Reported = ({navigation, route}) => {
   return (
-    <View style={{flex: 1}}>
+    <View
+      style={{
+        flex: 1,
+        marginTop: Platform.OS == 'ios' ? verticalScale(30) : 0,
+      }}>
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('Request');
@@ -27,10 +37,10 @@ const Reported = ({navigation, route}) => {
 
       <Container>
         <SafeAreaView>
-          <View style={{marginHorizontal: 10}}>
+          <View style={{width:"100%",alignItems:"center"}}>
             <CustomText
               fontFamily={'ProximaNova-Bold'}
-              fontSize={20}
+              fontSize={18}
               textAlign={'center'}
               // alignSelf={'center'}
               color={colors.primary}>
@@ -49,23 +59,29 @@ const Reported = ({navigation, route}) => {
 
           <View
             style={{
-              width: moderateScale(300),
+              width: '100%',
               height: verticalScale(240),
               borderRadius: 20,
               overflow: 'hidden',
               marginVertical: 20,
             }}>
-            <Component
-              uri={Math.random()}
-              style={commonStyles.img}
-              source={{uri: route?.params?.otherUserData?.images?.[0]}}
-            />
+            <View
+              style={{
+                with: '70%',
+                height: verticalScale(240),
+              }}>
+              <Component
+                uri={Math.random()}
+                style={{with: '100%', height: '100%'}}
+                source={{uri: route?.params?.otherUserData?.images?.[0]}}
+              />
+            </View>
           </View>
 
           <CustomText
-            marginTop={30}
+            marginTop={20}
             fontFamily={'ProximaNova-Bold'}
-            fontSize={20}
+            fontSize={19}
             textAlign={'center'}
             alignSelf={'center'}
             color={colors.primary}>
@@ -79,7 +95,7 @@ const Reported = ({navigation, route}) => {
 
 const Container = styled(View, {
   width: '100%',
-  padding: moderateScale(20),
+  padding: moderateScale(30),
   flex: 1,
 });
 

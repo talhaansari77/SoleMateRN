@@ -1,4 +1,4 @@
-import {View, Text, SafeAreaView, ScrollView} from 'react-native';
+import {View, Text, SafeAreaView, ScrollView,TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import CustomText from '../../../components/CustomText';
 import styled from 'react-native-styled-components';
@@ -13,6 +13,8 @@ import Toast from 'react-native-simple-toast';
 import Loader from '../../../utils/Loader';
 import {deleteRequest} from '../../../services/request';
 import {deleteChat} from '../../../services/chats';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 
 const ReportReason = ({navigation, route}) => {
   const [count, setCount] = useState(-1);
@@ -95,9 +97,22 @@ const ReportReason = ({navigation, route}) => {
     //  console.log(route?.params?.otherUser?.fcmToken,reason?reason:writeReason,route?.params?.authUser?.firstName)
   };
   return (
-    <ScrollView>
+    <ScrollView
+    showsVerticalScrollIndicator={false}
+    >
       <Container>
         <SafeAreaView>
+        <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('Request');
+        }}
+        style={{width: 40, height: 40,marginTop:20}}>
+        <Ionicons
+          name="ios-chevron-back-outline"
+          size={moderateScale(22)}
+          color={colors.primary}
+        />
+      </TouchableOpacity>
           <View>
             <CustomText
               marginTop={10}

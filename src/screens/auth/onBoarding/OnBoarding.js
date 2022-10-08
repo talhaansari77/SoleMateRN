@@ -18,7 +18,7 @@ import {Spacer} from '../../../components/Spacer';
 import CustomButton from '../../../components/CustomButton';
 import CustomGradientButton from '../../../components/CustomGradientButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 const OnBoardingData = [
   {
     id: 0,
@@ -58,9 +58,13 @@ const OnBoarding = ({navigation}) => {
   const [page, setPage] = useState(0);
   const ref = useRef(null);
   const [isAuth, setIsAuth] = useState(true);
+
+
+
   useEffect(() => {
     (async function () {
       const user = await AsyncStorage.getItem('userAuth');
+      console.log("AuthID")
       if (user) {
         navigation.reset({
           index: 0,

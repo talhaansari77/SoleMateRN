@@ -8,7 +8,7 @@ import {
   PermissionsAndroid,
   Platform,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {
   moderateScale,
@@ -23,27 +23,26 @@ import RNFetchBlob from 'rn-fetch-blob';
 // import CustomText from "./CustomText";
 // import moment from "moment";
 
-import { colors } from '../utils/Colors';
+import {colors} from '../utils/Colors';
 import profileImages from '../../assets/Profile_images';
 import commonStyles from '../utils/CommonStyles';
 import icons from '../../assets/icons';
 import CustomImage from './CustomImage';
-import { Spacer } from './Spacer';
-import { getMessages, updateMessage } from '../services/chats';
+import {Spacer} from './Spacer';
+import {getMessages, updateMessage} from '../services/chats';
 import Component from './FastImage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { getUserID } from 'react-native-fbsdk/lib/commonjs/FBAppEventsLogger';
-import { getAuthId } from '../services/FirebaseAuth';
-import { useIsFocused } from '@react-navigation/native';
+import {getUserID} from 'react-native-fbsdk/lib/commonjs/FBAppEventsLogger';
+import {getAuthId} from '../services/FirebaseAuth';
+import {useIsFocused} from '@react-navigation/native';
 import * as Progress from 'react-native-progress';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 // import profileImages from '../../../../assets/Profile_images';
 
-
-
 import moment from 'moment';
 import CustomAudio from './CustomAudio';
+import ReceiverVoiceMessage from './ReceiverVoiceMessage';
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
@@ -61,7 +60,9 @@ export const ChatBody = ({
   setGetAllChat,
   otherUserData,
   playing,
-  setPlaying
+  setPlaying,
+  getAuthData,
+  navigation
 }) => {
   const [messages, setMessages] = useState([]);
   const isFocused = useIsFocused();
@@ -96,23 +97,21 @@ export const ChatBody = ({
   }, [authId, otherId]);
 
   useEffect(() => {
-    if (isFocused){
+    if (isFocused) {
       changeMessageStatus();
     }
-  }, [authId, otherId, isFocused,messages]);
+  }, [authId, otherId, isFocused, messages]);
 
-//   useEffect(() => {
+  //   useEffect(() => {
 
-//     messages.map(item=>{
-//       if (item.currentPositionSec / item.currentDurationSec === 1) {
-//         setPlaying(false)
-//     }
+  //     messages.map(item=>{
+  //       if (item.currentPositionSec / item.currentDurationSec === 1) {
+  //         setPlaying(false)
+  //     }
 
-//     })
-  
-// }, [state]);
+  //     })
 
-
+  // }, [state]);
 
   const changeMessageStatus = async () => {
     const id = await getAuthId();
@@ -145,7 +144,7 @@ export const ChatBody = ({
     file_ext = '.' + file_ext[0];
     // config: To get response by passing the downloading related options
     // fs: Root directory path to download
-    const { config, fs } = RNFetchBlob;
+    const {config, fs} = RNFetchBlob;
     let RootDir = fs.dirs.PictureDir;
     let options = {
       fileCache: true,
@@ -204,70 +203,70 @@ export const ChatBody = ({
     }
   };
 
-// const [state, setState] = useState({ recordTime: '00:00:00' });
-// useEffect(() => {
-//   console.log('Voice Data::',state);
-//   if (state.currentPositionSec / state.currentDurationSec === 1) {
-//       setPlaying(false)
-//   }
-// }, [state]);
- const onStartPlay = async (item) => {
-    console.log('onStartPlay',item[0]?.audioUri);
-//     if (!playing) {
-//         setPlaying(!playing)
-//         const dirs = RNFetchBlob.fs.dirs;
-// // const path = Platform.select({
-// //   ios: item[0]?.audioUri,
-// //   android: `${dirs.CacheDir}/${item[0]?.audioUri} `,
-// // });
+  // const [state, setState] = useState({ recordTime: '00:00:00' });
+  // useEffect(() => {
+  //   console.log('Voice Data::',state);
+  //   if (state.currentPositionSec / state.currentDurationSec === 1) {
+  //       setPlaying(false)
+  //   }
+  // }, [state]);
+  const onStartPlay = async item => {
+    console.log('onStartPlay', item[0]?.audioUri);
+    //     if (!playing) {
+    //         setPlaying(!playing)
+    //         const dirs = RNFetchBlob.fs.dirs;
+    // // const path = Platform.select({
+    // //   ios: item[0]?.audioUri,
+    // //   android: `${dirs.CacheDir}/${item[0]?.audioUri} `,
+    // // });
 
-// const uri = await audioRecorderPlayer.startPlay(item[0]?.audioUri);
+    // const uri = await audioRecorderPlayer.startPlay(item[0]?.audioUri);
 
-//         // const msg = await audioRecorderPlayer.startPlayer(item[0]?.audioUri);
-//         console.log(uri);
-//       ;
-//     } else {
-//         setPlaying(!playing)
-//         onStopPlay()
-//     }
- console.log('onStartPlay');
-        if (!playing) {
-            setPlaying(!playing)
-            const msg = await audioRecorderPlayer.startPlayer();
-            console.log(msg);
-            audioRecorderPlayer.addPlayBackListener(e => {
-                setState({
-                    currentPositionSec: e.currentPosition,
-                    currentDurationSec: e.duration,
-                    playTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
-                    duration: audioRecorderPlayer.mmssss(Math.floor(e.duration)),
-                });
-                return;
-            });
-        } else {
-            setPlaying(!playing)
-            onStopPlay()
-        }
-};
- 
+    //         // const msg = await audioRecorderPlayer.startPlayer(item[0]?.audioUri);
+    //         console.log(uri);
+    //       ;
+    //     } else {
+    //         setPlaying(!playing)
+    //         onStopPlay()
+    //     }
+    console.log('onStartPlay');
+    if (!playing) {
+      setPlaying(!playing);
+      const msg = await audioRecorderPlayer.startPlayer();
+      console.log(msg);
+      audioRecorderPlayer.addPlayBackListener(e => {
+        setState({
+          currentPositionSec: e.currentPosition,
+          currentDurationSec: e.duration,
+          playTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
+          duration: audioRecorderPlayer.mmssss(Math.floor(e.duration)),
+        });
+        return;
+      });
+    } else {
+      setPlaying(!playing);
+      onStopPlay();
+    }
+  };
+
   const onStopPlay = async () => {
-  console.log('onStopPlay');
-  audioRecorderPlayer.stopPlayer();
-  audioRecorderPlayer.removePlayBackListener();
-};
-  const renderMessages = ({ item: message, index }) => {
+    console.log('onStopPlay');
+    audioRecorderPlayer.stopPlayer();
+    audioRecorderPlayer.removePlayBackListener();
+  };
+  const renderMessages = ({item: message, index}) => {
     const isUser = message?.from == authId;
 
-    console.log("MessageDays",message.days)
+    console.log('MessageDays', message.days);
     let chatDate;
     if (index == 0) {
-      chatDate = messages[index].days
+      chatDate = messages[index].days;
     } else {
-      if (index < messages.length-1) {
+      if (index < messages.length - 1) {
         if (messages[index].days !== messages[index - 1].days) {
-          chatDate = messages[index].days
-        } else  {
-          chatDate = ''
+          chatDate = messages[index].days;
+        } else {
+          chatDate = '';
         }
       }
     }
@@ -277,7 +276,7 @@ export const ChatBody = ({
           padding: 7,
           flex: 1,
         }}>
-        <View style={{ paddingBottom: verticalScale(15) }}>
+        <View style={{paddingBottom: verticalScale(15)}}>
           <CustomText label={chatDate} textStyle={styles.timerText} />
         </View>
 
@@ -297,7 +296,7 @@ export const ChatBody = ({
                   <View>
                     <CustomText
                       label={message.text}
-                      textStyle={{ ...styles.messageText, color: colors.white }}
+                      textStyle={{...styles.messageText, color: colors.white}}
                       textAlign={'justify'}
                     />
                   </View>
@@ -309,7 +308,7 @@ export const ChatBody = ({
                     }}>
                     <CustomText
                       label={message.createdAt}
-                      textStyle={{ ...styles.timerText1, color: colors.white }}
+                      textStyle={{...styles.timerText1, color: colors.white}}
                     />
 
                     {/* <Text style={{alignSelf:"center"}}>c</Text> */}
@@ -319,7 +318,7 @@ export const ChatBody = ({
                   size={moderateScale(20)}
                   color={colors.primary}
                 /> */}
-                    <View style={{ marginLeft: 5 }}>
+                    <View style={{marginLeft: 5}}>
                       <Ionicons
                         name={
                           message.status == true
@@ -345,7 +344,7 @@ export const ChatBody = ({
                       justifyContent: 'center',
 
                       shadowColor: colors.gray,
-                      shadowOffset: { width: 0, height: 2 },
+                      shadowOffset: {width: 0, height: 2},
                       shadowOpacity: 5,
                       shadowRadius: 3,
                       elevation: 5,
@@ -371,7 +370,8 @@ export const ChatBody = ({
                   height: verticalScale(185),
                 }}>
                 <View />
-                <View style={{ width: 200, flexDirection: 'row' }}>
+                <View style={{width: 200, flexDirection: 'row',marginHorizontal:20,marginTop:10}}>
+                  <View style={{alignSelf:"flex-end",flexDirection:"row"}}>
                   <Text
                     style={[
                       styles.timerText1,
@@ -382,6 +382,22 @@ export const ChatBody = ({
                     ]}>
                     {message.createdAt}
                   </Text>
+
+                   <View style={{marginBottom:10}}>
+                    <Ionicons
+                      name={
+                        message.status == true
+                          ? 'ios-checkmark-done-outline'
+                          : 'ios-checkmark'
+                      }
+                      size={moderateScale(15)}
+                      color={colors.primary}
+                    />
+                  </View>
+                    
+                  </View>
+                
+                 
 
                   {/* <CustomText
                     label={message.createdAt}
@@ -398,8 +414,21 @@ export const ChatBody = ({
                     <Component
                       uri={Math.random()}
                       style={styles.imConatiner}
-                      source={{ uri: message?.image }}
+                      source={{uri: message?.image}}
                     />
+                    {/* <View style={{position:"absolute",bottom:0,alignSelf:"flex-end",marginRight:30,marginBottom:10,padding:5}}>
+
+                            <Ionicons
+                              name={
+                                message.status == true
+                                  ? 'ios-checkmark-done-outline'
+                                  : 'ios-checkmark'
+                              }
+                              size={moderateScale(20)}
+                              color={colors.primary}
+                            />
+
+                    </View> */}
                   </TouchableOpacity>
 
                   {message.reaction ? (
@@ -418,7 +447,7 @@ export const ChatBody = ({
                         justifyContent: 'center',
 
                         shadowColor: colors.gray,
-                        shadowOffset: { width: 0, height: 2 },
+                        shadowOffset: {width: 0, height: 2},
                         shadowOpacity: 5,
                         shadowRadius: 3,
                         elevation: 5,
@@ -441,7 +470,16 @@ export const ChatBody = ({
               <View>
                 {message.file.map(item => {
                   return (
-                    <View style={styles.senderFile}>
+                    <TouchableOpacity
+                    onPress={()=>{
+                      navigation.navigate("viewFile",{fileData:message.file})
+                    
+                    }}
+                    activeOpacity={0.6}
+                     style={styles.senderFile}>
+                      <View style={{width:"100%",height:"70%",backgroundColor:"red",justifyContent:"center",padding:7,backgroundColor:"#6c757d",
+                    
+                      borderRadius:5}}>
                       <CustomText
                         label={item.fileName}
                         color={colors.white}
@@ -449,18 +487,21 @@ export const ChatBody = ({
                         fontSize={12}
                         textAlign={'justify'}
                       />
+
+                      </View>
+                   
                       <View
                         style={{
                           flexDirection: 'row',
                           justifyContent: 'space-between',
-                          marginTop: 10,
+                          marginTop: 5,
                           alignItems: 'center',
                         }}>
                         <CustomText
                           label={item.type}
                           color={colors.white}
                           numberOfLines={1}
-                          fontSize={10}
+                          fontSize={9}
                           textAlign={'justify'}
                         />
                         <TouchableOpacity
@@ -488,7 +529,7 @@ export const ChatBody = ({
                   size={moderateScale(20)}
                   color={colors.primary}
                 /> */}
-                          <View style={{ marginLeft: 5 }}>
+                          <View style={{marginLeft: 5}}>
                             <Ionicons
                               name={
                                 message.status == true
@@ -502,28 +543,28 @@ export const ChatBody = ({
                         </TouchableOpacity>
                       </View>
                       {/* <Text>{item.fileName}</Text> */}
-                    </View>
+                    </TouchableOpacity>
                   );
                 })}
               </View>
             )}
 
-{message.audio == undefined || message?.audio?.length == 0 ? (
-                <></>
-              ):
-              <View>
-                <CustomAudio  
-                // startPlay={()=>{
-                //   onStartPlay(message.audio)
+            {message.audio == undefined || message?.audio?.length == 0 ? (
+              <></>
+            ) : (
+              <View style={{alignSelf: 'flex-end'}}>
+                <CustomAudio
+                  message={message}
+                  userData={getAuthData}
+                  // startPlay={()=>{
+                  //   onStartPlay(message.audio)
 
-                // }}
-                // playing={playing}
-                audio={message.audio}
+                  // }}
+                  // playing={playing}
+                  audio={message.audio}
                 />
-
               </View>
-            
-            }
+            )}
           </View>
         ) : (
           <View
@@ -556,9 +597,9 @@ export const ChatBody = ({
                 <Component
                   // resizeMode="cover"
 
-                  style={{ height: '100%', width: '100%' }}
+                  style={{height: '100%', width: '100%'}}
                   uniqueKey={Math.random()}
-                  source={{ uri: otherUserData?.images?.[0] }}
+                  source={{uri: otherUserData?.images?.[0]}}
                 />
                 {/* <Image
                   source={profileImages.profile01}
@@ -619,7 +660,7 @@ export const ChatBody = ({
                         justifyContent: 'center',
 
                         shadowColor: colors.gray,
-                        shadowOffset: { width: 0, height: 2 },
+                        shadowOffset: {width: 0, height: 2},
                         shadowOpacity: 5,
                         shadowRadius: 3,
                         elevation: 5,
@@ -649,7 +690,7 @@ export const ChatBody = ({
                       flexDirection: 'row',
 
                       shadowColor: '#e9ecef',
-                      shadowOffset: { width: 0, height: 2 },
+                      shadowOffset: {width: 0, height: 2},
                       shadowOpacity: 5,
                       shadowRadius: 3,
                       elevation: 5,
@@ -664,7 +705,7 @@ export const ChatBody = ({
                       <Component
                         uri={Math.random()}
                         style={styles.imConatiner}
-                        source={{ uri: message?.image }}
+                        source={{uri: message?.image}}
                       />
                     </TouchableOpacity>
                     {message.reaction ? (
@@ -683,7 +724,7 @@ export const ChatBody = ({
                           // bottom:0,
 
                           shadowColor: colors.gray,
-                          shadowOffset: { width: 0, height: 2 },
+                          shadowOffset: {width: 0, height: 2},
                           shadowOpacity: 5,
                           shadowRadius: 3,
                           elevation: 5,
@@ -756,21 +797,20 @@ export const ChatBody = ({
                           <TouchableOpacity
                             activeOpacity={0.5}
                             onPress={() => {
-                              checkPermission(item.fielUrl)
+                              checkPermission(item.fielUrl);
                             }}
                             style={{
                               width: moderateScale(30),
                               // height:verticalScale(30),
                               // backgroundColor:"red",
-                              alignItems: "center",
-                              justifyContent: "center"
-
+                              alignItems: 'center',
+                              justifyContent: 'center',
                             }}>
                             <Image
                               // resizeMode="contain"
-                              source={icons.download} style={{ width: 20, height: 20 }} />
-
-
+                              source={icons.download}
+                              style={{width: 20, height: 20}}
+                            />
                           </TouchableOpacity>
                         </View>
                         {/* <Text>{item.fileName}</Text> */}
@@ -780,23 +820,22 @@ export const ChatBody = ({
                 </View>
               )}
 
-              {/* <View style={{justifyContent: 'center', marginLeft: scale(10)}}>
-                <CustomImage
-                  src={icons.orangeTickReadIcon}
-                  height={15}
-                  width={15}
-                />
-                <Ionicons
-                  name="ios-checkmark"
-                  size={moderateScale(20)}
-                  color={colors.primary}
-                />
-                <Ionicons
-                  name="ios-checkmark-done-outline"
-                  size={moderateScale(20)}
-                  color={colors.orange}
-                />
-              </View> */}
+              {message.audio == undefined || message?.audio?.length == 0 ? (
+                <></>
+              ) : (
+                <View style={{alignSelf: 'flex-end', width: '100%'}}>
+                  <ReceiverVoiceMessage
+                    message={message}
+                    userData={otherUserData}
+                    // startPlay={()=>{
+                    //   onStartPlay(message.audio)
+
+                    // }}
+                    // playing={playing}
+                    audio={message.audio}
+                  />
+                </View>
+              )}
             </View>
           </View>
         )}
@@ -804,14 +843,14 @@ export const ChatBody = ({
     );
   };
   return (
-    <View style={{ flex: 1, paddingBottom: 60 }}>
+    <View style={{flex: 1, paddingBottom: 60}}>
       <FlatList
         data={messages}
         renderItem={renderMessages}
         style={styles.chat}
         // initialScrollIndex={messages.length - 1}
         keyExtractor={item => item._id}
-        showsVerticalScrollIndicator={false}        
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
@@ -908,6 +947,12 @@ const styles = ScaledSheet.create({
     // borderBottomRightRadius: verticalScale(10),
     borderTopLeftRadius: verticalScale(20),
     borderTopRightRadius: verticalScale(20),
+
+    shadowColor: colors.gray,
+    shadowOffset: {width: 0, height: 0.5},
+    shadowOpacity: 5,
+    shadowRadius: 3,
+    elevation: 5,
   },
   timerText: {
     fontSize: verticalScale(11),
@@ -942,7 +987,7 @@ const styles = ScaledSheet.create({
     borderBottomRightRadius: verticalScale(22),
 
     shadowColor: colors.gray,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 0.5},
     shadowOpacity: 5,
     shadowRadius: 3,
     elevation: 5,
@@ -967,7 +1012,7 @@ const styles = ScaledSheet.create({
     borderRadius: 30,
 
     shadowColor: colors.gray,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 10,
     shadowRadius: 3,
     elevation: 5,
@@ -1003,16 +1048,15 @@ const styles = ScaledSheet.create({
 
     backgroundColor: colors.primary,
     alignSelf: 'flex-end',
-    paddingHorizontal: verticalScale(15),
-    paddingVertical: verticalScale(10),
-    borderBottomLeftRadius: verticalScale(20),
-    // borderBottomRightRadius: verticalScale(10),
-    borderTopLeftRadius: verticalScale(20),
-    borderTopRightRadius: verticalScale(20),
+    padding:moderateScale(10),
+  
+    borderRadius:15,
+  
   },
 });
 
-{/* <View
+{
+  /* <View
 style={{
     padding: 10,
     height: 80,
@@ -1022,8 +1066,10 @@ style={{
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row'
-}}> */}
-{/* <TouchableOpacity style={{
+}}> */
+}
+{
+  /* <TouchableOpacity style={{
     flex: 1, padding: 10,
     alignItems: 'center',
 }}
@@ -1032,9 +1078,11 @@ style={{
 
  }}>
     <FontAwesome5Icon name={playing ? 'pause' : 'play'} size={20} />
-</TouchableOpacity> */}
+</TouchableOpacity> */
+}
 
-{/* <View style={{
+{
+  /* <View style={{
     flex: 7, paddingHorizontal: 10,
     justifyContent: 'center',
     marginTop: verticalScale(10)
@@ -1058,5 +1106,6 @@ style={{
     <View style={{ height: 50, width: 50, overflow: 'hidden', borderRadius: 25 }}>
         <Image source={profileImages.profile01} resizeMode="contain" />
     </View>
-</View> */}
+</View> */
+}
 // </View>

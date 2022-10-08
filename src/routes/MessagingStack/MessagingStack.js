@@ -6,6 +6,7 @@ import Request from "../../screens/home/chat/request/Request";
 import Report from "../../screens/home/report";
 import ReportReason from "../../screens/home/reportReason";
 import Reported from "../../screens/home/reported";
+import ViewFile from "../../screens/home/chat/ViewFile";
 
 
 const MessagingStack = () => {
@@ -20,6 +21,9 @@ const MessagingStack = () => {
       <Stack.Screen name="Report" component={Report} />
       <Stack.Screen name="ReportReason" component={ReportReason} />
       <Stack.Screen name="Reported" component={Reported} />
+      <Stack.Screen name="viewFile" component={ViewFile} />
+
+
   
     </Stack.Navigator>
   );

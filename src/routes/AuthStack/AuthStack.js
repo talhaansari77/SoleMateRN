@@ -20,21 +20,11 @@ import reportReason from '../../screens/home/reportReason';
 import reported from '../../screens/home/reported';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import RudioRecoder from '../../screens/home/rudioRecoder/RudioRecoder';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthStack = ({navigation}) => {
-  const handleDynamicUrlLink = link => {
-    console.log('this is DynamicLink:🖐', link);
-    if (link?.url) {
-      const id = link.url?.split('=').pop();
-      const screenName = link.url?.split('&')[0].split('=').pop();
-      const wihApp = link.url?.split('&')[1].split('=').pop();
-      console.log('user Id:', id);
-      console.log('screenName:', screenName);
-      console.log('wihApp:', wihApp);
-      if (screenName === 'Profile')
-        navigation.navigate('MainStack', {screen: 'Profile', params: {id: id}});
-    }
-  };
+
+
 
   useEffect(() => {
     dynamicLinks()
@@ -48,6 +38,33 @@ const AuthStack = ({navigation}) => {
       linkingListener();
     };
   }, []);
+
+
+ 
+
+  const handleDynamicUrlLink =async  link => {
+    console.log("this is background")
+
+    console.log('this is DynamicLink:🖐', link);
+    if (link?.url) {
+      const id = link.url?.split('=').pop();
+      await AsyncStorage.setItem("requestId",id)
+
+      const screenName = link.url?.split('&')[0].split('=').pop();
+      const wihApp = link.url?.split('&')[1].split('=').pop();
+      console.log('user Id:', id);
+      console.log("RequestIdData",id)
+      
+      console.log('screenName:', screenName);
+      console.log('wihApp:', wihApp);
+      if (screenName === 'Profile')
+
+        navigation.navigate('MainStack', {screen: 'Profile',});
+    }
+  };
+
+
+
   const Stack = createStackNavigator();
   return (
     <Stack.Navigator

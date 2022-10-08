@@ -36,7 +36,9 @@ function MainSettings({navigation}) {
 
   const onLogout = async () => {
     await AsyncStorage.removeItem('userAuth');
-    await AsyncStorage.removeItem('fcmToken');
+     await AsyncStorage.removeItem('fcmToken');
+
+     console.log("LogourData")
 
     await signout();
     navigation.reset({

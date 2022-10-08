@@ -5,9 +5,7 @@ import {colors} from '../../../utils/Colors';
 import styled from 'react-native-styled-components';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import moment from 'moment';
-import { useIsFocused,useFocusEffect } from "@react-navigation/native";
-
-
+import {useIsFocused, useFocusEffect} from '@react-navigation/native';
 
 import profileImages from '../../../../assets/Profile_images';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -30,6 +28,7 @@ import {checkUserRequest, createRequest} from '../../../services/request';
 import {Spacer} from '../../../components/Spacer';
 import {checkCharPassword} from '../../../utils/Email_Password_Validation';
 import Toast from 'react-native-simple-toast';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const traits = [
   {id: 1, trait: 'Gamer'},
   {id: 2, trait: 'Lover'},
@@ -83,90 +82,118 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
   const [authID, setAuthID] = useState('');
   const [authData, setAuthData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [requestId, setRequestId] = useState(route.params?.id);
+  const [requestId, setRequestId] = useState('');
   const isFocused = useIsFocused();
+
 
   const [otherProfileID, setOtherProfileId] = useState();
 
-
-
-
   // console.log('authData', authData);
-  console.log('otherProfile', otherProfileID);
+  // console.log('otherProfile', route.params?.id);
 
   var a = moment();
   var b = moment(authData?.dob, 'YYYY');
   var age = a.diff(b, 'years');
 
+  useFocusEffect(
+    React.useCallback(() => {
+      return async () => {
+        console.log('blur');
+        await AsyncStorage.removeItem('otherViewProfile');
+        // await AsyncStorage.removeItem("requestId");
+      };
+    }, []),
+  );
+
   useEffect(() => {
     getAuthData();
-  }, [route.params?.otherId,route.params?.id,]);
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     if(!otherProfileID){
-  //       setOtherProfileId(route.params?.otherId)
-
-
-  //     }
-  //     else{
-  //       setOtherProfileId("")
-
-  //     }
-     
-  //   }, [])
-  // );
+  }, [isFocused,requestId==null]);
 
   const getAuthData = async () => {
+    let otherViewProfile = await AsyncStorage?.getItem('otherViewProfile');
+    let  requestProfile=await AsyncStorage?.getItem("requestId",)
+
+    // let otherUserId = JSON.parse?.(requestProfile);
+    setRequestId(requestProfile);
+    console.log('otherViewProfile', requestProfile);
+
     setLoading(true);
     await getAuthId().then(id => {
       setAuthID(id);
 
-      getSpecificeUser(requestId?requestId:otherProfileID?otherProfileID:id).then(data => {
-        setAuthData(data);
-        setLoading(false);
-      });
+      if (otherViewProfile) {
+        console.log('otherUserId');
+        getSpecificeUser(otherViewProfile).then(data => {
+          setAuthData(data);
+          setLoading(false);
+        });
+      } else if (requestProfile) {
+        console.log('requestId',requestProfile);
+        getSpecificeUser(requestProfile).then(data => {
+          setAuthData(data);
+          setLoading(false);
+        });
+      } else {
+        console.log('authUserId');
+        getSpecificeUser(id).then(data => {
+          setAuthData(data);
+          setLoading(false);
+        });
+      }
     });
   };
-  const onCancel = () => {
+  const onCancel = async () => {
     setLoading(true);
     try {
-      if (requestId) {
-        setRequestId('');
-        setLoading(false);
-      }
-    } catch (error) {}
-  };
+      await AsyncStorage.removeItem('requestId');
+      Toast.show('request Cancel');
 
-  const onAccept = async () => {
-    const notesStatus = await checkUserRequest(authID, route.params?.id);
-    if (!notesStatus) {
-      const requestData = {
-        from: authID,
-        to: route.params?.id,
-        relationStatus: 0,
-        lastMessage: {},
-      };
-      await createRequest(requestData);
-      Toast.show('request sent');
       navigation.reset({
         index: 0,
         routes: [{name: 'MessagingStack'}],
       });
-    } else {
-      alert('You already in contact with');
+
+      setLoading(false);
+    } catch (error) {}
+  };
+
+  const onAccept = async () => {
+    if(requestId){
+
+      console.log("RequestDataIS",requestId)
+      const notesStatus = await checkUserRequest(authID, requestId);
+      if (!notesStatus) {
+        const requestData = {
+          from: authID,
+          to:requestId,
+          relationStatus: 0,
+          lastMessage: {},
+        };
+        await createRequest(requestData);
+        Toast.show('request sent');
+        await AsyncStorage.removeItem('requestId');
+  
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'MessagingStack'}],
+        });
+      } else {
+        alert('You already in contact with');
+      }
+
     }
+  
   };
   return (
     <View style={{flex: 1}}>
       <View
         style={{
-          paddingVertical: verticalScale(Platform.OS=="ios"? 25:0),
+          paddingVertical: verticalScale(Platform.OS == 'ios' ? 25 : 0),
           paddingBottom: 0,
           flex: 1,
         }}>
         {/* Actions */}
-        {route.params?.id ? (
+        {requestId ? (
           <ActionBtn
             handleCancle={() => {
               onCancel();
@@ -181,7 +208,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
 
         {/* Get The App */}
 
-        <GetAppBtn getApp={getApp} />
+        {/* <GetAppBtn getApp={requestId} /> */}
 
         <Header navigation={navigation} />
 

@@ -93,7 +93,7 @@ export const getMessages = (user1, user2, setMessages,setGetAllChat) => {
             audio:message.audio,
             // date:message?.date,
             from: message.from,
-            days: chatFormat(message.createdAt,"MMM-DD"),
+            days: chatFormat(message.createdAt,"MMMM - DD"),
             // days:month(message.createdAt.getMonth()),
 
 
