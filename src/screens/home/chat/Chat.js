@@ -5,37 +5,57 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import ProfileNav from '../profile/molecules/ProfileNav';
 import commonStyles from '../../../utils/CommonStyles';
-import {styles} from './styles';
+import { styles } from './styles';
 import CustomText from '../../../components/CustomText';
-import {verticalScale, moderateScale} from 'react-native-size-matters';
-import {Spacer} from '../../../components/Spacer';
-import {colors} from '../../../utils/Colors';
+import { verticalScale, moderateScale } from 'react-native-size-matters';
+import { Spacer } from '../../../components/Spacer';
+import { colors } from '../../../utils/Colors';
 import HeaderConatiner from './request/Molecules/HeaderConatiner';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {Divider} from 'react-native-elements';
-import {ChatBody} from '../../../components/ChatBody';
+import { Divider } from 'react-native-elements';
+import { ChatBody } from '../../../components/ChatBody';
 import CustomButton from '../../../components/CustomButton';
-import {sendMessage, sendMessageWithImage} from '../../../services/chats';
+import { sendMessage, sendMessageWithImage } from '../../../services/chats';
 import {
   updateLastMessage,
   updateLastMessagewithImage,
 } from '../../../services/request';
 import AddDocuments from './molecules/AddDocuments';
-import {uploadImage} from '../../../services/FirebaseAuth';
+import { uploadImage } from '../../../services/FirebaseAuth';
+import axios from "axios";
+import { getCurrentFCMToken } from '../../../utils/PushNotification';
 
-const Chat = ({navigation, route}) => {
+
+const Chat = ({ navigation, route }) => {
   const [textMessage, setTextMessage] = useState([]);
   const [settingModal, setSettingModal] = useState(false);
   const [documentsModal, setDocumentsModal] = useState(false);
   const [image, setImage] = useState('');
   const [status, setStatus] = useState(false);
+  // Send Notifications to YourSelf
+  const myAppToken = 'key='+getCurrentFCMToken();
+  // NotificationData
+  const NotificationData = {
+    method: 'POST',
+    url: 'https://fcm.googleapis.com/fcm/send',
+    headers: {
+      Authorization: 'key=AAAAntfCcWI:APA91bGvB4v_-ERQEr5c9uAUbgB4OO5eqzGklQtRDSy0nuBCl488yFVTM0VqfjJKVfg21ABmip856AK_R9x8rYqvTq3AMowRdEqdYj9wrCDajnNUEkpeN0lpVo-lEptGSZ3WAqyIPLV_',
+      'Content-Type': 'application/json'
+    },
+    data: {
+      registration_ids: [
+        'fvFIGkPqQPiWgI-VT-CJjv:APA91bHbN0ZnAvdI0cN8vlZxd-q44UPoGOU2j2ILyFaYN73a2Bv2cc9-bE2oz6VAm4PnbopQOcOZImoQ4gfe6PnPbuVEu5Pv482j5ncmH-8uRMHtDugqC-Wzi7hMqM-zjMo3d76IeEJO'
+      ],
+      notification: { body: 'This is an FCM notification message!', title: 'FCM Message' }
+    }
+  };
 
   console.log('RoutesData', image);
 
@@ -67,6 +87,13 @@ const Chat = ({navigation, route}) => {
 
     setTextMessage('');
     setImage('');
+    // Sending Notifications
+    console.log("Sending Notifications");
+    axios.request(NotificationData).then(function (response) {
+      console.log(response.data);
+    }).catch(function (error) {
+      console.error(error);
+    });
   };
 
   return (
@@ -103,8 +130,8 @@ const Chat = ({navigation, route}) => {
               color={colors.white}
             />
           </TouchableOpacity>
-          <View style={{width: verticalScale(20)}} />
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ width: verticalScale(20) }} />
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View style={styles.textInputContainer1}>
               <TextInput
                 placeholder="message"
@@ -126,7 +153,7 @@ const Chat = ({navigation, route}) => {
                 />
               </TouchableOpacity>
             </View>
-            <View style={{width: verticalScale(5)}} />
+            <View style={{ width: verticalScale(5) }} />
             {textMessage ? (
               <TouchableOpacity
                 onPress={() => {
@@ -175,7 +202,7 @@ const Chat = ({navigation, route}) => {
                   fontFamily="ProximaNova-Bold"
                 />
               </View>
-              <View style={{width: '100%', alignItems: 'center'}}>
+              <View style={{ width: '100%', alignItems: 'center' }}>
                 <CustomButton
                   backgroundColor={colors.darkOrange}
                   borderRadius={25}
