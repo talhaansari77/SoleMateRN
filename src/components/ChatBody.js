@@ -31,6 +31,8 @@ import Component from './FastImage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {getUserID} from 'react-native-fbsdk/lib/commonjs/FBAppEventsLogger';
 import {getAuthId} from '../services/FirebaseAuth';
+import { useIsFocused } from '@react-navigation/native';
+import moment from 'moment';
 // import colors from "../../Utils/colors";
 // import { getMessages } from "../Services/chats";
 export const ChatBody = ({
@@ -51,7 +53,7 @@ export const ChatBody = ({
 
   // console.log('statusMessage', messages);
   console.log('messageSubscriber', messages?.date);
-
+const isFocused = useIsFocused();
 
   useEffect(() => {
     const messageSubscriber = getMessages(
@@ -60,14 +62,12 @@ export const ChatBody = ({
       setMessages,
       setGetAllChat,
     );
-
-
     return () => messageSubscriber();
   }, [authId, otherId]);
 
   useEffect(() => {
     changeMessageStatus();
-  }, [authId, otherId]);
+  }, [authId, otherId,isFocused]);
 
   const changeMessageStatus = async () => {
     const id = await getAuthId();
@@ -90,8 +90,7 @@ export const ChatBody = ({
 
   const renderMessages = ({item: message}) => {
     const isUser = message?.from == authId;
-
-    // let name = month[message.days.getMonth()];
+   
 
     
 
@@ -102,7 +101,7 @@ export const ChatBody = ({
           flex: 1,
         }}>
         <View style={{paddingBottom: verticalScale(15)}}>
-          <CustomText label={message.days} textStyle={styles.timerText}/>
+          <CustomText label={msgDate} textStyle={styles.timerText}/>
         </View>
 
         {isUser ? (
@@ -484,6 +483,7 @@ export const ChatBody = ({
       </View>
     );
   };
+  let listViewRef;
   return (
     <View style={{flex: 1, paddingBottom: 60}}>
       <FlatList
@@ -491,6 +491,9 @@ export const ChatBody = ({
         renderItem={renderMessages}
         style={styles.chat}
         // initialScrollIndex={messages.length - 1}
+        ref={(ref)=>{
+          listViewRef=ref;
+        }}
         keyExtractor={item => item._id}
         showsVerticalScrollIndicator={false}
       />
