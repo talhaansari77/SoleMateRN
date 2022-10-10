@@ -1,5 +1,5 @@
-import { View, Text, Pressable, PermissionsAndroid } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, Pressable, PermissionsAndroid, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { colors } from '../../../utils/Colors';
 import AudioRecorderPlayer, {
     AVEncoderAudioQualityIOSType,
@@ -11,18 +11,25 @@ import AudioRecorderPlayer, {
     RecordBackType,
 } from 'react-native-audio-recorder-player';
 import * as Progress from 'react-native-progress';
-
+import { color } from 'react-native-elements/dist/helpers';
+import profileImages from '../../../../assets/Profile_images';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import CustomText from '../../../components/CustomText';
+import { Spacer } from '../../../components/Spacer';
+import { scale, verticalScale } from 'react-native-size-matters';
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 const RudioRecoder = () => {
-
-    const [state, setState] = useState({ recordTime: "00:00:00" })
-    const [voiceProgress, setVoiceProgress] = useState(0)
+    const [state, setState] = useState({ recordTime: '00:00:00' });
+    const [voiceProgress, setVoiceProgress] = useState(0);
+    const [playing, setPlaying] = useState(false);
 
     useEffect(() => {
-        console.log(state)
-    }, [state])
-
+        console.log(state);
+        if (state.currentPositionSec / state.currentDurationSec === 1) {
+            setPlaying(false)
+        }
+    }, [state]);
 
     onStartRecord = async () => {
         if (Platform.OS === 'android') {
@@ -54,17 +61,14 @@ const RudioRecoder = () => {
             }
         }
         const result = await audioRecorderPlayer.startRecorder();
-        audioRecorderPlayer.addRecordBackListener((e) => {
+        audioRecorderPlayer.addRecordBackListener(e => {
             setState({
                 recordSecs: e.currentPosition,
-                recordTime: audioRecorderPlayer.mmssss(
-                    Math.floor(e.currentPosition),
-                ),
+                recordTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
             });
             return;
         });
         console.log(result);
-
     };
 
     onStopRecord = async () => {
@@ -77,19 +81,24 @@ const RudioRecoder = () => {
     };
 
     onStartPlay = async () => {
-
         console.log('onStartPlay');
-        const msg = await audioRecorderPlayer.startPlayer();
-        console.log(msg);
-        audioRecorderPlayer.addPlayBackListener((e) => {
-            setState({
-                currentPositionSec: e.currentPosition,
-                currentDurationSec: e.duration,
-                playTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
-                duration: audioRecorderPlayer.mmssss(Math.floor(e.duration)),
+        if (!playing) {
+            setPlaying(!playing)
+            const msg = await audioRecorderPlayer.startPlayer();
+            console.log(msg);
+            audioRecorderPlayer.addPlayBackListener(e => {
+                setState({
+                    currentPositionSec: e.currentPosition,
+                    currentDurationSec: e.duration,
+                    playTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
+                    duration: audioRecorderPlayer.mmssss(Math.floor(e.duration)),
+                });
+                return;
             });
-            return;
-        });
+        } else {
+            setPlaying(!playing)
+            onStopPlay()
+        }
     };
 
     onPausePlay = async () => {
@@ -105,57 +114,117 @@ const RudioRecoder = () => {
     // Main Function
     // Main Function
     return (
-        <View style={{ flex: 1, backgroundColor: colors.gray, justifyContent: "center", alignItems: "center" }}>
-            <View style={{ paddingVertical: 15, justifyContent: "center", alignItems: "center" }}>
-                <Text style={{ fontSize: 22, fontWeight: "bold", paddingVertical: 10 }}>
+        <View
+            style={{
+                flex: 1,
+                backgroundColor: colors.gray,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+            <View
+                style={{
+                    paddingVertical: 15,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                <Text style={{ fontSize: 22, fontWeight: 'bold', paddingVertical: 10 }}>
                     {state.recordTime ? state.recordTime : state.playTime}
                 </Text>
-                {state.playTime ?
-
-                    <Progress.Bar progress={state.currentPositionSec / state.currentDurationSec} height={2} color={colors.white} width={200} />
-                    :
+                {state.playTime ? (
+                    <Progress.Bar
+                        progress={state.currentPositionSec / state.currentDurationSec}
+                        height={2}
+                        color={colors.white}
+                        width={200}
+                    />
+                ) : (
                     <></>
-                }
-
+                )}
             </View>
 
-            <View style={{ flexDirection: "row", justifyContent: "space-evenly", width: '100%' }}>
-                <MyBtn title={"Record"} onPress={onStartRecord} />
+            <View
+                style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-evenly',
+                    width: '100%',
+                }}>
+                <MyBtn title={'Record'} onPress={onStartRecord} />
                 {/* <MyBtn title={"Resume"} /> */}
-                <MyBtn title={"Stop"} onPress={onStopRecord} />
+                <MyBtn title={'Stop'} onPress={onStopRecord} />
                 {/* <MyBtn title={"Pause"} /> */}
-                <MyBtn title={"Play"} onPress={onStartPlay} />
+                <MyBtn title={'Play'} onPress={onStartPlay} />
             </View>
 
-        </View>
-    )
-}
+            <Spacer height={100} />
 
-export default RudioRecoder
+            {/* Voice Chat Components */}
+            <View
+                style={{
+                    padding: 10,
+                    height: 80,
+                    width: '80%',
+                    borderRadius: 20,
+                    backgroundColor: colors.placeholder,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row'
+                }}>
+                {/* play icons */}
+                <TouchableOpacity style={{
+                    flex: 1, padding: 10,
+                    alignItems: 'center',
+                }} onPress={onStartPlay} >
+                    <FontAwesome5Icon name={playing ? 'pause' : 'play'} size={20} />
+                </TouchableOpacity>
+
+                {/* Progress.Bar */}
+                <View style={{
+                    flex: 7, paddingHorizontal: 10,
+                    justifyContent: 'center',
+                    marginTop: verticalScale(10)
+                }}>
+                    <Progress.Bar
+                        progress={state.playTime ? (state?.currentPositionSec / state?.currentDurationSec) : (1)}
+                        height={3}
+                        color={colors.white}
+                        width={scale(155)}
+                    />
+                    <Spacer height={10} />
+                    <View style={{ flexDirection: 'row', justifyContent: "space-between", marginHorizontal: scale(2) }}>
+                        <CustomText label={state.recordTime ? state.recordTime : state.playTime} color={colors.white} />
+                        <CustomText label={'Oct-7'} color={colors.white} />
+                    </View>
+                </View>
+                {/* image */}
+                <View style={{
+                    flex: 2, justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                    <View style={{ height: 50, width: 50, overflow: 'hidden', borderRadius: 25 }}>
+                        <Image source={profileImages.profile01} resizeMode="contain" />
+                    </View>
+                </View>
+            </View>
+        </View>
+    );
+};
+
+export default RudioRecoder;
 
 const MyBtn = ({ title, onPress }) => (
     <Pressable
         style={({ pressed }) => [
             {
-                backgroundColor: pressed
-                    ? 'rgb(210, 230, 255)'
-                    : 'white',
+                backgroundColor: pressed ? 'rgb(210, 230, 255)' : 'white',
             },
             {
                 padding: 10,
                 maxWidth: 100,
                 height: 50,
-                justifyContent: "center"
-            }
+                justifyContent: 'center',
+            },
         ]}
-        onPress={onPress}
-
-    >
-        <Text style={{ color: colors.black }}>
-            {title}
-        </Text>
+        onPress={onPress}>
+        <Text style={{ color: colors.black }}>{title}</Text>
     </Pressable>
-)
-
-
-
+);
