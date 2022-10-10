@@ -19,6 +19,7 @@ import Reported from '../../screens/home/reported/Reported';
 import reportReason from '../../screens/home/reportReason';
 import reported from '../../screens/home/reported';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
+import RudioRecoder from '../../screens/home/rudioRecoder/RudioRecoder';
 
 const AuthStack = ({navigation}) => {
   const handleDynamicUrlLink = link => {
@@ -53,6 +54,7 @@ const AuthStack = ({navigation}) => {
       screenOptions={{headerShown: false}}
       // initialRouteName={"Report"}
     >
+      <Stack.Screen name="AudioRecorder" component={RudioRecoder} />
       <Stack.Screen name="OnBoarding" component={OnBoarding} />
       <Stack.Screen name="Welcome" component={Welcome} />
       {/* <Stack.Screen name="ViewPager" component={ViewPager} /> */}

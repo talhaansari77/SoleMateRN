@@ -82,7 +82,9 @@ export const ChatBody = ({
   }, [authId, otherId]);
 
   useEffect(() => {
-    changeMessageStatus();
+    if(isFocused){
+      changeMessageStatus();
+    }
   }, [authId, otherId, isFocused,messages]);
 
   const changeMessageStatus = async () => {
