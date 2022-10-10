@@ -1,40 +1,56 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ImageBackground,
+} from 'react-native';
 import React from 'react';
-import { ScaledSheet } from 'react-native-size-matters';
-import { colors } from '../../../utils/Colors';
+import {moderateScale, ScaledSheet} from 'react-native-size-matters';
+import {colors} from '../../../utils/Colors';
 import CustomText from '../../../components/CustomText';
-import { verticalScale } from 'react-native-size-matters';
+import {verticalScale} from 'react-native-size-matters';
 import commonStyles from '../../../utils/CommonStyles';
 import profileImages from '../../../../assets/Profile_images';
-const SignupWithCon = ({ onGoogle, onFacebook }) => {
+import icons from '../../../../assets/icons';
+const SignupWithCon = ({onGoogle, onFacebook}) => {
   return (
     <View style={styles.mainContainer}>
-      <TouchableOpacity onPress={onFacebook} style={styles.childContainer}>
-        <CustomText
-          label="FACEBOOK"
-          fontFamily="ProximaNova-Bold"
-          color={colors.facebookBlue}
-          fontSize={verticalScale(12)}
-        />
-      </TouchableOpacity>
       <TouchableOpacity
         style={styles.childContainer}
         activeOpacity={0.6}
         onPress={onGoogle}>
-        <Image
-          style={commonStyles.img}
+        <ImageBackground
+          style={[
+            commonStyles.img,
+            {
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+            },
+          ]}
           resizeMode="cover"
-          source={profileImages.google}
-        />
+          source={profileImages.google}>
+          <View
+            style={{
+              width: moderateScale(30),
+              height: verticalScale(30),
+              marginLeft: 10,
+              padding: 2,
+            }}>
+            <Image source={icons.google} style={commonStyles.img} />
+          </View>
 
-        <View style={{ position: 'absolute' }}>
-          <CustomText
-            label="GOOGLE"
-            fontFamily="ProximaNova-Bold"
-            color={colors.googleGreen}
-            fontSize={verticalScale(12)}
-          />
-        </View>
+          <View style={{width: '60%'}}>
+            <CustomText
+              label="GOOGLE"
+              fontFamily="ProximaNova-Bold"
+              color={colors.googleGreen}
+              fontSize={verticalScale(12)}
+            />
+          </View>
+        </ImageBackground>
       </TouchableOpacity>
     </View>
   );
@@ -50,14 +66,14 @@ const styles = ScaledSheet.create({
     borderColor: colors.lightGray,
     flexDirection: 'row',
     shadowColor: colors.lightGray,
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: {width: 0, height: 0},
     shadowOpacity: 2,
     shadowRadius: 5,
   },
   childContainer: {
-    width: '50%',
+    width: '100%',
     height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+
+    flexDirection: 'row',
   },
 });

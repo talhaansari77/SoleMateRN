@@ -13,8 +13,8 @@ import {Spacer} from '../../../../components/Spacer';
 import {useState} from 'react';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
-const PictureBox = ({images,setImages}) => {
-  
+const PictureBox = ({images, setImages}) => {
+  console.log('Imagesdata', images);
 
   return (
     <View style={{height: verticalScale(300)}}>
@@ -23,12 +23,21 @@ const PictureBox = ({images,setImages}) => {
           <ImageContainer
             activeOpacity={0.6}
             onPress={() =>
-              onClickImage().then(img =>{
+              onClickImage().then(img => {
                 setImages({...images, image1: img});
                 // console.log("This is Array Object",Object.values((images)))
               })
             }>
-            <ImageLabel>1</ImageLabel>
+            <Text
+              style={[
+                styles.textImage,
+                {
+                  color: images.image1 ? colors.white : colors.lightBlack,
+                },
+              ]}>
+              1
+            </Text>
+            {/* <ImageLabel>1</ImageLabel> */}
             {images.image1 ? (
               <Image source={{uri: images.image1}} style={hw100} />
             ) : (
@@ -47,7 +56,16 @@ const PictureBox = ({images,setImages}) => {
             onPress={() =>
               onClickImage().then(img => setImages({...images, image2: img}))
             }>
-            <ImageLabel>2</ImageLabel>
+            <Text
+              style={[
+                styles.textImage,
+                {
+                  color: images.image2 ? colors.white : colors.lightBlack,
+                },
+              ]}>
+              2
+            </Text>
+            {/* <ImageLabel>2</ImageLabel> */}
             {images.image2 ? (
               <Image source={{uri: images.image2}} style={hw100} />
             ) : (
@@ -64,7 +82,15 @@ const PictureBox = ({images,setImages}) => {
             onPress={() =>
               onClickImage().then(img => setImages({...images, image3: img}))
             }>
-            <ImageLabel>3</ImageLabel>
+            <Text
+              style={[
+                styles.textImage,
+                {
+                  color: images.image3 ? colors.white : colors.lightBlack,
+                },
+              ]}>
+              3
+            </Text>
             {images.image3 ? (
               <Image source={{uri: images.image3}} style={hw100} />
             ) : (
@@ -84,7 +110,15 @@ const PictureBox = ({images,setImages}) => {
           onPress={() =>
             onClickImage().then(img => setImages({...images, image4: img}))
           }>
-          <ImageLabel>4</ImageLabel>
+          <Text
+            style={[
+              styles.textImage,
+              {
+                color: images.image4 ? colors.white : colors.lightBlack,
+              },
+            ]}>
+            4
+          </Text>
           {images.image4 ? (
             <Image source={{uri: images.image4}} style={hw100} />
           ) : (
@@ -97,7 +131,15 @@ const PictureBox = ({images,setImages}) => {
           onPress={() =>
             onClickImage().then(img => setImages({...images, image5: img}))
           }>
-          <ImageLabel>5</ImageLabel>
+          <Text
+            style={[
+              styles.textImage,
+              {
+                color: images.image5 ? colors.white : colors.lightBlack,
+              },
+            ]}>
+            5
+          </Text>
           {images.image5 ? (
             <Image source={{uri: images.image5}} style={hw100} />
           ) : (
@@ -110,7 +152,15 @@ const PictureBox = ({images,setImages}) => {
           onPress={() =>
             onClickImage().then(img => setImages({...images, image6: img}))
           }>
-          <ImageLabel>6</ImageLabel>
+          <Text
+            style={[
+              styles.textImage,
+              {
+                color: images.image6 ? colors.white : colors.lightBlack,
+              },
+            ]}>
+            6
+          </Text>
           {images.image6 ? (
             <Image source={{uri: images.image6}} style={hw100} />
           ) : (
@@ -204,10 +254,22 @@ const hw100 = {
 const ImageContainerStyle = {
   flex: 1,
   borderRadius: 10,
-  borderColor: colors.primary,
+  borderColor: colors.lightBlack,
   borderWidth: 1.2,
   backgroundColor: colors.inputBorder,
   alignItems: 'center',
   justifyContent: 'center',
   overflow: 'hidden',
 };
+
+const styles = ScaledSheet.create({
+  textImage: {
+    position: 'absolute',
+    zIndex: 1,
+    fontFamily: 'ProximaNova-Bold',
+    fontSize: verticalScale(12),
+    top: 0,
+    padding: moderateScale(5),
+    left: scale(10),
+  },
+});

@@ -30,12 +30,13 @@ import AudioRecorderPlayer, {
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
-const CustomAudio = ({audio,userData,message}) => {
+const CustomAudio = ({audio, userData, message}) => {
+  console.log('AudioData', audio?.[0]?.audioUri);
   const [state, setState] = useState({recordTime: '00:00:00'});
   const [voiceProgress, setVoiceProgress] = useState(0);
   const [playing, setPlaying] = useState(false);
 
-  console.log("UserAithData",userData)
+  console.log('UserAithData', userData);
 
   useEffect(() => {
     console.log('This is audio you are looking for:', audio);
@@ -74,7 +75,9 @@ const CustomAudio = ({audio,userData,message}) => {
         return;
       }
     }
-    const result = await audioRecorderPlayer.startRecorder(audio.audioUri);
+    const result = await audioRecorderPlayer.startRecorder(
+      audio?.[0]?.audioUri,
+    );
     audioRecorderPlayer.addRecordBackListener(e => {
       setState({
         recordSecs: e.currentPosition,
@@ -151,17 +154,23 @@ const CustomAudio = ({audio,userData,message}) => {
           flex: 2,
           justifyContent: 'center',
           alignItems: 'center',
-        //   backgroundColor:'brown'
+          //   backgroundColor:'brown'
         }}>
         <View
-          style={{height: 45, width: 45, overflow: 'hidden', borderRadius: 20,marginLeft: 10}}>
-              <Component
-                  // resizeMode="cover"
+          style={{
+            height: 45,
+            width: 45,
+            overflow: 'hidden',
+            borderRadius: 20,
+            marginLeft: 10,
+          }}>
+          <Component
+            // resizeMode="cover"
 
-                  style={{ height: '100%', width: '100%' }}
-                  uniqueKey={Math.random()}
-                  source={{ uri: userData?.images?.[0] }}
-                />
+            style={{height: '100%', width: '100%'}}
+            uniqueKey={Math.random()}
+            source={{uri: userData?.images?.image1}}
+          />
           {/* <Image source={{uri:userData?.images?.[0]}} resizeMode="contain" /> */}
         </View>
       </View>
@@ -170,11 +179,15 @@ const CustomAudio = ({audio,userData,message}) => {
           flex: 1,
           padding: 10,
           alignItems: 'center',
-          marginLeft:10
-        //   backgroundColor:'pink'
+          marginLeft: 10,
+          //   backgroundColor:'pink'
         }}
         onPress={onStartPlay}>
-        <FontAwesome5Icon name={playing ? 'pause' : 'play'} size={20} color={colors.white} />
+        <FontAwesome5Icon
+          name={playing ? 'pause' : 'play'}
+          size={20}
+          color={colors.white}
+        />
       </TouchableOpacity>
 
       {/* Progress.Bar */}
@@ -183,10 +196,10 @@ const CustomAudio = ({audio,userData,message}) => {
           flex: 7.5,
           paddingHorizontal: 7,
           justifyContent: 'center',
-          height:"100%",
-          
+          height: '100%',
+
           marginTop: verticalScale(20),
-        //   backgroundColor:'red'
+          //   backgroundColor:'red'
         }}>
         {state.playTime ? (
           <Progress.Bar
@@ -196,7 +209,7 @@ const CustomAudio = ({audio,userData,message}) => {
             width={moderateScale(130)}
           />
         ) : (
-          <Progress.Bar
+          <Progress.Barzw
             progress={1}
             height={2}
             color={colors.white}
@@ -208,44 +221,37 @@ const CustomAudio = ({audio,userData,message}) => {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            alignItems:"center",
+            alignItems: 'center',
             // marginHorizontal: scale(5),
-            marginTop:10,
+            marginTop: 10,
           }}>
           <CustomText
-                    fontSize={9}
-
-            label={
-              state?.recordTime
-                ? state?.recordTime
-                : state?.playTime
-            }
+            fontSize={9}
+            label={state?.recordTime ? state?.recordTime : state?.playTime}
             color={colors.white}
           />
-          <View style={{flexDirection:"row",alignItems:"center"}}>
-          <CustomText
-          marginRight={5}
-          fontSize={9}
-           label={message.createdAt} color={colors.white} />
-          <View >
-                            <Ionicons
-                              name={
-                                message.status == true
-                                  ? 'ios-checkmark-done-outline'
-                                  : 'ios-checkmark'
-                              }
-                              size={moderateScale(15)}
-                              color={colors.white}
-                            />
-                          </View>
-
-
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <CustomText
+              marginRight={5}
+              fontSize={9}
+              label={message.createdAt}
+              color={colors.white}
+            />
+            <View>
+              <Ionicons
+                name={
+                  message.status == true
+                    ? 'ios-checkmark-done-outline'
+                    : 'ios-checkmark'
+                }
+                size={moderateScale(15)}
+                color={colors.white}
+              />
+            </View>
           </View>
-         
         </View>
       </View>
       {/* image */}
-    
     </View>
   );
 };

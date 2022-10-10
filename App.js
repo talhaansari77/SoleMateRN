@@ -26,21 +26,35 @@ export default function App() {
     console.log('ForeGround DynamicLink-1:🖐', link);
     if (link?.url) {
       const id = link.url?.split('=').pop();
+      // const getTime = link?.time.split('=').pop();
+
+
+
       await AsyncStorage.setItem("requestId",id)
       console.log('Forground Id:', id);
 
       const screenName = link.url?.split('&')[0].split('=').pop();
       const wihApp = link.url?.split('&')[1].split('=').pop();
-
+      // const getTime = link.url?.split('&')[2].split('=').pop();
+      //  console.log('ForgroundGetTime:',getTime);
+      //  await AsyncStorage.setItem("generateLinkTime",getTime)
       console.log('screenName:', screenName);
       console.log('wihApp:', wihApp);
-      if (screenName === 'Profile')
-        navigation.navigate('MainStack', {screen: 'Profile'});
+      if (screenName === 'Profile'){
+        // navigation.navigate('MainStack', {screen: 'Profile'});
+
+
+      }
+
+
     }
 
   };
   useEffect(() => {
-    SplashScreen.hide();
+
+    // setTimeout(() => {
+    //   SplashScreen.hide();
+    // }, 1500);
     requestUserPermission();
     notificationServices();
   }, [])

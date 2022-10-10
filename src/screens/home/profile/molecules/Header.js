@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import React from 'react';
 import ProfileNav from './ProfileNav';
 import CustomText from '../../../../components/CustomText';

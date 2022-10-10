@@ -1,18 +1,13 @@
 import {
   View,
-  Text,
   Image,
   SafeAreaView,
   TouchableOpacity,
   Switch,
 } from 'react-native';
 import React, {useState} from 'react';
-// import SettingsArray from "./molecules/SettingsArray";
 import styled from 'react-native-styled-components';
-import {moderateScale} from 'react-native-size-matters';
 import CustomText from '../../../components/CustomText';
-// import MainSettingsArray from "./molecules/MainSettingsArray";
-import ToggleSwitch from 'toggle-switch-react-native';
 import icons from '../../../../assets/icons';
 import {colors} from '../../../utils/Colors';
 import {Divider} from 'react-native-elements';
@@ -24,42 +19,25 @@ function GeneralSettings({navigation}) {
     withSticker: true,
   });
 
-  const toggleSwitch = () => setisOn(previousState => !previousState);
-
+  //  global Switch function
   const onGlobal = () => {
     setisOn({...isOn, global: !isOn.global});
   };
+  //  global ViewProfile function
 
   const onViewProfile = () => {
     setisOn({...isOn, withProfile: !isOn.withProfile});
   };
 
+  //  global WithSticke function
 
-  const onWithSticker=()=>{
-
+  const onWithSticker = () => {
     setisOn({...isOn, withSticker: !isOn.withSticker});
+  };
 
-
-  }
-
-  
   return (
     <SafeAreaView>
       <Container>
-        {/* <TouchableOpacity onPress={() => console.log("Done")}>
-          <View>
-            <CustomText
-              fontSize={14}
-              fontWeight={'700'}
-              alignSelf={'flex-end'}
-              marginTop={-10}
-              color={colors.primary}
-              fontFamily={'ProximaNova_Bold'}>
-              Done
-            </CustomText>
-          </View>
-        </TouchableOpacity> */}
-
         <TouchableOpacity>
           <View>
             <CustomText
@@ -116,17 +94,6 @@ function GeneralSettings({navigation}) {
               style={{transform: [{scaleX: 1.1}, {scaleY: 1.1}]}}
               onValueChange={onGlobal}
             />
-
-            {/* <ToggleSwitch
-              isOn={isOn.global}
-              onColor={colors.primary}
-              offColor={colors.switchGray}
-              labelStyle={{color: 'black', fontWeight: '900'}}
-              size="small"
-              onToggle={() => {
-                setisOn({...isOn, global: !isOn.global});
-              }}
-            /> */}
           </WithSwitch>
 
           <CustomText
@@ -143,7 +110,7 @@ function GeneralSettings({navigation}) {
         <TouchableOpacity>
           <WithSwitch style={{marginTop: 50}}>
             <CustomText
-              fontFamily={"ProximaNova-Bold"}
+              fontFamily={'ProximaNova-Bold'}
               fontSize={14}
               fontWeight={'700'}
               marginTop={6}>
@@ -157,17 +124,6 @@ function GeneralSettings({navigation}) {
               style={{transform: [{scaleX: 1.1}, {scaleY: 1.1}]}}
               onValueChange={onViewProfile}
             />
-
-            {/* <ToggleSwitch
-              isOn={isOn.withProfile}
-              onColor={colors.primary}
-              offColor={colors.switchGray}
-              labelStyle={{color: 'black', fontWeight: '900'}}
-              size="large"
-              onToggle={() => {
-                setisOn({...isOn, withProfile: !isOn.withProfile});
-              }}
-            /> */}
           </WithSwitch>
         </TouchableOpacity>
       </Container>
@@ -185,7 +141,6 @@ function GeneralSettings({navigation}) {
               Show me only with sticker
             </CustomText>
 
-
             <Switch
               value={isOn.withSticker}
               trackColor={{false: colors.switchGray, true: colors.darkOrange}}
@@ -193,17 +148,6 @@ function GeneralSettings({navigation}) {
               style={{transform: [{scaleX: 1.1}, {scaleY: 1.1}]}}
               onValueChange={onWithSticker}
             />
-
-            {/* <ToggleSwitch
-              isOn={isOn.withSticker}
-              onColor={colors.primary}
-              offColor={colors.switchGray}
-              labelStyle={{color: 'black', fontWeight: '900'}}
-              size="large"
-              onToggle={() => {
-                setisOn({...isOn, withSticker: !isOn.withSticker});
-              }}
-            /> */}
           </WithSwitch>
           <CustomText
             fontFamily={'ProximaNova-Regular'}
@@ -219,9 +163,9 @@ function GeneralSettings({navigation}) {
 
       <Divider />
       <Container>
-        <TouchableOpacity 
-        activeOpacity={0.6}
-        onPress={() => navigation.navigate('MainSettings')}>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={() => navigation.navigate('MainSettings')}>
           <WithSwitch>
             <CustomText
               fontFamily={'ProximaNova-Bold'}
@@ -254,12 +198,6 @@ const Container = styled(View, {
 
 const DirectionRow = styled(View, {
   flexDirection: 'row',
-});
-
-const Underline = styled(View, {
-  borderBottomColor: '#eee',
-  borderBottomWidth: 2,
-  width: moderateScale(380),
 });
 
 const WithSwitch = styled(View, {

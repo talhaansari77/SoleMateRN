@@ -610,7 +610,7 @@ export const ChatBody = ({
 
                   style={{height: '100%', width: '100%'}}
                   uniqueKey={Math.random()}
-                  source={{uri: otherUserData?.images?.[0]}}
+                  source={{uri: otherUserData?.images?.image1}}
                 />
                 {/* <Image
                   source={profileImages.profile01}

@@ -16,15 +16,17 @@ const ConditionPassCon = ({txt1, txt2, color, color2, onGetPassword}) => {
       </View>
       <View style={{alignSelf: 'center', width: '45%'}}>
         <CustomText
-           label={txt2} 
-           onPress={txt2 == '* get our password' ? onGetPassword : null} 
-           alignSelf="flex-start" 
-           textDecorationLine={txt2 == '* get our password' ? "underline" : "none"} 
-           fontFamily="ProximaNova-Regular" 
-           color={color2} 
-           fontSize={verticalScale(10)} 
-        /> 
-       </View> 
+          label={txt2}
+          onPress={txt2 == '* get our password' ? onGetPassword : null}
+          alignSelf="flex-start"
+          textDecorationLine={
+            txt2 == '* get our password' ? 'underline' : 'none'
+          }
+          fontFamily="ProximaNova-Regular"
+          color={color2}
+          fontSize={verticalScale(10)}
+        />
+      </View>
     </View>
   );
 };

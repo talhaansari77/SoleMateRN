@@ -1,20 +1,19 @@
-import {View, Text, Image, ImageBackground, SafeAreaView} from 'react-native';
-import React, {useState, useEffect} from 'react';
+import {View, ImageBackground} from 'react-native';
+import React from 'react';
 import CustomText from '../../../components/CustomText';
-import CustomButton from '../../../components/CustomButton';
-import welcomeImages from '../../../../assets/welocme_images';
 import commonStyles from '../../../utils/CommonStyles';
 import {Spacer} from '../../../components/Spacer';
 import {verticalScale, moderateScale} from 'react-native-size-matters';
 import {colors} from '../../../utils/Colors';
 import CustomGradientButton from '../../../components/CustomGradientButton';
+import profileImages from '../../../../assets/Profile_images';
 
 const Welcome = ({navigation}) => {
   return (
     <View style={commonStyles.commonMain}>
       <ImageBackground
         ImageBackground
-        source={welcomeImages.welcomeImageGirl}
+        source={profileImages.loginSignupGiral}
         style={[
           commonStyles.img,
           {
@@ -29,7 +28,6 @@ const Welcome = ({navigation}) => {
             fontFamily="ProximaNova-Bold"
             color={colors.white}
             marginTop={20}
-            // fontWeight="700"
             fontSize={verticalScale(35)}
           />
           <CustomText
@@ -39,7 +37,9 @@ const Welcome = ({navigation}) => {
             marginTop={verticalScale(10)}
             fontSize={verticalScale(10)}
           />
-          <View style={{height: '45%'}} />
+          <View style={{height: '40%'}} />
+
+          {/* go to login Screen */}
           <CustomGradientButton
             title="Login"
             width="90%"
@@ -51,6 +51,8 @@ const Welcome = ({navigation}) => {
               navigation.navigate('Login');
             }}
           />
+
+          {/* got to SignupScreen */}
           <CustomText
             label="Sign up"
             fontFamily="ProximaNova-Bold"

@@ -1,12 +1,19 @@
-import {View, Text, Image, Dimensions, ActivityIndicator} from 'react-native';
+import {View, Dimensions, ActivityIndicator} from 'react-native';
 import React from 'react';
-import profileImages from '../../../../../assets/Profile_images';
 import CustomText from '../../../../components/CustomText';
 import {colors} from '../../../../utils/Colors';
 import {moderateScale} from 'react-native-size-matters';
 import FastImage from '../../../../components/FastImage';
 
-const ProfileImage = ({src, loading, name, age, location, showName}) => {
+const ProfileImage = ({
+  src,
+  loading,
+  name,
+  age,
+  location,
+  showName,
+  uniqueKey,
+}) => {
   return (
     <>
       {/* ProfileImage */}
@@ -23,17 +30,10 @@ const ProfileImage = ({src, loading, name, age, location, showName}) => {
             // resizeMode="cover"
 
             style={{height: '100%', width: '100%'}}
-            uniqueKey={Math.random()}
+            uniqueKey={uniqueKey}
             source={src}
           />
         )}
-
-        {/* <Image
-          resizeMode="cover"
-          source={src}
-          style={{ height: "100%", width: "100%" }}
-          {}
-        /> */}
         {showName ? (
           <View
             style={{
@@ -55,13 +55,13 @@ const ProfileImage = ({src, loading, name, age, location, showName}) => {
                 children={name ? ' - ' : null}
                 color={colors.white}
                 fontFamily={'ProximaNova-Bold'}
-                fontSize={14}
+                fontSize={18}
               />
               <CustomText
                 label={age}
                 color={colors.white}
                 fontFamily={'ProximaNova-Bold'}
-                fontSize={14}
+                fontSize={18}
               />
             </View>
 
@@ -69,7 +69,7 @@ const ProfileImage = ({src, loading, name, age, location, showName}) => {
               color={colors.white}
               numberOfLines={1}
               fontFamily={'ProximaNova-Bold'}
-              fontSize={14}>
+              fontSize={18}>
               {location}
             </CustomText>
           </View>

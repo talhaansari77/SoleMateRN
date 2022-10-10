@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   SafeAreaView,
   TouchableOpacity,
   Platform,
@@ -10,11 +9,8 @@ import styled from 'react-native-styled-components';
 import {moderateScale, verticalScale} from 'react-native-size-matters';
 import CustomText from '../../../components/CustomText';
 import {colors} from '../../../utils/Colors';
-import CustomImage from '../../../components/CustomImage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import profileImages from '../../../../assets/Profile_images';
 import Component from '../../../components/FastImage';
-import commonStyles from '../../../utils/CommonStyles';
 
 const Reported = ({navigation, route}) => {
   return (
@@ -42,21 +38,11 @@ const Reported = ({navigation, route}) => {
               fontFamily={'ProximaNova-Bold'}
               fontSize={18}
               textAlign={'center'}
-              // alignSelf={'center'}
               color={colors.primary}>
               We sent {route?.params?.otherUserData?.firstName} the reason you
               end the conversation!
             </CustomText>
           </View>
-          {/* <View style={{marginTop:verticalScale(20)}}>
-          <CustomImage
-            height={290}
-            width={260}
-            alignSelf={'center'}
-            src={profileImages.reportImage}
-          />
-        </View> */}
-
           <View
             style={{
               width: '100%',
@@ -73,7 +59,7 @@ const Reported = ({navigation, route}) => {
               <Component
                 uri={Math.random()}
                 style={{with: '100%', height: '100%'}}
-                source={{uri: route?.params?.otherUserData?.images?.[0]}}
+                source={{uri: route?.params?.otherUserData?.images?.image1}}
               />
             </View>
           </View>

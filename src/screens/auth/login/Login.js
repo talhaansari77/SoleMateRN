@@ -1,57 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
+import {View, ScrollView, KeyboardAvoidingView} from 'react-native';
 import commonStyles from '../../../utils/CommonStyles';
 import CustomTextInput from '../../../components/CustomTextInput';
-import { Spacer } from '../../../components/Spacer';
-import { moderateScale, verticalScale } from 'react-native-size-matters';
+import {Spacer} from '../../../components/Spacer';
+import {moderateScale, verticalScale} from 'react-native-size-matters';
 import CustomText from '../../../components/CustomText';
-import ConditionPassCon from './molecules/ConditionPassCon';
-import { View } from 'react-native';
 import CustomButton from '../../../components/CustomButton';
-import { colors } from '../../../utils/Colors';
-import { styles } from '../ViewPager/styles';
-import LoginpWithCon from './LoginWithCon';
-import { ValidateInput } from '../signup/UseSignup';
+import {colors} from '../../../utils/Colors';
 import auth from '@react-native-firebase/auth';
-// import {AuthLogin} from '../../../services/FirebaseAuth';
-import { ValidateLogin } from './molecules/UseLogin';
+import {ValidateLogin} from './molecules/UseLogin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import { getFCMToken } from '../../../utils/PushNotification';
-import { getNewFcmToken } from '../../../services/SendNotification';
-import { saveUser } from '../../../services/FirebaseAuth';
+import {getNewFcmToken} from '../../../services/SendNotification';
+import {saveUser} from '../../../services/FirebaseAuth';
+import SignupWithCon from '../signup/SignupWithCon';
 
-
-const Login = ({ navigation }) => {
+const Login = ({navigation}) => {
   const [eyeClick, setEyeClick] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [newFcmToken, setNewFcmToken] = useState("")
+  const [newFcmToken, setNewFcmToken] = useState('');
   const [submitError, setSubmitError] = useState({
     emailError: '',
     passwordError: '',
   });
 
   useEffect(() => {
+    getAuthToken();
+  }, []);
 
-    getAuthToken()
-   
-  }, [])
+  //  get fcmToken
+  const getAuthToken = async () => {
+    await getNewFcmToken(setNewFcmToken);
+  };
 
-  console.log("newFcmToken",newFcmToken)
-
-  const getAuthToken=async ()=>{
-
-   await getNewFcmToken(setNewFcmToken)
-
-    // console.log("LoginFcm",token)
-
-  }
+  // textInPut Validation function
 
   const onHandleSubmit = async () => {
+    //  validation
     const response = ValidateLogin(
       email,
       password,
@@ -62,6 +52,8 @@ const Login = ({ navigation }) => {
     if (response) {
       setLoading(true);
 
+      //  login with email and password
+
       try {
         const userCredentials = await auth().signInWithEmailAndPassword(
           email.trim(),
@@ -70,13 +62,13 @@ const Login = ({ navigation }) => {
         if (userCredentials.user.uid) {
           AsyncStorage.setItem('userAuth', userCredentials.user.uid);
 
-          await saveUser(userCredentials.user.uid,{fcmToken:newFcmToken})
+          // save user data
 
-
+          await saveUser(userCredentials.user.uid, {fcmToken: newFcmToken});
 
           navigation.reset({
             index: 0,
-            routes: [{ name: 'MainStack' }],
+            routes: [{name: 'MainStack'}],
           });
         }
       } catch (error) {
@@ -94,57 +86,47 @@ const Login = ({ navigation }) => {
       }
     }
   };
+
+  // Signin with google
   const handleGoogleSignup = async () => {
-    // console.log('GoogleLogin')
-    // try {
-    //   // Get the users ID token
-    //   const {idToken} = await GoogleSignin.signIn();
-
-    //   // Create a Google credential with the token
-    //   const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
-    //   // Sign-in the user with the credential
-    //   await auth().signInWithCredential(googleCredential);
-    // } catch (error) {
-    //   alert(error.message);
-    // }
     try {
       await GoogleSignin.hasPlayServices({
         // Check if device has Google Play Services installed
         // Always resolves to true on iOS
         showPlayServicesUpdateDialog: true,
       });
-      const { idToken } = await GoogleSignin.signIn();
+      const {idToken} = await GoogleSignin.signIn();
 
       // Create a Google credential with the token
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
       // Sign-in the user with the credential
-      auth().signInWithCredential(googleCredential).then((userInfo) => {
-        console.log('UserInfo --->', userInfo.user)
-        if (!userInfo.additionalUserInfo.isNewUser) {
-          AsyncStorage.setItem('userAuth', userInfo.user.uid);
-          navigation.navigate("MainStack", { screen: "Profile" })
-        } else if (userInfo.user) {
-          alert("User Already Exist")
-        }
-      })
+      auth()
+        .signInWithCredential(googleCredential)
+        .then(async userInfo => {
+          if (!userInfo.additionalUserInfo.isNewUser) {
+            AsyncStorage.setItem('userAuth', userInfo.user.uid);
+            await saveUser(userInfo.user.uid, {fcmToken: newFcmToken});
+            navigation.navigate('MainStack', {screen: 'Profile'});
+          } else if (userInfo.user) {
+            alert('you not exist please signup first');
+          }
+        });
     } catch (error) {
       console.log('Message', JSON.stringify(error));
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        alert('User Cancelled the Login Flow');
+        alert('User Cancelled the Login');
       } else if (error.code === statusCodes.IN_PROGRESS) {
         alert('Signing In');
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        alert('Play Services Not Available or Outdated');
+        alert('Play Services Not Available ');
       } else {
         alert(error.message);
       }
     }
-
-
   };
 
+  // googleSigin configration
   useEffect(() => {
     GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
@@ -163,100 +145,117 @@ const Login = ({ navigation }) => {
   }, []);
 
   return (
-    <View
-      style={[
-        commonStyles.commonMain,
-        {
-          padding: 25,
-        },
-      ]}>
-      <Spacer height={verticalScale(35)} />
-      <CustomText
-        label="Login"
-        fontFamily="ProximaNova-Bold"
-        // color={colors.facebookBlue}
-        fontSize={verticalScale(15)}
-      />
-      <Spacer height={verticalScale(20)} />
-
-      <LoginpWithCon onGoogle={() => {
-        handleGoogleSignup();
-      }} />
-      <Spacer height={verticalScale(20)} />
-
-      <CustomTextInput
-        value={email}
-        withLabel="Email adress"
-        placeholder={'example@gmail.com'}
-        error={submitError.emailError}
-        onChangeText={em => {
-          setEmail(em);
-          setSubmitError({ ...submitError, emailError: '' });
-        }}
-      />
-      <Spacer height={verticalScale(20)} />
-      <CustomTextInput
-        withLabel="Password"
-        value={password}
-        error={submitError.passwordError}
-        onChangeText={pass => {
-          setPassword(pass);
-          setSubmitError({ ...submitError, passwordError: '' });
-        }}
-        password
-        secureTextEntry={eyeClick}
-        eyeClick={eyeClick}
-        setEyeClick={setEyeClick}
-        placeholder={'password'}
-      />
-      <Spacer height={verticalScale(20)} />
-
-      {/* <View style={{ flex: 1, alignItems: "center" }}> */}
-      <View
-        style={{
-          alignSelf: 'center',
-          padding: 10,
-          position: 'absolute',
-          bottom: verticalScale(40),
-          width: '100%',
-        }}>
-        <CustomButton
-          title="Login"
-          fontFamily="ProximaNova-Bold"
-          width="100%"
-          loading={loading}
-          backgroundColor={colors.primary}
-          opacity={0.4}
-          color={colors.white}
-          marginTop={verticalScale(10)}
-          height={verticalScale(45)}
-          borderRadius={moderateScale(15)}
-          onPress={() => {
-            // navigation.navigate("MainStack")
-            onHandleSubmit();
-
-            // onHandleSumbit();
-          }}
-        />
-
-        <View style={styles.bottomConatiner}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View
+          style={[
+            commonStyles.commonMain,
+            {
+              padding: 25,
+            },
+          ]}>
+          <Spacer height={verticalScale(35)} />
           <CustomText
-            label="Already have an account?"
-            fontFamily={'ProximaNova-Regular'}
-            fontSize={verticalScale(12)}
-          />
-          <CustomText
-            label="Sign up"
+            label="Login"
             fontFamily="ProximaNova-Bold"
-            color={colors.black}
-            marginLeft={verticalScale(5)}
-            fontSize={verticalScale(12)}
-            onPress={() => navigation.navigate('Signup')}
+            fontSize={verticalScale(15)}
           />
-          {/* </View> */}
+          <Spacer height={verticalScale(20)} />
+
+          {/* siginwithGoogle button */}
+          <SignupWithCon
+            onGoogle={() => {
+              handleGoogleSignup();
+            }}
+          />
+
+          <Spacer height={verticalScale(20)} />
+
+          <CustomTextInput
+            value={email}
+            withLabel="Email adress"
+            placeholder={'example@gmail.com'}
+            error={submitError.emailError}
+            onChangeText={em => {
+              setEmail(em);
+              setSubmitError({...submitError, emailError: ''});
+            }}
+          />
+          <Spacer height={verticalScale(20)} />
+          <CustomTextInput
+            withLabel="Password"
+            value={password}
+            error={submitError.passwordError}
+            onChangeText={pass => {
+              setPassword(pass);
+              setSubmitError({...submitError, passwordError: ''});
+            }}
+            password
+            secureTextEntry={eyeClick}
+            eyeClick={eyeClick}
+            setEyeClick={setEyeClick}
+            placeholder={'password'}
+          />
+          <Spacer height={verticalScale(20)} />
+
+          <View
+            style={{
+              alignSelf: 'center',
+              width: '100%',
+              marginTop: '45%',
+
+              alignSelf: 'flex-end',
+            }}>
+            <CustomButton
+              title="Login"
+              fontFamily="ProximaNova-Bold"
+              width="100%"
+              loading={loading}
+              backgroundColor={colors.primary}
+              opacity={0.4}
+              color={colors.white}
+              height={verticalScale(45)}
+              borderRadius={moderateScale(15)}
+              onPress={() => {
+                // validation
+                onHandleSubmit();
+              }}
+            />
+
+            <View
+              style={{
+                alignItems: 'center',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                marginTop: verticalScale(10),
+              }}>
+              <CustomText
+                label="Create an account? "
+                fontFamily={'ProximaNova-Regular'}
+                fontSize={verticalScale(11)}
+              />
+              <CustomText
+                label="Sign up"
+                fontFamily="ProximaNova-Bold"
+                color={colors.black}
+                marginLeft={verticalScale(2)}
+                fontSize={verticalScale(11)}
+                onPress={() => 
+
+                  navigation.reset({
+                    index: 0,
+                    routes: [{name: 'Signup'}],
+                  })
+                
+                }
+              />
+            </View>
+          </View>
         </View>
-      </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

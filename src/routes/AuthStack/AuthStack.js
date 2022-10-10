@@ -5,7 +5,6 @@ import Welcome from '../../screens/auth/welcome';
 import Login from '../../screens/auth/login';
 import Signup from '../../screens/auth/signup';
 import OnBoarding from '../../screens/auth/onBoarding/OnBoarding';
-import ViewPager from '../../screens/auth/ViewPager';
 import Settings from '../../screens/home/settings';
 import MainSettings from '../../screens/home/settings/MainSettings';
 import GeneralSettings from '../../screens/home/settings/GeneralSettings';

@@ -24,10 +24,13 @@ export const styles = ScaledSheet.create({
   },
   textInputContainer1: {
     width: '83%',
+
     flexDirection: 'row',
     backgroundColor: colors.white,
     borderRadius: verticalScale(20),
-    height: verticalScale(32),
+    maxHeight:verticalScale(100),
+    padding:5,
+    // height: verticalScale(32),
     borderColor: colors.primary,
     borderWidth: 1,
     alignItems: 'center',
