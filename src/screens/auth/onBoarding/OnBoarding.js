@@ -1,14 +1,8 @@
-import {
-  
-  View,
-  SafeAreaView,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import {View, SafeAreaView, Image, TouchableOpacity} from 'react-native';
 import React, {useRef, useState, useEffect} from 'react';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import welcomeImages from '../../../../assets/welocme_images';
-import { ScaledSheet} from 'react-native-size-matters';
+import {ScaledSheet} from 'react-native-size-matters';
 import {colors} from '../../../utils/Colors';
 import {verticalScale} from 'react-native-size-matters';
 import CustomText from '../../../components/CustomText';
@@ -52,6 +46,7 @@ const OnBoarding = ({navigation}) => {
   const ref = useRef(null);
   const [isAuth, setIsAuth] = useState(true);
 
+  // check  Auth id
   useEffect(() => {
     (async function () {
       const user = await AsyncStorage.getItem('userAuth');
@@ -65,6 +60,8 @@ const OnBoarding = ({navigation}) => {
       setIsAuth(true);
     })();
   }, []);
+
+  // move Next function if use click next Button
   const moveForward = () => {
     if (page + 1 <= 2) {
       ref?.current?.goToSlide(page + 1);
@@ -73,21 +70,22 @@ const OnBoarding = ({navigation}) => {
     }
   };
   return isAuth ? (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white',}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       {/* <OnBoardContainer/> */}
       <AppIntroSlider
         showNextButton={false}
         showDoneButton={false}
         ref={ref}
         data={OnBoardingData}
-        dotStyle={{backgroundColor:"white"}}
-        activeDotStyle={{backgroundColor:"white"}}
+        dotStyle={{backgroundColor: 'white'}}
+        activeDotStyle={{backgroundColor: 'white'}}
         onSlideChange={index => setPage(index)}
         keyExtractor={(item, index) => {
           item?.id + index.toString();
         }}
         renderItem={({item}) => (
           <>
+            {/* mainOnBoarding View */}
             <View style={styles.onBoardingContainer}>
               <View style={styles.imgConatiner}>
                 <Image
@@ -158,8 +156,8 @@ const OnBoarding = ({navigation}) => {
                   fontSize={verticalScale(10)}
                 />
               </View>
-           
-            
+
+              {/* Next Button */}
               <CustomGradientButton
                 title="Next"
                 marginTop={verticalScale(35)}
@@ -172,12 +170,13 @@ const OnBoarding = ({navigation}) => {
                   }
                 }}
               />
-                 <TouchableOpacity
+
+              {/* Skip Button */}
+              <TouchableOpacity
                 style={{
-                  marginTop:20,
-                  zIndex:1,
+                  marginTop: 20,
+                  zIndex: 1,
                   height: 50,
-                 
                 }}
                 onPress={() => {
                   navigation.navigate('Signup');
@@ -189,9 +188,6 @@ const OnBoarding = ({navigation}) => {
                   fontSize={verticalScale(12)}
                 />
               </TouchableOpacity>
-           
-
-             
             </View>
           </>
         )}
@@ -207,7 +203,7 @@ export default OnBoarding;
 const styles = ScaledSheet.create({
   onBoardingContainer: {
     alignItems: 'center',
-    flex:1,
+    flex: 1,
   },
   imgConatiner: {
     height: '50%',

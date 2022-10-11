@@ -1,9 +1,6 @@
 import {
   StyleSheet,
   View,
-  FlatList,
-  Image,
-  Text,
   TouchableOpacity,
   PermissionsAndroid,
   Platform,
@@ -11,29 +8,22 @@ import {
 import React, {useEffect, useState} from 'react';
 import * as Progress from 'react-native-progress';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-import profileImages from '../../assets/Profile_images';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomText from './CustomText';
 import {colors} from '../utils/Colors';
 import {verticalScale, scale, moderateScale} from 'react-native-size-matters';
 import Component from './FastImage';
-import {Spacer} from './Spacer';
-import AudioRecorderPlayer, {
-  AVEncoderAudioQualityIOSType,
-  AVEncodingOption,
-  AudioEncoderAndroidType,
-  AudioSet,
-  AudioSourceAndroidType,
-  PlayBackType,
-  RecordBackType,
-} from 'react-native-audio-recorder-player';
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const ReceiverVoiceMessage = ({audio, userData, message}) => {
-  const [state, setState] = useState({recordTime: '00:00:00'});
-  const [voiceProgress, setVoiceProgress] = useState(0);
+  
+  const [state, setState] = useState({});
   const [playing, setPlaying] = useState(false);
+  let rt = audio?.[0]?.recordTime.split(':');
+  rt = rt[0] + ':' + rt[1];
+  // let pt = state?.playTime?.split(':')
+  // pt = pt[0]+":"+pt[1];
 
   console.log('UserAithData', userData);
 
@@ -44,6 +34,7 @@ const ReceiverVoiceMessage = ({audio, userData, message}) => {
       setPlaying(false);
     }
   }, [state]);
+
   onStartRecord = async () => {
     if (Platform.OS === 'android') {
       try {
@@ -73,7 +64,7 @@ const ReceiverVoiceMessage = ({audio, userData, message}) => {
         return;
       }
     }
-    const result = await audioRecorderPlayer.startRecorder(audio.audioUri);
+    const result = await audioRecorderPlayer.startRecorder();
     audioRecorderPlayer.addRecordBackListener(e => {
       setState({
         recordSecs: e.currentPosition,
@@ -97,7 +88,7 @@ const ReceiverVoiceMessage = ({audio, userData, message}) => {
     console.log('onStartPlay');
     if (!playing) {
       setPlaying(!playing);
-      const msg = await audioRecorderPlayer.startPlayer();
+      const msg = await audioRecorderPlayer.startPlayer(audio[0].audioUri);
       console.log('This is Inside Play', msg);
       audioRecorderPlayer.addPlayBackListener(e => {
         setState({
@@ -137,7 +128,7 @@ const ReceiverVoiceMessage = ({audio, userData, message}) => {
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
-        marginLeft:10,
+        marginLeft: 10,
         shadowColor: colors.gray,
         shadowOffset: {width: 0, height: 1},
         shadowOpacity: 2,
@@ -150,11 +141,9 @@ const ReceiverVoiceMessage = ({audio, userData, message}) => {
         style={{
           justifyContent: 'center',
           alignItems: 'center',
-            backgroundColor:'brown',
-            flexDirection:"row",
-        }}>
-      
-      </View>
+          backgroundColor: 'brown',
+          flexDirection: 'row',
+        }}></View>
       <TouchableOpacity
         style={{
           flex: 1,
@@ -207,7 +196,13 @@ const ReceiverVoiceMessage = ({audio, userData, message}) => {
           }}>
           <CustomText
             fontSize={9}
-            label={state?.recordTime ? state?.recordTime : state?.playTime}
+            label={
+              state?.playTime
+                ? state.currentPositionSec / state.currentDurationSec == 1
+                  ? rt
+                  : state?.playTime
+                : rt
+            }
             color={colors.gray}
           />
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -217,28 +212,27 @@ const ReceiverVoiceMessage = ({audio, userData, message}) => {
               label={message.createdAt}
               color={colors.gray}
             />
-        
           </View>
         </View>
       </View>
       {/* image */}
       <View
-          style={{
-            height: 45,
-            width: 45,
-            overflow: 'hidden',
-            borderRadius: 20,
-            marginLeft: 10,
-          }}>
-          <Component
-            // resizeMode="cover"
+        style={{
+          height: 45,
+          width: 45,
+          overflow: 'hidden',
+          borderRadius: 20,
+          marginLeft: 10,
+        }}>
+        <Component
+          // resizeMode="cover"
 
-            style={{height: '100%', width: '100%'}}
-            uniqueKey={Math.random()}
-            source={{uri: userData?.images?.image1}}
-          />
-          {/* <Image source={{uri:userData?.images?.[0]}} resizeMode="contain" /> */}
-        </View>
+          style={{height: '100%', width: '100%'}}
+          uniqueKey={Math.random()}
+          source={{uri: userData?.images?.image1}}
+        />
+        {/* <Image source={{uri:userData?.images?.[0]}} resizeMode="contain" /> */}
+      </View>
     </View>
   );
 };

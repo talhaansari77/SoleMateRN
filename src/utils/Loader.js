@@ -1,7 +1,7 @@
 import {View} from 'react-native';
 import LottieView from 'lottie-react-native';
 
-const Loader = ({loading, file}) => {
+const Loader = ({loading, file,height}) => {
   return loading ? (
     <View
       style={{
@@ -13,7 +13,7 @@ const Loader = ({loading, file}) => {
         height: '100%',
         width: '100%',
       }}>
-      <LottieView style={{height: 200}} source={file} autoPlay speed={1} />
+      <LottieView style={{height: height||200}} source={file} autoPlay speed={1} />
     </View>
   ) : (
     <></>

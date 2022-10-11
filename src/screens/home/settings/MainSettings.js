@@ -1,10 +1,9 @@
-import {View, Text, Image, SafeAreaView, TouchableOpacity} from 'react-native';
+import {View, Image, SafeAreaView, TouchableOpacity} from 'react-native';
 import React from 'react';
-// import SettingsArray from "./molecules/SettingsArray";
 import styled from 'react-native-styled-components';
 import CustomText from '../../../components/CustomText';
 import {colors} from '../../../utils/Colors';
-import {verticalScale, scale, moderateScale} from 'react-native-size-matters';
+import { scale, moderateScale} from 'react-native-size-matters';
 import icons from '../../../../assets/icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -29,6 +28,7 @@ function MainSettings({navigation}) {
       name: 'Log Out',
       icon: icons.logIcon,
       onPress: () => {
+        // logout funcation
         onLogout();
       },
     },

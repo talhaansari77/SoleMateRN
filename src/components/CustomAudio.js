@@ -1,9 +1,6 @@
 import {
   StyleSheet,
   View,
-  FlatList,
-  Image,
-  Text,
   TouchableOpacity,
   PermissionsAndroid,
   Platform,
@@ -11,32 +8,27 @@ import {
 import React, {useEffect, useState} from 'react';
 import * as Progress from 'react-native-progress';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-import profileImages from '../../assets/Profile_images';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomText from './CustomText';
 import {colors} from '../utils/Colors';
 import {verticalScale, scale, moderateScale} from 'react-native-size-matters';
 import Component from './FastImage';
-import {Spacer} from './Spacer';
-import AudioRecorderPlayer, {
-  AVEncoderAudioQualityIOSType,
-  AVEncodingOption,
-  AudioEncoderAndroidType,
-  AudioSet,
-  AudioSourceAndroidType,
-  PlayBackType,
-  RecordBackType,
-} from 'react-native-audio-recorder-player';
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const CustomAudio = ({audio, userData, message}) => {
-  console.log('AudioData', audio?.[0]?.audioUri);
-  const [state, setState] = useState({recordTime: '00:00:00'});
-  const [voiceProgress, setVoiceProgress] = useState(0);
+  
+  const [state, setState] = useState({});
   const [playing, setPlaying] = useState(false);
+  let rt = audio?.[0]?.recordTime.split(':');
+  rt = rt[0] + ':' + rt[1];
+  // let pt = state?.playTime?.split(':')
+  // pt = pt[0]+":"+pt[1];
 
   console.log('UserAithData', userData);
+  console.log('audioUrl', audio[0].audioUri);
 
   useEffect(() => {
     console.log('This is audio you are looking for:', audio);
@@ -75,9 +67,7 @@ const CustomAudio = ({audio, userData, message}) => {
         return;
       }
     }
-    const result = await audioRecorderPlayer.startRecorder(
-      audio?.[0]?.audioUri,
-    );
+    const result = await audioRecorderPlayer.startRecorder();
     audioRecorderPlayer.addRecordBackListener(e => {
       setState({
         recordSecs: e.currentPosition,
@@ -85,7 +75,7 @@ const CustomAudio = ({audio, userData, message}) => {
       });
       return;
     });
-    console.log(result);
+    console.log('Local Audio', result);
   };
 
   onStopRecord = async () => {
@@ -101,7 +91,8 @@ const CustomAudio = ({audio, userData, message}) => {
     console.log('onStartPlay');
     if (!playing) {
       setPlaying(!playing);
-      const msg = await audioRecorderPlayer.startPlayer();
+      const msg = await audioRecorderPlayer.startPlayer(audio[0].audioUri);
+
       console.log('This is Inside Play', msg);
       audioRecorderPlayer.addPlayBackListener(e => {
         setState({
@@ -209,7 +200,7 @@ const CustomAudio = ({audio, userData, message}) => {
             width={moderateScale(130)}
           />
         ) : (
-          <Progress.Barzw
+          <Progress.Bar
             progress={1}
             height={2}
             color={colors.white}
@@ -227,7 +218,13 @@ const CustomAudio = ({audio, userData, message}) => {
           }}>
           <CustomText
             fontSize={9}
-            label={state?.recordTime ? state?.recordTime : state?.playTime}
+            label={
+              state?.playTime
+                ? state.currentPositionSec / state.currentDurationSec == 1
+                  ? rt
+                  : state?.playTime
+                : rt
+            }
             color={colors.white}
           />
           <View style={{flexDirection: 'row', alignItems: 'center'}}>

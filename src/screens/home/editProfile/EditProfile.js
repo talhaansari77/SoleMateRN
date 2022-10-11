@@ -24,6 +24,8 @@ import Loader from '../../../utils/Loader';
 import TwoInputModal from './molecules/TwoInputModal';
 import {getSpecificeUser} from '../../../services/FirebaseAuth';
 import {getNewFcmToken} from '../../../services/SendNotification';
+import uuid from 'react-native-uuid';
+import {loaders} from '../../../../assets/loader';
 
 const genders = [
   {id: 1, name: 'Male'},
@@ -73,7 +75,6 @@ const EditProfile = ({navigation}) => {
   const [editLocation, setEditLocation] = useState('');
   const [fcmToken, setFcmToken] = useState('');
   const [authID, setAuthID] = useState('');
-  const [questionIndex, setQuestionIndex] = useState('');
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -142,10 +143,8 @@ const EditProfile = ({navigation}) => {
           data?.characteristics.map(item =>
             cTags.push({characteristics: item}),
           );
-
           // set all user data in state
-
-          setFirstName(data?.firstName);
+           setFirstName(data?.firstName);
           setLastName(data?.lastName);
           setAboutMe(data?.aboutMe);
           setfamilyOrigin(data?.familyOrigin);
@@ -304,17 +303,9 @@ const EditProfile = ({navigation}) => {
               : images.image6
             : '',
         };
-        // temp2 = {
-        //   image1: images.image1 ? await uploadImage(images.image1, authID) : '',
-        //   image2: images.image2 ? await uploadImage(images.image2, authID) : '',
-        //   image3: images.image3 ? await uploadImage(images.image3, authID) : '',
-        //   image4: images.image4 ? await uploadImage(images.image4, authID) : '',
-        //   image5: images.image5 ? await uploadImage(images.image5, authID) : '',
-        //   image6: images.image6 ? await uploadImage(images.image6, authID) : '',
-        // };
-
-        if (authID) {
+    
           // save user in firebase
+        if (authID) {
           await saveUser(authID, {...data, images: temp2});
 
           setTimeout(() => {
@@ -881,10 +872,7 @@ const EditProfile = ({navigation}) => {
         // backgroundColor={colors.primary}
       /> */}
       {/* </View> */}
-      <Loader
-        loading={loading}
-        file={require('../../../../assets/loader/heartLoading.json')}
-      />
+      {/* <Loader loading={loading} fo /> */}
     </View>
   );
 };

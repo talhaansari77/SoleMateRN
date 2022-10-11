@@ -51,11 +51,15 @@ const AuthStack = ({navigation}) => {
 
       const screenName = link.url?.split('&')[0].split('=').pop();
       const wihApp = link.url?.split('&')[1].split('=').pop();
+      const linkDate = link.url?.split('&')[2].split('=').pop();
+      
       console.log('user Id:', id);
       console.log("RequestIdData",id)
       
       console.log('screenName:', screenName);
       console.log('wihApp:', wihApp);
+      console.log('linkDate:', linkDate);
+
       if (screenName === 'Profile')
 
         navigation.navigate('MainStack', {screen: 'Profile',});

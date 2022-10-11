@@ -52,9 +52,9 @@ export default function App() {
   };
   useEffect(() => {
 
-    // setTimeout(() => {
-    //   SplashScreen.hide();
-    // }, 1500);
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 1500);
     requestUserPermission();
     notificationServices();
   }, [])

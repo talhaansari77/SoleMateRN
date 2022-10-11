@@ -201,11 +201,11 @@ const Signup = ({navigation}) => {
     } catch (error) {
       console.log('Message', JSON.stringify(error));
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        alert('User Cancelled the Login Flow');
+        alert('User Cancelled the Signup ');
       } else if (error.code === statusCodes.IN_PROGRESS) {
         alert('Signing In');
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        alert('Play Services Not Available or Outdated');
+        alert('Play Services Not Available');
       } else {
         alert(error.message);
       }

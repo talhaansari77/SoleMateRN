@@ -10,8 +10,7 @@ import profileImages from '../../../../../assets/Profile_images';
 import {colors} from '../../../../utils/Colors';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {Spacer} from '../../../../components/Spacer';
-import {useState} from 'react';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 const PictureBox = ({images, setImages}) => {
   console.log('Imagesdata', images);
@@ -25,7 +24,6 @@ const PictureBox = ({images, setImages}) => {
             onPress={() =>
               onClickImage().then(img => {
                 setImages({...images, image1: img});
-                // console.log("This is Array Object",Object.values((images)))
               })
             }>
             <Text
@@ -37,7 +35,6 @@ const PictureBox = ({images, setImages}) => {
               ]}>
               1
             </Text>
-            {/* <ImageLabel>1</ImageLabel> */}
             {images.image1 ? (
               <Image source={{uri: images.image1}} style={hw100} />
             ) : (
@@ -65,7 +62,6 @@ const PictureBox = ({images, setImages}) => {
               ]}>
               2
             </Text>
-            {/* <ImageLabel>2</ImageLabel> */}
             {images.image2 ? (
               <Image source={{uri: images.image2}} style={hw100} />
             ) : (
@@ -103,7 +99,6 @@ const PictureBox = ({images, setImages}) => {
           </ImageContainer>
         </View>
       </FirstRow>
-      {/* 2nd Row */}
       <SecondRow>
         <ImageContainer2
           activeOpacity={0.6}
@@ -174,8 +169,6 @@ const PictureBox = ({images, setImages}) => {
 
 export default PictureBox;
 
-// ImageLibrary
-
 const onClickImage = async () => {
   let uri = '';
   try {
@@ -185,11 +178,9 @@ const onClickImage = async () => {
     });
     if (!result.cancelled) {
       console.log('ImagesDetail✌', result.assets[0].uri);
-      // setUri(result);
-      // setUri(result.assets[0].uri);
+
       uri = result.assets[0].uri;
     } else {
-      // setUri('');
       uri = '';
     }
   } catch (error) {
@@ -198,7 +189,6 @@ const onClickImage = async () => {
 
   return uri;
 };
-// ImageLibrary
 
 const VerticalPadding = styled(View, {
   paddingVertical: 20,
@@ -218,13 +208,11 @@ const SecondRow = styled(View, {
 });
 const ImageContainer = styled(TouchableOpacity, props => ({
   ...ImageContainerStyle,
-  // paddingTop: verticalScale(props.paddingTop) || 0,
 }));
 const ImageContainer2 = styled(TouchableOpacity, props => ({
   ...ImageContainerStyle,
   height: '100%',
   width: '100%',
-  // paddingTop: verticalScale(props.paddingTop) || 0,
 }));
 
 const ImageLabel = styled(Text, {
@@ -243,7 +231,6 @@ const BigFlex_2X = {
 };
 const BigFlex_1X = {
   height: verticalScale(200),
-  // paddingLeft: scale(5),
   paddingVertical: verticalScale(3),
   flex: 3.33,
 };
