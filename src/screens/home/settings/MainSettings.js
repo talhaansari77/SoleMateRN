@@ -8,6 +8,7 @@ import icons from '../../../../assets/icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {getAuthId, saveUser, signout} from '../../../services/FirebaseAuth';
+import commonStyles from '../../../utils/CommonStyles';
 function MainSettings({navigation}) {
 
   // Setting Array
@@ -87,10 +88,14 @@ function MainSettings({navigation}) {
                   paddingBottom: 40,
                   alignItems: 'center',
                 }}>
-                <Image
-                  style={{marginRight: scale(10)}}
+                  <View style={{width:20,height:20,marginRight: scale(10)}}>
+                  <Image
+                  style={commonStyles.img}
                   source={settings.icon}
                 />
+
+                  </View>
+               
                 <CustomText fontFamily={'ProximaNova-Regular'} fontSize={15}>
                   {settings.name}
                 </CustomText>

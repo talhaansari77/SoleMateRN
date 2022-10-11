@@ -21,15 +21,13 @@ export default function App() {
       const id = link.url?.split('=').pop();
       await AsyncStorage.setItem("requestId",id)
       console.log('Forground Id:', id);
-
       const screenName = link.url?.split('&')[0].split('=').pop();
       const wihApp = link.url?.split('&')[1].split('=').pop();
-      const linkDate = link.linkDate?.split('&')[2].split('=').pop();
+      const linkDate = link.url?.split('&')[2].split('=').pop();
       // const linkDate = link.url?.split('&')[2].split('=').pop();
-
-
-
       console.log('linkDate', linkDate);
+      await AsyncStorage.setItem("linkDate",linkDate)
+
 
       
       console.log('screenName:', screenName);

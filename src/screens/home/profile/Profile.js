@@ -41,6 +41,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
   const [loading, setLoading] = useState(false);
   const [requestId, setRequestId] = useState('');
   const isFocused = useIsFocused();
+
   const [linkStatus, setLinkStatus] = useState(false);
 
   var a = moment();
@@ -68,6 +69,9 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
   const getAuthData = async () => {
     let otherViewProfile = await AsyncStorage?.getItem('otherViewProfile');
     let requestProfile = await AsyncStorage?.getItem('requestId');
+    let linkDate = await AsyncStorage?.getItem('linkDate');
+
+    
     // let generateLinkTime = await AsyncStorage?.getItem('generateLinkTime');
 
     // const response = fromNow(generateLinkTime).includes("day");
@@ -93,12 +97,17 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
         var totalData = moment(newDate).format('YYYY-MM-DD');
         // console.log("totalData",totalData)
 
-        getSpecificeUser(requestProfile).then(async data => {
           // console.log("consoleProfile",data?.requestTime)
 
-          if (moment(data?.requestTime).diff(moment(totalData), 'days') == 0) {
+          if (moment(linkDate).diff(  moment(totalData), 'days') == 0) {
             alert('Link is Expired');
-            await AsyncStorage.removeItem('requestId');
+
+
+            RemoveLinkData()
+
+       
+
+
 
             getSpecificeUser(id).then(data => {
               setAuthData(data);
@@ -111,7 +120,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
               setLoading(false);
             });
           }
-        });
+    
       } else {
         console.log('authUserId');
         getSpecificeUser(id).then(data => {
@@ -122,12 +131,20 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
     });
   };
 
+  const RemoveLinkData= async()=>{
+    await AsyncStorage.removeItem('requestId');
+    await AsyncStorage.removeItem('linkDate');
+
+  }
+
   // cancel request
   const onCancel = async () => {
     setLoading(true);
     try {
       // remove request in storage
       await AsyncStorage.removeItem('requestId');
+      await AsyncStorage.removeItem('linkDate');
+
       Toast.show('request Cancel');
 
       navigation.reset({
@@ -159,6 +176,8 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
         await createRequest(requestData);
         Toast.show('request accept');
         await AsyncStorage.removeItem('requestId');
+        await AsyncStorage.removeItem('linkDate');
+
 
         navigation.reset({
           index: 0,
@@ -168,6 +187,8 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
         alert('You already in contact with');
         Toast.show('You already in contact with');
         await AsyncStorage.removeItem('requestId');
+        await AsyncStorage.removeItem('linkDate');
+
         navigation.reset({
           index: 0,
           routes: [{name: 'MessagingStack'}],
