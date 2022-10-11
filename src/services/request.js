@@ -26,6 +26,9 @@ export const createRequest = async requestData => {
 };
 
 export const getAuthRequest = (authId, setData) => {
+  console.log("UserRequest",authId)
+
+
   try {
     firestore()
       .collection('request')
@@ -33,6 +36,7 @@ export const getAuthRequest = (authId, setData) => {
         const request = [];
 
         notesSnapshot?.forEach(note => {
+
           if (note?.data()?.from === authId) {
             request.push(note.data());
           } else if (note?.data()?.to == authId) {

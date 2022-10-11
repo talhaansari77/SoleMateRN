@@ -19,6 +19,9 @@ import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+import { getFCMToken } from '../../../utils/PushNotification';
+import { getNewFcmToken } from '../../../services/SendNotification';
+import { saveUser } from '../../../services/FirebaseAuth';
 
 
 const Login = ({ navigation }) => {
@@ -26,10 +29,27 @@ const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [newFcmToken, setNewFcmToken] = useState("")
   const [submitError, setSubmitError] = useState({
     emailError: '',
     passwordError: '',
   });
+
+  useEffect(() => {
+
+    getAuthToken()
+   
+  }, [])
+
+  console.log("newFcmToken",newFcmToken)
+
+  const getAuthToken=async ()=>{
+
+   await getNewFcmToken(setNewFcmToken)
+
+    // console.log("LoginFcm",token)
+
+  }
 
   const onHandleSubmit = async () => {
     const response = ValidateLogin(
@@ -49,6 +69,10 @@ const Login = ({ navigation }) => {
         );
         if (userCredentials.user.uid) {
           AsyncStorage.setItem('userAuth', userCredentials.user.uid);
+
+          await saveUser(userCredentials.user.uid,{fcmToken:newFcmToken})
+
+
 
           navigation.reset({
             index: 0,

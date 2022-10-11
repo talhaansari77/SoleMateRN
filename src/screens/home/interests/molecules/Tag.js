@@ -40,7 +40,7 @@ const Tag = ({name}) => {
         backgroundColor={isChecked ? colors.primary : ''}>
         <CustomText
           fontSize={14}
-          fontWeight={'ProximaNova-Bold'}
+          fontFamily={'ProximaNova-Bold'}
           color={isChecked ? colors.white : colors.black}>
           {name}
         </CustomText>

@@ -9,7 +9,7 @@ import icons from '../../../../assets/icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {signout} from '../../../services/FirebaseAuth';
+import {getAuthId, saveUser, signout} from '../../../services/FirebaseAuth';
 function MainSettings({navigation}) {
   const MainSettingsArray = [
     {
@@ -35,8 +35,13 @@ function MainSettings({navigation}) {
   ];
 
   const onLogout = async () => {
+    const id= await getAuthId()
+    await saveUser(id,{fcmToken:""})
+
     await AsyncStorage.removeItem('userAuth');
-    await AsyncStorage.removeItem('fcmToken');
+     await AsyncStorage.removeItem('fcmToken');
+
+
 
     await signout();
     navigation.reset({
@@ -80,7 +85,7 @@ function MainSettings({navigation}) {
           fontWeight={'700'}
           marginBottom={35}
           marginTop={17}
-          fontFamily={'ProximaNova_Bold'}>
+          fontFamily={'ProximaNova-Bold'}>
           Settings
         </CustomText>
 
@@ -98,7 +103,7 @@ function MainSettings({navigation}) {
                   style={{marginRight: scale(10)}}
                   source={settings.icon}
                 />
-                <CustomText fontFamily={'ProximaNova_Regular'} fontSize={15}>
+                <CustomText fontFamily={'ProximaNova-Regular'} fontSize={15}>
                   {settings.name}
                 </CustomText>
               </View>

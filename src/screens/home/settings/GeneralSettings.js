@@ -67,7 +67,7 @@ function GeneralSettings({navigation}) {
               fontWeight={'700'}
               marginBottom={35}
               marginTop={17}
-              fontFamily={'ProximaNova_Bold'}>
+              fontFamily={'ProximaNova-Bold'}>
               Settings
             </CustomText>
           </View>
@@ -76,7 +76,7 @@ function GeneralSettings({navigation}) {
         <TouchableOpacity>
           <DirectionRow>
             <CustomText
-              fontFamily={'ProximaNova_Bold'}
+              fontFamily={'ProximaNova-Bold'}
               fontSize={14}
               fontWeight={'700'}
               marginTop={-5}>
@@ -89,7 +89,7 @@ function GeneralSettings({navigation}) {
                 color={colors.gray}
                 marginLeft={30}
                 marginTop={-8}
-                fontFamily={'ProximaNova_Regular'}>
+                fontFamily={'ProximaNova-Regular'}>
                 Cecilia Chapman 711-2880 Nulla St. Mankato Mississippi 96522
               </CustomText>
             </View>
@@ -102,7 +102,7 @@ function GeneralSettings({navigation}) {
         <TouchableOpacity>
           <WithSwitch>
             <CustomText
-              fontFamily={'ProximaNova_Bold'}
+              fontFamily={'ProximaNova-Bold'}
               fontSize={14}
               fontWeight={'700'}
               marginTop={3}>
@@ -130,7 +130,7 @@ function GeneralSettings({navigation}) {
           </WithSwitch>
 
           <CustomText
-            fontFamily={'ProximaNova_Regular'}
+            fontFamily={'ProximaNova-Regular'}
             fontSize={11}
             marginTop={10}
             alignSelf={'flex-start'}
@@ -143,7 +143,7 @@ function GeneralSettings({navigation}) {
         <TouchableOpacity>
           <WithSwitch style={{marginTop: 50}}>
             <CustomText
-              fontFamily={'ProximaNova_Bold'}
+              fontFamily={"ProximaNova-Bold"}
               fontSize={14}
               fontWeight={'700'}
               marginTop={6}>
@@ -178,7 +178,7 @@ function GeneralSettings({navigation}) {
         <TouchableOpacity>
           <WithSwitch>
             <CustomText
-              fontFamily={'ProximaNova_Bold'}
+              fontFamily={'ProximaNova-Bold'}
               fontSize={14}
               fontWeight={'700'}
               marginTop={6}>
@@ -224,7 +224,7 @@ function GeneralSettings({navigation}) {
         onPress={() => navigation.navigate('MainSettings')}>
           <WithSwitch>
             <CustomText
-              fontFamily={'ProximaNova_Bold'}
+              fontFamily={'ProximaNova-Bold'}
               fontSize={14}
               fontWeight={'700'}
               marginTop={5}>
@@ -232,7 +232,7 @@ function GeneralSettings({navigation}) {
             </CustomText>
 
             <CustomText
-              fontFamily={'ProximaNova_Regular'}
+              fontFamily={'ProximaNova-Regular'}
               fontSize={12}
               color={colors.gray}
               marginTop={5}

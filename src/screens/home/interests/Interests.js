@@ -43,7 +43,7 @@ const Interests = () => {
   return (
       <Container>
         <Spacer height={30} />
-        <CustomText fontFamily={"bold"} fontSize={24}>
+        <CustomText fontFamily={"ProximaNova-Bold"} fontSize={24}>
           My Interests
         </CustomText>
         <Spacer height={10} />

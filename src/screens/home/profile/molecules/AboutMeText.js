@@ -17,11 +17,11 @@ const AboutMeText = ({aboutMe}) => {
             paddingRight: scale(5),
           }}
         >
-          <CustomText fontSize={13} color={colors.primary} fontFamily={"regular"}>
+          <CustomText fontSize={13} color={colors.primary} fontFamily={"ProximaNova-Regular"}>
             About me
           </CustomText>
           <View style={{ paddingVertical: verticalScale(5) }}>
-            <CustomText fontSize={13} color={colors.black} fontFamily={"bold"}>
+            <CustomText fontSize={13} color={colors.black} fontFamily={"ProximaNova-Bold"}>
              {aboutMe}
             </CustomText>
           </View>

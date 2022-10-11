@@ -32,6 +32,7 @@ import {ChatBody} from '../../../components/ChatBody';
 import CustomGradientButton from '../../../components/CustomGradientButton';
 import CustomButton from '../../../components/CustomButton';
 import uuid from 'react-native-uuid';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import storage from '@react-native-firebase/storage';
 import AudioRecorderPlayer, {
   AVEncoderAudioQualityIOSType,
@@ -196,7 +197,7 @@ const Chat = ({navigation, route}) => {
     // fcmToken,message,title
     NotificationSender(
       otherUserData?.fcmToken,
-      textMessage,
+      textMessage?textMessage:file?file.name:result!=0?"Photo":audioUri?"Voice message":null,
       getAuthData?.firstName,
     );
     setTextMessage('');
@@ -409,8 +410,10 @@ const Chat = ({navigation, route}) => {
             setReactionObject={setReactionObject}
             reactionModal={reactionModal}
             otherUserData={otherUserData}
+            getAuthData={getAuthData}
             playing={playing}
             setPlaying={setPlaying}
+            navigation={navigation}
 
             setReactionModal={setReactionModal}
             authId={route.params?.authId}
@@ -512,9 +515,11 @@ const Chat = ({navigation, route}) => {
                   fontSize={verticalScale(18)}
                   borderRadius={25}
                   marginTop={20}
-                  onPress={() => {
+                  onPress={ async() => {
+                    await AsyncStorage.setItem("otherViewProfile",route.params?.otherUserId)
+                    setShowEndConversion(false)
                     navigation.navigate('Profile', {
-                      otherId: route?.params?.otherUserId,
+                      otherViewProfile: route?.params?.otherUserId,
                     });
                   }}
                   borderWidth={1.9}
@@ -535,6 +540,8 @@ const Chat = ({navigation, route}) => {
                   backgroundColor={colors.primary}
                   borderRadius={50}
                   onPress={() => {
+                    setShowEndConversion(false)
+
                     navigation.navigate('Report', {
                       authData: getAuthData,
                       otherData: otherUserData,
