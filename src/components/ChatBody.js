@@ -203,32 +203,9 @@ export const ChatBody = ({
     }
   };
 
-  // const [state, setState] = useState({ recordTime: '00:00:00' });
-  // useEffect(() => {
-  //   console.log('Voice Data::',state);
-  //   if (state.currentPositionSec / state.currentDurationSec === 1) {
-  //       setPlaying(false)
-  //   }
-  // }, [state]);
   const onStartPlay = async item => {
     console.log('onStartPlay', item[0]?.audioUri);
-    //     if (!playing) {
-    //         setPlaying(!playing)
-    //         const dirs = RNFetchBlob.fs.dirs;
-    // // const path = Platform.select({
-    // //   ios: item[0]?.audioUri,
-    // //   android: `${dirs.CacheDir}/${item[0]?.audioUri} `,
-    // // });
 
-    // const uri = await audioRecorderPlayer.startPlay(item[0]?.audioUri);
-
-    //         // const msg = await audioRecorderPlayer.startPlayer(item[0]?.audioUri);
-    //         console.log(uri);
-    //       ;
-    //     } else {
-    //         setPlaying(!playing)
-    //         onStopPlay()
-    //     }
     console.log('onStartPlay');
     if (!playing) {
       setPlaying(!playing);
@@ -270,13 +247,11 @@ export const ChatBody = ({
         }
       }
     }
+
+    // Main Function
     return (
-      <View
-        style={{
-          padding: 7,
-          flex: 1,
-        }}>
-        <View style={{paddingBottom: verticalScale(15)}}>
+      <View style={styles.container}>
+        <View style={styles.pb15}>
           <CustomText label={chatDate} textStyle={styles.timerText} />
         </View>
 
@@ -300,24 +275,12 @@ export const ChatBody = ({
                       textAlign={'justify'}
                     />
                   </View>
-                  <View
-                    style={{
-                      alignSelf: 'flex-end',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
+                  <View style={styles.goToRight}>
                     <CustomText
                       label={message.createdAt}
                       textStyle={{...styles.timerText1, color: colors.white}}
                     />
 
-                    {/* <Text style={{alignSelf:"center"}}>c</Text> */}
-
-                    {/* <Ionicons
-                  name="ios-checkmark"
-                  size={moderateScale(20)}
-                  color={colors.primary}
-                /> */}
                     <View style={{marginLeft: 5}}>
                       <Ionicons
                         name={
@@ -332,24 +295,7 @@ export const ChatBody = ({
                   </View>
                 </TouchableOpacity>
                 {message.reaction ? (
-                  <View
-                    style={{
-                      backgroundColor: 'white',
-                      alignSelf: 'flex-end',
-                      borderRadius: 100,
-                      marginTop: -10,
-                      width: 25,
-                      height: 25,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-
-                      shadowColor: colors.gray,
-                      shadowOffset: {width: 0, height: 2},
-                      shadowOpacity: 5,
-                      shadowRadius: 3,
-                      elevation: 5,
-                      marginRight: 5,
-                    }}>
+                  <View style={styles.reactionContainer}>
                     <Text>{message.reaction}</Text>
                   </View>
                 ) : (
@@ -361,31 +307,11 @@ export const ChatBody = ({
             {message.image == '' ? (
               <></>
             ) : (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                  // paddingBottom:10
-                  height: verticalScale(185),
-                }}>
+              <View style={styles.rightImageContainer}>
                 <View />
-                <View
-                  style={{
-                    width: 200,
-                    flexDirection: 'row',
-                    marginHorizontal: 20,
-                    marginTop: 10,
-                  }}>
-                  <View style={{alignSelf: 'flex-end', flexDirection: 'row'}}>
-                    <Text
-                      style={[
-                        styles.timerText1,
-                        {
-                          alignSelf: 'flex-end',
-                          marginBottom: verticalScale(10),
-                        },
-                      ]}>
+                <View style={styles.insideRightImage1}>
+                  <View style={styles.insideRightImage2}>
+                    <Text style={[styles.timerText1, styles.insideRightImage2]}>
                       {message.createdAt}
                     </Text>
 
@@ -402,11 +328,6 @@ export const ChatBody = ({
                     </View>
                   </View>
 
-                  {/* <CustomText
-                    label={message.createdAt}
-                    alignSelf="flex-end"
-                    textStyle={{...styles.timerText1, color: colors.gr}}
-                  /> */}
                   <TouchableOpacity
                     activeOpacity={0.8}
                     onLongPress={() => {
@@ -419,45 +340,10 @@ export const ChatBody = ({
                       style={styles.imConatiner}
                       source={{uri: message?.image}}
                     />
-                    {/* <View style={{position:"absolute",bottom:0,alignSelf:"flex-end",marginRight:30,marginBottom:10,padding:5}}>
-
-                            <Ionicons
-                              name={
-                                message.status == true
-                                  ? 'ios-checkmark-done-outline'
-                                  : 'ios-checkmark'
-                              }
-                              size={moderateScale(20)}
-                              color={colors.primary}
-                            />
-
-                    </View> */}
                   </TouchableOpacity>
 
                   {message.reaction ? (
-                    <View
-                      style={{
-                        backgroundColor: 'white',
-                        borderRadius: 100,
-                        // marginTop: -15,
-                        width: 25,
-                        height: 25,
-                        // top:0,
-                        // bottom: 0,
-                        alignSelf: 'flex-end',
-                        // marginRight: 40,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-
-                        shadowColor: colors.gray,
-                        shadowOffset: {width: 0, height: 2},
-                        shadowOpacity: 5,
-                        shadowRadius: 3,
-                        elevation: 5,
-                        marginBottom: 10,
-                        // marginRight: 100,
-                        marginLeft: verticalScale(-40),
-                      }}>
+                    <View style={styles.reactionContainer2}>
                       <Text>{message.reaction}</Text>
                     </View>
                   ) : (
@@ -481,17 +367,7 @@ export const ChatBody = ({
                       }}
                       activeOpacity={0.6}
                       style={styles.senderFile}>
-                      <View
-                        style={{
-                          width: '100%',
-                          height: '70%',
-                          backgroundColor: 'red',
-                          justifyContent: 'center',
-                          padding: 7,
-                          backgroundColor: '#6c757d',
-
-                          borderRadius: 5,
-                        }}>
+                      <View style={styles.fileContainer}>
                         <CustomText
                           label={item.fileName}
                           color={colors.white}
@@ -501,13 +377,7 @@ export const ChatBody = ({
                         />
                       </View>
 
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          marginTop: 5,
-                          alignItems: 'center',
-                        }}>
+                      <View style={styles.fileContainer2}>
                         <CustomText
                           label={item.type}
                           color={colors.white}
@@ -520,11 +390,7 @@ export const ChatBody = ({
                             // console.log("itemFile",item.fielUrl)
                             // checkPermission(item.fielUrl)
                           }}
-                          style={{
-                            alignSelf: 'flex-end',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                          }}>
+                          style={styles.fileContainer3}>
                           <CustomText
                             label={message.createdAt}
                             textStyle={{
@@ -573,42 +439,20 @@ export const ChatBody = ({
                   // }}
                   // playing={playing}
                   audio={message.audio}
+                  isUser={isUser}
                 />
               </View>
             )}
           </View>
         ) : (
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              // flexWrap:"wrap",
-              display: 'flex',
-              flex: 1,
-              width: '100%',
-            }}>
-            <View
-              style={{
-                flex: 0.2,
-                height: '100%',
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingLeft: 4,
-              }}>
-              <View
-                style={{
-                  width: '100%',
-                  height: 60,
-
-                  borderRadius: 20,
-                  overflow: 'hidden',
-                  marginRight: scale(10),
-                }}>
+          <View style={styles.left1}>
+            <View style={styles.left2}>
+              <View style={styles.left3}>
                 {/* otherUserData */}
                 <Component
                   // resizeMode="cover"
 
-                  style={{height: '100%', width: '100%'}}
+                  style={styles.hw100}
                   uniqueKey={Math.random()}
                   source={{uri: otherUserData?.images?.image1}}
                 />
@@ -620,12 +464,7 @@ export const ChatBody = ({
               </View>
             </View>
 
-            <View
-              style={{
-                flex: 1,
-                height: '100%',
-                flexDirection: 'row',
-              }}>
+            <View style={styles.leftMsgContainer}>
               {message.text == '' ? (
                 <></>
               ) : (
@@ -660,24 +499,7 @@ export const ChatBody = ({
                     </View>
                   </TouchableOpacity>
                   {message.reaction ? (
-                    <View
-                      style={{
-                        backgroundColor: 'white',
-                        borderRadius: 100,
-                        marginTop: -15,
-                        width: 25,
-                        height: 25,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-
-                        shadowColor: colors.gray,
-                        shadowOffset: {width: 0, height: 2},
-                        shadowOpacity: 5,
-                        shadowRadius: 3,
-                        elevation: 5,
-                        marginRight: 5,
-                        marginLeft: 10,
-                      }}>
+                    <View style={styles.reactionContainerLeft1}>
                       <Text>{message.reaction}</Text>
                     </View>
                   ) : (
@@ -689,23 +511,8 @@ export const ChatBody = ({
               {message?.image == '' ? (
                 <></>
               ) : (
-                <View
-                  style={{
-                    // flexDirection: 'row',
-                    width: '100%',
-                    height: verticalScale(180),
-                  }}>
-                  <View
-                    style={{
-                      width: 200,
-                      flexDirection: 'row',
-
-                      shadowColor: '#e9ecef',
-                      shadowOffset: {width: 0, height: 2},
-                      shadowOpacity: 5,
-                      shadowRadius: 3,
-                      elevation: 5,
-                    }}>
+                <View style={styles.leftImageContainer1}>
+                  <View style={styles.leftImageContainer2}>
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onLongPress={() => {
@@ -720,48 +527,12 @@ export const ChatBody = ({
                       />
                     </TouchableOpacity>
                     {message.reaction ? (
-                      <View
-                        style={{
-                          backgroundColor: 'white',
-                          borderRadius: 100,
-                          marginTop: verticalScale(157),
-                          width: 25,
-
-                          height: 25,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          // alignSelf:"flex-end",
-                          position: 'absolute',
-                          // bottom:0,
-
-                          shadowColor: colors.gray,
-                          shadowOffset: {width: 0, height: 2},
-                          shadowOpacity: 5,
-                          shadowRadius: 3,
-                          elevation: 5,
-                          marginRight: 5,
-                          marginLeft: 20,
-                        }}>
+                      <View style={styles.reactionContainerLeft2}>
                         <Text>{message.reaction}</Text>
                       </View>
                     ) : (
                       <></>
                     )}
-                    {/* <View style={{justifyContent: 'space-between'}} />
-
-                    <View
-                      style={{
-                        justifyContent: 'center',
-                        marginLeft: scale(10),
-                        height: '80%',
-                      }}>
-                      <CustomImage
-                        resizeMode={'contain'}
-                        src={icons.orangeTickReadIcon}
-                        height={15}
-                        width={15}
-                      />
-                    </View> */}
 
                     <Text
                       style={[
@@ -793,20 +564,8 @@ export const ChatBody = ({
                             textAlign={'justify'}
                           />
                         </View>
-                        {/* <CustomText
-                          label={item.fileName}
-                          color={colors.black}
-                          numberOfLines={1}
-                          fontSize={12}
-                          textAlign={'justify'}
-                        /> */}
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            marginTop: 5,
-                            alignItems: 'center',
-                          }}>
+
+                        <View style={styles.fileContainerLeft1}>
                           <CustomText
                             label={item.type}
                             color={colors.black}
@@ -819,13 +578,7 @@ export const ChatBody = ({
                             onPress={() => {
                               checkPermission(item.fielUrl);
                             }}
-                            style={{
-                              width: moderateScale(30),
-                              // height:verticalScale(30),
-                              // backgroundColor:"red",
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                            }}>
+                            style={styles.fileContainerLeft2}>
                             <Image
                               // resizeMode="contain"
                               source={icons.download}
@@ -843,17 +596,19 @@ export const ChatBody = ({
               {message.audio == undefined || message?.audio?.length == 0 ? (
                 <></>
               ) : (
-                <View style={{alignSelf: 'flex-end', width: '100%'}}>
-                  <ReceiverVoiceMessage
-                    message={message}
-                    userData={otherUserData}
-                    // startPlay={()=>{
-                    //   onStartPlay(message.audio)
+                <View style={styles.audioContainer1}>
+                  <CustomAudio
+                  message={message}
+                  userData={getAuthData}
+                  // startPlay={()=>{
+                  //   onStartPlay(message.audio)
 
-                    // }}
-                    // playing={playing}
-                    audio={message.audio}
-                  />
+                  // }}
+                  // playing={playing} 
+                  audio={message.audio}
+                  isUser={false}
+                />
+                  
                 </View>
               )}
             </View>
@@ -863,7 +618,7 @@ export const ChatBody = ({
     );
   };
   return (
-    <View style={{flex: 1, paddingBottom: 60}}>
+    <View style={styles.mainContainer}>
       <FlatList
         data={messages}
         renderItem={renderMessages}
@@ -876,66 +631,197 @@ export const ChatBody = ({
   );
 };
 
-// const styles = StyleSheet.create({
-//   chat: {
-//     padding: 15,
-//     height: "75%",
-//   },
-
-//   message: {
-//     backgroundColor: "#F3F3F3",
-//     borderTopRightRadius: 20,
-//     borderTopLeftRadius: 20,
-//     padding: 20,
-//     minHeight: 100,
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   messageSpoil: {
-//     height: 30,
-//     width: 30,
-//     alignSelf: "flex-end",
-//     top: -30,
-//     right: -15,
-//   },
-//   message1: {
-//     backgroundColor: colors.primary,
-//     alignSelf: "flex-end",
-//     paddingHorizontal: verticalScale(15),
-//     paddingVertical: verticalScale(5),
-//     borderBottomLeftRadius: verticalScale(5),
-//     borderBottomRightRadius: verticalScale(5),
-//     borderTopLeftRadius: verticalScale(5),
-//   },
-//   timerText: {
-//     fontSize: verticalScale(9),
-//     color: colors.lightGray,
-//     alignSelf: "flex-end",
-//     marginTop: verticalScale(10),
-//   },
-//   timerText1: {
-//     fontSize: verticalScale(10),
-//     color: colors.lightGray,
-//     alignSelf: "flex-start",
-//     marginTop: verticalScale(10),
-//   },
-//   message2: {
-//     backgroundColor:colors.inputBorder,
-//     alignSelf: "flex-start",
-//     paddingHorizontal: verticalScale(15),
-//     paddingVertical: verticalScale(5),
-//     borderBottomLeftRadius: verticalScale(5),
-//     borderBottomRightRadius: verticalScale(5),
-//     borderTopLeftRadius: verticalScale(5),
-
-//   },
-//   messageText: {
-//     fontSize: verticalScale(10),
-//     color: colors.lightBlack,
-//   },
-// });
+// AllStyles
 
 const styles = ScaledSheet.create({
+  mainContainer: {flex: 1, paddingBottom: 60},
+  container: {
+    padding: 7,
+    flex: 1,
+  },
+  pb15: {
+    paddingBottom: verticalScale(15),
+  },
+  goToRight: {
+    alignSelf: 'flex-end',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  reactionContainer: {
+    backgroundColor: 'white',
+    alignSelf: 'flex-end',
+    borderRadius: 100,
+    marginTop: -10,
+    width: 25,
+    height: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    shadowColor: colors.gray,
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 5,
+    shadowRadius: 3,
+    elevation: 5,
+    marginRight: 5,
+  },
+  reactionContainer2: {
+    backgroundColor: 'white',
+    borderRadius: 100,
+    // marginTop: -15,
+    width: 25,
+    height: 25,
+    // top:0,
+    // bottom: 0,
+    alignSelf: 'flex-end',
+    // marginRight: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    shadowColor: colors.gray,
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 5,
+    shadowRadius: 3,
+    elevation: 5,
+    marginBottom: 10,
+    // marginRight: 100,
+    marginLeft: verticalScale(-40),
+  },
+  rightImageContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    // paddingBottom:10
+    height: verticalScale(185),
+  },
+  fileContainer: {
+    width: '100%',
+    height: '70%',
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    padding: 7,
+    backgroundColor: '#6c757d',
+
+    borderRadius: 5,
+  },
+  fileContainer2: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 5,
+    alignItems: 'center',
+  },
+  fileContainer3: {
+    alignSelf: 'flex-end',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  left1: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    // flexWrap:"wrap",
+    display: 'flex',
+    flex: 1,
+    width: '100%',
+  },
+  left2: {
+    flex: 0.2,
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: 4,
+  },
+  left3: {
+    width: '100%',
+    height: 60,
+
+    borderRadius: 20,
+    overflow: 'hidden',
+    marginRight: scale(10),
+  },
+  leftMsgContainer: {
+    flex: 1,
+    height: '100%',
+    flexDirection: 'row',
+  },
+  hw100: {height: '100%', width: '100%'},
+  reactionContainerLeft1: {
+    backgroundColor: 'white',
+    borderRadius: 100,
+    marginTop: -15,
+    width: 25,
+    height: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    shadowColor: colors.gray,
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 5,
+    shadowRadius: 3,
+    elevation: 5,
+    marginRight: 5,
+    marginLeft: 10,
+  },
+  leftImageContainer1: {
+    // flexDirection: 'row',
+    width: '100%',
+    height: verticalScale(180),
+  },
+  leftImageContainer2: {
+    width: 200,
+    flexDirection: 'row',
+
+    shadowColor: '#e9ecef',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 5,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  reactionContainerLeft2: {
+    backgroundColor: 'white',
+    borderRadius: 100,
+    marginTop: verticalScale(157),
+    width: 25,
+
+    height: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    // alignSelf:"flex-end",
+    position: 'absolute',
+    // bottom:0,
+
+    shadowColor: colors.gray,
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 5,
+    shadowRadius: 3,
+    elevation: 5,
+    marginRight: 5,
+    marginLeft: 20,
+  },
+  fileContainerLeft1: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 5,
+    alignItems: 'center',
+  },
+  fileContainerLeft2: {
+    width: moderateScale(30),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  audioContainer1: {alignSelf: 'flex-end', width: '100%'},
+  insideRightImage1: {
+    width: 200,
+    flexDirection: 'row',
+    marginHorizontal: 20,
+    marginTop: 10,
+  },
+  insideRightImage2: {
+    alignSelf: 'flex-end',
+    flexDirection: 'row',
+  },
+  insideRightImage3: {
+    alignSelf: 'flex-end',
+    marginBottom: verticalScale(10),
+  },
   chat: {
     padding: 0,
     height: '75%',
@@ -1104,57 +990,3 @@ const styles = ScaledSheet.create({
   },
 });
 
-{
-  /* <View
-style={{
-    padding: 10,
-    height: 80,
-    width: '80%',
-    borderRadius: 20,
-    backgroundColor: colors.placeholder,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row'
-}}> */
-}
-{
-  /* <TouchableOpacity style={{
-    flex: 1, padding: 10,
-    alignItems: 'center',
-}}
- onPress={()=>{
-  onStartPlay(message.audio)
-
- }}>
-    <FontAwesome5Icon name={playing ? 'pause' : 'play'} size={20} />
-</TouchableOpacity> */
-}
-
-{
-  /* <View style={{
-    flex: 7, paddingHorizontal: 10,
-    justifyContent: 'center',
-    marginTop: verticalScale(10)
-}}>
-    <Progress.Bar
-        progress={message.playTime ? (message?.currentPositionSec / message?.currentDurationSec) : (1)}
-        height={3}
-        color={colors.white}
-        width={scale(155)}
-    />
-    <Spacer height={10} />
-    <View style={{ flexDirection: 'row', justifyContent: "space-between", marginHorizontal: scale(2) }}>
-        <CustomText label={message.recordTime ? message.recordTime : message.playTime} color={colors.white} />
-        <CustomText label={'Oct-7'} color={colors.white} />
-    </View>
-</View>
-<View style={{
-    flex: 2, justifyContent: 'center',
-    alignItems: 'center',
-}}>
-    <View style={{ height: 50, width: 50, overflow: 'hidden', borderRadius: 25 }}>
-        <Image source={profileImages.profile01} resizeMode="contain" />
-    </View>
-</View> */
-}
-// </View>

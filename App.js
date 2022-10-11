@@ -14,12 +14,6 @@ LogBox.ignoreAllLogs();
 
 export default function App() {
 
-  useEffect(() => {
-
-    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
-    return () => unsubscribe();
-  }, []);
-
   const handleDynamicLink = async link => {
     console.log("this is Forground")
     console.log('ForeGround DynamicLink-1:🖐', link);
@@ -31,6 +25,8 @@ export default function App() {
       const screenName = link.url?.split('&')[0].split('=').pop();
       const wihApp = link.url?.split('&')[1].split('=').pop();
       const linkDate = link.linkDate?.split('&')[2].split('=').pop();
+      // const linkDate = link.url?.split('&')[2].split('=').pop();
+
 
 
       console.log('linkDate', linkDate);
@@ -43,9 +39,19 @@ export default function App() {
 
 
       }
+      // if (screenName === 'Profile')
+      //   navigation.navigate('MainStack', {screen: 'Profile'});
     }
 
   };
+
+  useEffect(() => {
+
+    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    return () => unsubscribe();
+  }, [dynamicLinks]);
+
+  
   useEffect(() => {
 
     setTimeout(() => {
