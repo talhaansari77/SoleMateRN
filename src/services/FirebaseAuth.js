@@ -28,7 +28,7 @@ export const getTime=async()=>{
 
 export const fromNow = (time) => {
   const fireBaseTime = new Date(
-    time.seconds * 1000 + time.nanoseconds / 1000000
+    time.seconds * 100 + time.nanoseconds / 1000000
   );
   return moment(fireBaseTime).fromNow();
 };

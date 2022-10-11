@@ -7,9 +7,10 @@ import { scale, moderateScale} from 'react-native-size-matters';
 import icons from '../../../../assets/icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
 import {getAuthId, saveUser, signout} from '../../../services/FirebaseAuth';
 function MainSettings({navigation}) {
+
+  // Setting Array
   const MainSettingsArray = [
     {
       id: 1,
@@ -33,7 +34,7 @@ function MainSettings({navigation}) {
       },
     },
   ];
-
+// logout user if user exist and remove id in local storage and also remove fcm token in local storage
   const onLogout = async () => {
     const id= await getAuthId()
     await saveUser(id,{fcmToken:""})
@@ -42,7 +43,7 @@ function MainSettings({navigation}) {
      await AsyncStorage.removeItem('fcmToken');
 
 
-
+   // signout function
     await signout();
     navigation.reset({
       index: 0,
@@ -50,24 +51,10 @@ function MainSettings({navigation}) {
     });
   };
   return (
-    <Container>
-      {/* <TouchableOpacity>
-        <View>
-          <CustomText
-            fontFamily={'ProximaNova-Bold'}
-            fontSize={16}
-            fontWeight={'700'}
-            alignSelf={'flex-end'}
-            marginRight={12}
-            marginTop={10}
-            color={colors.primary}>
-            Done
-          </CustomText>
-        </View>
-      </TouchableOpacity> */}
-
-     
+    <Container> 
       <View style={{padding: 20}}>
+
+        {/* header back button */}
         <TouchableOpacity
           onPress={() => {
             navigation.goBack();
@@ -89,9 +76,10 @@ function MainSettings({navigation}) {
           Settings
         </CustomText>
 
+         {/* setting array */}
+
         {MainSettingsArray.map((settings, index) => {
           return (
-            // onPress={() => navigation.navigate("MainSettings")}
             <TouchableOpacity onPress={settings.onPress} key={index}>
               <View
                 style={{
@@ -117,9 +105,6 @@ function MainSettings({navigation}) {
 
 const Container = styled(SafeAreaView, {
   width: '100%',
-  // alignItems: "center",
-  // flexDirection: "column",
-  // padding: moderateScale(20),
   flex: 1,
 });
 

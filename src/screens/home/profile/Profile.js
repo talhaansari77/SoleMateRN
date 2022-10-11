@@ -19,7 +19,7 @@ import {checkUserRequest, createRequest} from '../../../services/request';
 import {Spacer} from '../../../components/Spacer';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { fromNow } from '../../../services/FirebaseAuth';
+import {fromNow} from '../../../services/FirebaseAuth';
 
 // user basic info
 
@@ -41,6 +41,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
   const [loading, setLoading] = useState(false);
   const [requestId, setRequestId] = useState('');
   const isFocused = useIsFocused();
+  const [linkStatus, setLinkStatus] = useState(false);
 
   var a = moment();
   var b = moment(authData?.dob, 'YYYY');
@@ -69,12 +70,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
     let requestProfile = await AsyncStorage?.getItem('requestId');
     // let generateLinkTime = await AsyncStorage?.getItem('generateLinkTime');
 
-
     // const response = fromNow(generateLinkTime).includes("day");
-
-
-
-
 
     // console.log('generateLinkTime', response);
 
@@ -92,19 +88,30 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
           setLoading(false);
         });
       } else if (requestProfile) {
-        // if(response){
-        //   alert("Link is Expired")
-      
+        var newDate = new Date();
 
-        // }
-        // else{
-          console.log('requestId', requestProfile);
-          getSpecificeUser(requestProfile).then(data => {
-            setAuthData(data);
-            setLoading(false);
-          });
-        // }
-       
+        var totalData = moment(newDate).format('YYYY-MM-DD');
+        // console.log("totalData",totalData)
+
+        getSpecificeUser(requestProfile).then(async data => {
+          // console.log("consoleProfile",data?.requestTime)
+
+          if (moment(data?.requestTime).diff(moment(totalData), 'days') == 0) {
+            alert('Link is Expired');
+            await AsyncStorage.removeItem('requestId');
+
+            getSpecificeUser(id).then(data => {
+              setAuthData(data);
+              setLoading(false);
+            });
+          } else {
+            setLinkStatus(true);
+            getSpecificeUser(requestProfile).then(data => {
+              setAuthData(data);
+              setLoading(false);
+            });
+          }
+        });
       } else {
         console.log('authUserId');
         getSpecificeUser(id).then(data => {
@@ -132,7 +139,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
     } catch (error) {}
   };
 
-  // accept request viva link
+  // accept request via link
 
   const onAccept = async () => {
     if (requestId) {
@@ -177,7 +184,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
           flex: 1,
         }}>
         {/* Actions */}
-        {requestId ? (
+        {linkStatus ? (
           <ActionBtn
             handleCancle={() => {
               onCancel();
