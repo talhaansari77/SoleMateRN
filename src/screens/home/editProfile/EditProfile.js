@@ -43,6 +43,14 @@ const genders = [
 ];
 
 const EditProfile = ({navigation}) => {
+  const [images, setImages] = useState({
+    image1: '',
+    image2: '',
+    image3: '',
+    image4: '',
+    image5: '',
+    image6: '',
+  });
   const [authData, setAuthData] = useState({});
   const [isSelect, setIsSelect] = useState(-1);
   const [firstName, setFirstName] = useState('');
@@ -73,15 +81,16 @@ const EditProfile = ({navigation}) => {
   const [personality, setPersonality] = useState([]);
   const [characteristics, setcharacteristics] = useState([]);
   const [characterModal, setCharacterModal] = useState(false);
-  const [images, setImages] = useState([]);
+  // const [images, setImages] = useState([]);
   const [personalityModal, setPersonalityModal] = useState(false);
   const [editLocation, setEditLocation] = useState('');
   const [fcmToken, setFcmToken] = useState('');
   const [authID, setAuthID] = useState('');
-  const [isEditPhoto, setIsEditPhoto] = useState(false);
+  // const [isEditPhoto, setIsEditPhoto] = useState(false);
+  // const [tempState, setTempState] = useState([]);
 
-  console.log('imagesUri', images);
-  console.log('imagesUri', birthday);
+  // console.log('imagesUri', images);
+  // console.log('birthday', birthday);
 
   const questions = [
     {id: 1, question: 'Want Kids', onValue: setWhatKids, state: whatKids},
@@ -120,12 +129,12 @@ const EditProfile = ({navigation}) => {
             cTags.push({characteristics: item}),
           );
 
-          const furls = [];
-          data?.images.map(item => furls.push({ uri: item }))
-          console.log("furls",furls)
-          setIsEditPhoto(true)
+          // const furls = [];
+          // data?.images.map(item => furls.push({ uri: item }))
+          // console.log("furls",furls)
+          setIsEditPhoto(true);
           // console.log('UserData:', data);
-          setImages(furls);
+          // setImages(furls);
 
           setFirstName(data?.firstName);
           setLastName(data?.lastName);
@@ -157,6 +166,14 @@ const EditProfile = ({navigation}) => {
           setPersonality(pTags);
           setcharacteristics(cTags);
           setIceBreakerQ(data?.iceBreakerQ);
+          setImages({
+            image1: data?.images?.image1,
+            image2: data?.images?.image2,
+            image3: data?.images?.image3,
+            image4: data?.images?.image4,
+            image5: data?.images?.image5,
+            image6: data?.images?.image6,
+          });
 
           setAuthData(data);
         }
@@ -205,7 +222,9 @@ const EditProfile = ({navigation}) => {
   }
 
   const onHandleSubmit = async () => {
+    let temp2 = {};
     console.log('I Am Submit ✌');
+    console.log('I Am temp2 ✌1', temp2);
     const data = {
       firstName: firstName,
       lastName: lastName,
@@ -215,7 +234,6 @@ const EditProfile = ({navigation}) => {
       language: language,
       personality: personality.map(item => item.personality),
       characteristics: characteristics.map(item => item.characteristics),
-      images: images.map(item => item.uri),
       gender: gender,
       location: editLocation,
       height: feetHeight + ' ' + inchesHeight,
@@ -238,22 +256,50 @@ const EditProfile = ({navigation}) => {
       iceBreakerQ: iceBreakerQ,
     };
     const response = EditValidate(data, submitError, setSubmitError);
+    console.log('step 1');
     if (response) {
       console.log('data');
       setLoading(true);
       try {
+        // let imageList = Object.values(images);
+        // var temp = [];
 
-        imageUri = images.filter(checkChanges); 
-        if(imageUri.length>0){
+        // imageList
+        //   .map(async (img, index) => {
+        //     if (img) {
+        //       console.log('step 2');
+        //       const link = await uploadImage(img, authID);
+        //       tempState.push(link);
+        //       console.log('This Temp Images', tempState);
+        //       // const obj = Object.assign({}, names)
+        //     } else {
+        //       temp.push('');
+        //     }
+        //   })
+          
+            console.log('step 3');
+            //This is Donig The Magic
+            temp2 = {
+              image1:images.image1? await uploadImage(images.image1, authID):"",
+              image2: images.image2? await uploadImage(images.image2, authID):"",
+              image3: images.image3? await uploadImage(images.image3, authID):"",
+              image4: images.image4? await uploadImage(images.image4, authID):"",
+              image5: images.image5? await uploadImage(images.image5, authID):"",
+              image6: images.image6? await uploadImage(images.image6, authID):"",
+            };
+        
 
-           let imageLink = [];
-        for (let index = 0; index < data.images.length; index++) {
-          const element = data.images[index];
-          console.log('ElementIndex', element);
-          const link = await uploadImage(element, authID);
-          imageLink.push(link);
-        }
-      }
+        console.log('step 4✌', temp2);
+        // imageUri = images.filter(checkChanges);
+        // if (imageUri.length > 0) {
+        //   let imageLink = [];
+        //   for (let index = 0; index < data.images.length; index++) {
+        //     const element = data.images[index];
+        //     console.log('ElementIndex', element);
+        //     const link = await uploadImage(element, authID);
+        //     imageLink.push(link);
+        //   }
+        // }
         // data.images = imageLink
         // imageUri = images.filter(checkChanges);
         // if(imageUri.length>0){
@@ -270,7 +316,7 @@ const EditProfile = ({navigation}) => {
         //   })
         // }
         // else{
-         // let imageLink = [];
+        // let imageLink = [];
         // for (let index = 0; index < data.images.length; index++) {
         //   const element = data.images[index];
         //   console.log('ElementIndex', element);
@@ -289,10 +335,10 @@ const EditProfile = ({navigation}) => {
         //   imageLink.push(link);
         // }
         // data.images = imageLink;
-        setLoading(false);
+        // setLoading(false);
 
         if (authID) {
-          await saveUser(authID, data);
+          await saveUser(authID, {...data,images:temp2});
 
           setTimeout(() => {
             setLoading(false);
@@ -391,8 +437,8 @@ const EditProfile = ({navigation}) => {
       {/* Header */}
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.imageView}>
-          {data.map((item, index) => {
+        {/*<View style={styles.imageView}>
+           {data.map((item, index) => {
             return (
               <PhotoContainer
                 key={index}
@@ -408,8 +454,15 @@ const EditProfile = ({navigation}) => {
               />
             );
           })}
-        </View>
+        </View> */}
+
         <View style={{flex: 1, paddingHorizontal: 20}}>
+          <PictureBox
+            images={images}
+            setImages={setImages}
+            width={moderateScale(100)}
+            height={verticalScale(95)}
+          />
           <View style={{padding: moderateScale(5)}}>
             <CustomText
               label={'Bio'}

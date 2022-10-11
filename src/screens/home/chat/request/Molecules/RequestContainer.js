@@ -94,7 +94,7 @@ const RequestContainer = ({
             />
             <View style={styles.line} />
             <CustomText
-              label={userData.occupation}
+              label={userData?.occupation}
               fontFamily={'ProximaNova-Regular'}
               color={colors.halfGray}
               numberOfLines={1}

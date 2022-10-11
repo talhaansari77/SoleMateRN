@@ -3,11 +3,11 @@ import Toast from 'react-native-simple-toast';
 
 export const EditValidate = (data, submitError, setSubmitError) => {
   console.log('BCJDBJC', data);
-  if (data.images.length < 5) {
-    // Toast.show('This is a toast.');
-    Toast.show('All images are required');
-    return;
-  }
+  // if (data.images.length < 5) {
+  //   // Toast.show('This is a toast.');
+  //   Toast.show('All images are required');
+  //   return;
+  // }
   if (!data.firstName) {
     setSubmitError({
       ...submitError,

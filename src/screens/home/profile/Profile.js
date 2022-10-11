@@ -191,7 +191,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
             name={authData?.firstName}
             age={age}
             location={authData?.location}
-            src={{uri: authData?.images?.[0]}}
+            src={{uri: authData?.images?.image1}}
             loading={loading}
           />
 
@@ -201,7 +201,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
           {/* Ice Break Question*/}
           <IceBreakQ />
           <Divider />
-          <ProfileImage src={{uri: authData?.images?.[1]}} loading={loading} />
+          <ProfileImage src={{uri: authData?.images?.image2}} loading={loading} />
           {/* Tags */}
           <ProfileTags title={'Personality'} data={authData?.personality} />
           <Divider />
@@ -228,7 +228,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
             infoList={basicInfo}
           />
           {/*ProfileImage*/}
-          <ProfileImage src={{uri: authData?.images?.[2]}} loading={loading} />
+          <ProfileImage src={{uri: authData?.images?.image3}} loading={loading} />
 
           {/* <ProfileImage src={profileImages.prettyFace} showName={false} /> */}
           {/* favorite food */}
@@ -249,7 +249,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
           />
 
           {/* ProfileImage */}
-          <ProfileImage src={{uri: authData?.images?.[3]}} loading={loading} />
+          <ProfileImage src={{uri: authData?.images?.image4}} loading={loading} />
 
           {/* <ProfileImage src={profileImages.prettyFace} showName={false} /> */}
 

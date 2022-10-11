@@ -19,7 +19,7 @@ const PhotoContainer = ({
   height,
   item,
   itemUri,
-  isEditPhoto ,
+  isEditPhoto,
   label,
 }) => {
   const [uri, setUri] = useState(item ? item.uri : '');
@@ -35,24 +35,24 @@ const PhotoContainer = ({
         // setUri(result);
         setUri(result.assets[0].uri);
         let itemIndex = -1;
-        if(isEditPhoto){
-          itemIndex = images.findIndex((item) => item.index === label);
-          console.log("====itemIndex",itemIndex)
-        }else{
-           itemIndex= images.findIndex((item) => item.index === index);
+        if (isEditPhoto) {
+          itemIndex = images.findIndex(item => item.index === label);
+          console.log('====itemIndex', itemIndex);
+        } else {
+          itemIndex = images.findIndex(item => item.index === index);
         }
         if (itemIndex === -1) {
           setImages([
             ...images,
             {
               index,
-         uri: result.assets[0].uri,
-      },
+              uri: result.assets[0].uri,
+            },
           ]);
         } else {
           const temp = [...images];
-         temp[itemIndex] = {...temp[itemIndex], uri: result.assets[0].uri};
-        setImages(temp);
+          temp[itemIndex] = {...temp[itemIndex], uri: result.assets[0].uri};
+          setImages(temp);
         }
         // const itemIndex = images.findIndex(item => item.index === index);
         // if (itemIndex === -1) {
@@ -86,8 +86,8 @@ const PhotoContainer = ({
         },
       ]}
       activeOpacity={0.6}>
-      {uri || images[index]?.uri? (
-        <Image source={{uri:images[index]?.uri||uri}} style={styles.img} /> 
+      {uri || images[index]?.uri ? (
+        <Image source={{uri: uri || images[index]?.uri}} style={styles.img} />
       ) : (
         <Entypo name="plus" size={moderateScale(20)} color={colors.black} />
         // <Image source={{ uri: images ?.[0]}} style={styles.img} />
