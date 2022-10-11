@@ -71,7 +71,6 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
     let requestProfile = await AsyncStorage?.getItem('requestId');
     let linkDate = await AsyncStorage?.getItem('linkDate');
 
-    
     // let generateLinkTime = await AsyncStorage?.getItem('generateLinkTime');
 
     // const response = fromNow(generateLinkTime).includes("day");
@@ -94,33 +93,24 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
       } else if (requestProfile) {
         var newDate = new Date();
 
-        var totalData = moment(newDate).format('YYYY-MM-DD');
-        // console.log("totalData",totalData)
+        var currentDate = moment(newDate).format('YYYY-MM-DD');
+   
+        if (moment(linkDate).diff(moment(currentDate), 'days') <=0) {
+          alert('Link is Expired');
 
-          // console.log("consoleProfile",data?.requestTime)
+          RemoveLinkData();
 
-          if (moment(linkDate).diff(  moment(totalData), 'days') == 0) {
-            alert('Link is Expired');
-
-
-            RemoveLinkData()
-
-       
-
-
-
-            getSpecificeUser(id).then(data => {
-              setAuthData(data);
-              setLoading(false);
-            });
-          } else {
-            setLinkStatus(true);
-            getSpecificeUser(requestProfile).then(data => {
-              setAuthData(data);
-              setLoading(false);
-            });
-          }
-    
+          getSpecificeUser(id).then(data => {
+            setAuthData(data);
+            setLoading(false);
+          });
+        } else {
+          setLinkStatus(true);
+          getSpecificeUser(requestProfile).then(data => {
+            setAuthData(data);
+            setLoading(false);
+          });
+        }
       } else {
         console.log('authUserId');
         getSpecificeUser(id).then(data => {
@@ -131,11 +121,10 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
     });
   };
 
-  const RemoveLinkData= async()=>{
+  const RemoveLinkData = async () => {
     await AsyncStorage.removeItem('requestId');
     await AsyncStorage.removeItem('linkDate');
-
-  }
+  };
 
   // cancel request
   const onCancel = async () => {
@@ -177,7 +166,6 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
         Toast.show('request accept');
         await AsyncStorage.removeItem('requestId');
         await AsyncStorage.removeItem('linkDate');
-
 
         navigation.reset({
           index: 0,

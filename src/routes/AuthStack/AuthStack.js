@@ -52,6 +52,8 @@ const AuthStack = ({navigation}) => {
       const screenName = link.url?.split('&')[0].split('=').pop();
       const wihApp = link.url?.split('&')[1].split('=').pop();
       const linkDate = link.url?.split('&')[2].split('=').pop();
+
+      await AsyncStorage.setItem("linkDate",linkDate)
       
       console.log('user Id:', id);
       console.log("RequestIdData",id)
