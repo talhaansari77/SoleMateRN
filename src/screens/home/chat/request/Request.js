@@ -5,6 +5,7 @@ import RequestContainer from './Molecules/RequestContainer';
 import {verticalScale} from 'react-native-size-matters';
 import {getAuthId} from '../../../../services/FirebaseAuth';
 import {getAuthRequest} from '../../../../services/request';
+import CustomVoiceMessage from '../../../../components/CustomVoiceMessage';
 import moment from 'moment';
 
 // name,age,qualification,location
@@ -74,6 +75,7 @@ const Request = ({navigation}) => {
           renderItem={RequestDetail}
         />
       </View>
+      <CustomVoiceMessage/>
       
     </SafeAreaView>
   );
