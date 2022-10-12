@@ -189,9 +189,9 @@ export const ChatBody = ({
       chatDate = messages[index].days
     } else {
       if (index < messages.length-1) {
-        if (messages[index].days !== messages[index + 1].days) {
-          chatDate = messages[index + 1].days
-        } else if (messages[index].days === messages[index + 1].days) {
+        if (messages[index].days !== messages[index - 1].days) {
+          chatDate = messages[index].days
+        } else  {
           chatDate = ''
         }
       }

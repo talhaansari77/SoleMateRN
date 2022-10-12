@@ -91,7 +91,7 @@ export const getMessages = (user1, user2, setMessages,setGetAllChat) => {
             file:message.file,
             // date:message?.date,
             from: message.from,
-            days:moment(message.createdAt).format("MMM-DD"),
+            days: chatFormat(message.createdAt,"MMM-DD"),
             // days:month(message.createdAt.getMonth()),
 
 
