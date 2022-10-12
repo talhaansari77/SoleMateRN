@@ -83,7 +83,7 @@ export const ChatBody = ({
 
   useEffect(() => {
     changeMessageStatus();
-  }, [authId, otherId, isFocused]);
+  }, [authId, otherId, isFocused,messages]);
 
   const changeMessageStatus = async () => {
     const id = await getAuthId();
