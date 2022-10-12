@@ -7,6 +7,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Button,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 
@@ -183,6 +184,7 @@ const CustomVoiceMessage = () => {
             onPress={onStopRecord}
             containerStyle={{marginTop: 10, marginBottom: 10}}
             text={'Stop'}
+            title={'Stop'}
           />
         </View>
       )}
