@@ -4,7 +4,9 @@ import {reactionData} from '../utils/Data';
 import {chatFormat} from '../utils/Time';
 import moment from 'moment';
 
-export const sendMessage = async (from, to, text, image, status, reaction,date) => {
+
+
+export const sendMessage = async (from, to, text, image, status, reaction,file) => {
   console.log('ImageData', status);
   const id =
     from > to
@@ -18,12 +20,13 @@ export const sendMessage = async (from, to, text, image, status, reaction,date) 
     image: image ? image : '',
     status: status,
     reaction: reaction ? reaction : '',
+    file:file,
     // date:date,
 
     createdAt: new Date(),
   };
   await firestore().doc(`chats/${id}`).set(message, {merge: true});
-  return {id, text, from, to, image, status};
+  return {id, text, from, to, image, status,file};
 };
 
 export const updateMessage = async (id, reactionData) => {
@@ -62,6 +65,7 @@ export const deleteChat = async (id) => {
   // }
 };
 
+
 export const getMessages = (user1, user2, setMessages,setGetAllChat) => {
   const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
@@ -84,9 +88,10 @@ export const getMessages = (user1, user2, setMessages,setGetAllChat) => {
             date: message.createdAt,
             createdAt: chatFormat(message.createdAt, 'HH:mm A'),
             to: message.to,
+            file:message.file,
             // date:message?.date,
             from: message.from,
-            days:moment(message.createdAt).format("MM-DD"),
+            days:moment(message.createdAt).format("MMM-DD"),
             // days:month(message.createdAt.getMonth()),
 
 

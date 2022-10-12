@@ -28,7 +28,7 @@ const IceBreakQField = ({ iceBreakerQ, setQuestionIndex, ...props }) => {
         <Spacer height={15} />
 
         <View>
-          {iceBreakerQ.map((q, index) => (
+          {iceBreakerQ?.map((q, index) => (
             <View key={index}>
               <TouchableOpacity
                 activeOpacity={0.6}

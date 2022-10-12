@@ -20,11 +20,17 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import CustomText from '../../../../components/CustomText';
 import icons from '../../../../../assets/icons';
+import storage from '@react-native-firebase/storage';
+
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 // import  DocumentPickerOptions  from 'react-native-document-picker';
 import DocumentPicker from "react-native-document-picker"
 // import RNFetchBlob from 'rn-fetch-blob'
-import RNFetchBlob from 'rn-fetch-blob';
+// import RNFetchBlob from 'rn-fetch-blob';
+// import  readFile  from "react-native-fs";
+import RNFetchBlob from 'rn-fetch-blob'
+
+
 
 const AddDocuments = ({
   documentsModal,
@@ -43,19 +49,20 @@ const AddDocuments = ({
       });
       console.log(
         'ResType',
+        res[0]?.uri,
 
-        res.uri,
-        res.type,
-        res.name,
-        res.size,
+        
       );
 
-      // const path=NormalizedPath(res.uri)
-      // console.log("PathData",path)
+      const path=NormalizedPath(res[0]?.uri)
+      console.log("PathData",path)
 
-      // const result=await RNFetchBlob.fs.readFile(path,"base64")
+      const result=await RNFetchBlob.fs.readFile(path,"base64")
+      UploadFileToFirebaseStorage(result, res[0])
+      // const response = await readFile(path, "base64");
 
-      // console.log("PathDataResult",result)
+
+      console.log("PathDataResult",result)
     } catch (error) {
       if (DocumentPicker.isCancel(error)) {
       } else {
@@ -63,6 +70,46 @@ const AddDocuments = ({
       }
     }
   };
+  
+  const UploadFileToFirebaseStorage=async (result,file)=>{
+
+    const uploadFile=  storage().ref(`allFiles/${file.name}`).putString(result,'base64',{contentType:file.type});
+    uploadFile.on('state_changed', 
+    (snapshot) => {
+      // Observe state change events such as progress, pause, and resume
+      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log('Upload is ' + progress + '% done');
+      switch (snapshot.state) {
+        case storage.TaskState.PAUSED: // or 'paused'
+          console.log('Upload is paused');
+          break;
+        case storage.TaskState.RUNNING: // or 'running'
+          console.log('Upload is running');
+          break;
+      }
+    }, 
+    (error) => {
+      // Handle unsuccessful uploads
+    }, 
+    () => {
+      // Handle successful uploads on complete
+      // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+      uploadFile.snapshot.ref.getDownloadURL().then((downloadURL) => {
+        // console.log('File available at', downloadURL);
+        setDocumentsModal(false);
+        onSend(downloadURL,file);
+      });
+    }
+  );
+
+
+
+
+    
+  
+  }
+  
 
   // set prefix in ios from path
   const NormalizedPath = path => {

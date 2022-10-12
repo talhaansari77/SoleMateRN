@@ -5,8 +5,10 @@ import {
   Image,
   Text,
   TouchableOpacity,
+  PermissionsAndroid,
+  Platform,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
   moderateScale,
@@ -16,21 +18,22 @@ import {
   verticalScale,
 } from 'react-native-size-matters';
 import CustomText from './CustomText';
+import RNFetchBlob from 'rn-fetch-blob';
 // import CustomText from "../CustomText";
 // import CustomText from "./CustomText";
 // import moment from "moment";
 
-import {colors} from '../utils/Colors';
+import { colors } from '../utils/Colors';
 import profileImages from '../../assets/Profile_images';
 import commonStyles from '../utils/CommonStyles';
 import icons from '../../assets/icons';
 import CustomImage from './CustomImage';
-import {Spacer} from './Spacer';
-import {getMessages, updateMessage} from '../services/chats';
+import { Spacer } from './Spacer';
+import { getMessages, updateMessage } from '../services/chats';
 import Component from './FastImage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {getUserID} from 'react-native-fbsdk/lib/commonjs/FBAppEventsLogger';
-import {getAuthId} from '../services/FirebaseAuth';
+import { getUserID } from 'react-native-fbsdk/lib/commonjs/FBAppEventsLogger';
+import { getAuthId } from '../services/FirebaseAuth';
 import { useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 // import colors from "../../Utils/colors";
@@ -48,12 +51,24 @@ export const ChatBody = ({
   otherUserData,
 }) => {
   const [messages, setMessages] = useState([]);
-  const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-
+  const isFocused = useIsFocused();
+  const month = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
 
   // console.log('statusMessage', messages);
   console.log('messageSubscriber', messages?.date);
-const isFocused = useIsFocused();
 
   useEffect(() => {
     const messageSubscriber = getMessages(
@@ -62,12 +77,13 @@ const isFocused = useIsFocused();
       setMessages,
       setGetAllChat,
     );
+
     return () => messageSubscriber();
   }, [authId, otherId]);
 
   useEffect(() => {
     changeMessageStatus();
-  }, [authId, otherId,isFocused]);
+  }, [authId, otherId, isFocused]);
 
   const changeMessageStatus = async () => {
     const id = await getAuthId();
@@ -88,20 +104,110 @@ const isFocused = useIsFocused();
     console.log('messageStatusUpdate');
   };
 
-  const renderMessages = ({item: message}) => {
+  const downloadFile = file => {
+    console.log('FileName', file);
+
+    // Get today's date to add the time suffix in filename
+    let date = new Date();
+    // File URL which we want to download
+    let FILE_URL = file;
+    console.log('FILEURL', file);
+    // Function to get extention of the file url
+    let file_ext = getFileExtention(FILE_URL);
+
+    file_ext = '.' + file_ext[0];
+
+    // config: To get response by passing the downloading related options
+    // fs: Root directory path to download
+    const { config, fs } = RNFetchBlob;
+    let RootDir = fs.dirs.PictureDir;
+    let options = {
+      fileCache: true,
+      addAndroidDownloads: {
+        path:
+          RootDir +
+          '/file_' +
+          Math.floor(date.getTime() + date.getSeconds() / 2) +
+          file_ext,
+        description: 'downloading file...',
+        notification: true,
+        // useDownloadManager works with Android only
+        useDownloadManager: true,
+      },
+    };
+    config(options)
+      .fetch('GET', FILE_URL)
+      .then(res => {
+        // Alert after successful downloading
+        console.log('res -> ', JSON.stringify(res));
+        alert('File Downloaded Successfully.');
+      });
+  };
+
+  const getFileExtention = fileUrl => {
+    // To get the file extension
+    return /[.]/.exec(fileUrl) ? /[^.]+$/.exec(fileUrl) : undefined;
+  };
+
+  const checkPermission = async file => {
+    console.log('CheckFile', file);
+
+    if (Platform.OS === 'ios') {
+      downloadFile(file);
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: 'Storage Permission Required',
+            message:
+              'Application needs access to your storage to download File',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          // Start downloading
+          downloadFile(file);
+          console.log('Storage Permission Granted.');
+        } else {
+          // If permission denied then show alert
+          Alert.alert('Error', 'Storage Permission Not Granted');
+        }
+      } catch (err) {
+        // To handle permission related exception
+        console.log('++++' + err);
+      }
+    }
+  };
+  const renderMessages = ({ item: message, index }) => {
     const isUser = message?.from == authId;
-   
+    // let Today = moment().format('MMM-DD');
+    // Today= moment(message.days).diff(moment(Today), "days") >= 0
+    // let chatDate = Number(message.days.split("-").pop());
+    // chatDate = Number(moment().format('DD')) == chatDate ? '' : message.days
+    let chatDate;
+    if (index == 0) {
+      chatDate = messages[index].days
+    } else {
+      if (index < messages.length-1) {
+        if (messages[index].days !== messages[index + 1].days) {
+          chatDate = messages[index + 1].days
+        } else if (messages[index].days === messages[index + 1].days) {
+          chatDate = ''
+        }
+      }
+    }
+    // const tempFile=[message.file]
+    // console.log("FileName",message.file?.length)
 
-    
-
+    // let name = month[message.days.getMonth()];
     return (
       <View
         style={{
           padding: 7,
           flex: 1,
         }}>
-        <View style={{paddingBottom: verticalScale(15)}}>
-          <CustomText label={msgDate} textStyle={styles.timerText}/>
+        <View style={{ paddingBottom: verticalScale(15) }}>
+          <CustomText label={chatDate} textStyle={styles.timerText} />
         </View>
 
         {isUser ? (
@@ -120,7 +226,7 @@ const isFocused = useIsFocused();
                   <View>
                     <CustomText
                       label={message.text}
-                      textStyle={{...styles.messageText, color: colors.white}}
+                      textStyle={{ ...styles.messageText, color: colors.white }}
                       textAlign={'justify'}
                     />
                   </View>
@@ -132,7 +238,7 @@ const isFocused = useIsFocused();
                     }}>
                     <CustomText
                       label={message.createdAt}
-                      textStyle={{...styles.timerText1, color: colors.white}}
+                      textStyle={{ ...styles.timerText1, color: colors.white }}
                     />
 
                     {/* <Text style={{alignSelf:"center"}}>c</Text> */}
@@ -142,7 +248,7 @@ const isFocused = useIsFocused();
                   size={moderateScale(20)}
                   color={colors.primary}
                 /> */}
-                    <View style={{marginLeft: 5}}>
+                    <View style={{ marginLeft: 5 }}>
                       <Ionicons
                         name={
                           message.status == true
@@ -168,7 +274,7 @@ const isFocused = useIsFocused();
                       justifyContent: 'center',
 
                       shadowColor: colors.gray,
-                      shadowOffset: {width: 0, height: 2},
+                      shadowOffset: { width: 0, height: 2 },
                       shadowOpacity: 5,
                       shadowRadius: 3,
                       elevation: 5,
@@ -194,7 +300,7 @@ const isFocused = useIsFocused();
                   height: verticalScale(185),
                 }}>
                 <View />
-                <View style={{width: 200, flexDirection: 'row'}}>
+                <View style={{ width: 200, flexDirection: 'row' }}>
                   <Text
                     style={[
                       styles.timerText1,
@@ -221,7 +327,7 @@ const isFocused = useIsFocused();
                     <Component
                       uri={Math.random()}
                       style={styles.imConatiner}
-                      source={{uri: message?.image}}
+                      source={{ uri: message?.image }}
                     />
                   </TouchableOpacity>
 
@@ -241,7 +347,7 @@ const isFocused = useIsFocused();
                         justifyContent: 'center',
 
                         shadowColor: colors.gray,
-                        shadowOffset: {width: 0, height: 2},
+                        shadowOffset: { width: 0, height: 2 },
                         shadowOpacity: 5,
                         shadowRadius: 3,
                         elevation: 5,
@@ -255,6 +361,79 @@ const isFocused = useIsFocused();
                     <></>
                   )}
                 </View>
+              </View>
+            )}
+
+            {message.file == undefined || message?.file?.length == 0 ? (
+              <></>
+            ) : (
+              <View>
+                {message.file.map(item => {
+                  return (
+                    <View style={styles.senderFile}>
+                      <CustomText
+                        label={item.fileName}
+                        color={colors.white}
+                        numberOfLines={1}
+                        fontSize={12}
+                        textAlign={'justify'}
+                      />
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          marginTop: 10,
+                          alignItems: 'center',
+                        }}>
+                        <CustomText
+                          label={item.type}
+                          color={colors.white}
+                          numberOfLines={1}
+                          fontSize={10}
+                          textAlign={'justify'}
+                        />
+                        <TouchableOpacity
+                          onPress={() => {
+                            // console.log("itemFile",item.fielUrl)
+                            // checkPermission(item.fielUrl)
+                          }}
+                          style={{
+                            alignSelf: 'flex-end',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                          }}>
+                          <CustomText
+                            label={message.createdAt}
+                            textStyle={{
+                              ...styles.timerText1,
+                              color: colors.white,
+                            }}
+                          />
+
+                          {/* <Text style={{alignSelf:"center"}}>c</Text> */}
+
+                          {/* <Ionicons
+                  name="ios-checkmark"
+                  size={moderateScale(20)}
+                  color={colors.primary}
+                /> */}
+                          <View style={{ marginLeft: 5 }}>
+                            <Ionicons
+                              name={
+                                message.status == true
+                                  ? 'ios-checkmark-done-outline'
+                                  : 'ios-checkmark'
+                              }
+                              size={moderateScale(15)}
+                              color={colors.white}
+                            />
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+                      {/* <Text>{item.fileName}</Text> */}
+                    </View>
+                  );
+                })}
               </View>
             )}
           </View>
@@ -289,9 +468,9 @@ const isFocused = useIsFocused();
                 <Component
                   // resizeMode="cover"
 
-                  style={{height: '100%', width: '100%'}}
+                  style={{ height: '100%', width: '100%' }}
                   uniqueKey={Math.random()}
-                  source={{uri: otherUserData?.images?.[0]}}
+                  source={{ uri: otherUserData?.images?.[0] }}
                 />
                 {/* <Image
                   source={profileImages.profile01}
@@ -352,7 +531,7 @@ const isFocused = useIsFocused();
                         justifyContent: 'center',
 
                         shadowColor: colors.gray,
-                        shadowOffset: {width: 0, height: 2},
+                        shadowOffset: { width: 0, height: 2 },
                         shadowOpacity: 5,
                         shadowRadius: 3,
                         elevation: 5,
@@ -382,7 +561,7 @@ const isFocused = useIsFocused();
                       flexDirection: 'row',
 
                       shadowColor: '#e9ecef',
-                      shadowOffset: {width: 0, height: 2},
+                      shadowOffset: { width: 0, height: 2 },
                       shadowOpacity: 5,
                       shadowRadius: 3,
                       elevation: 5,
@@ -397,39 +576,37 @@ const isFocused = useIsFocused();
                       <Component
                         uri={Math.random()}
                         style={styles.imConatiner}
-                        source={{uri: message?.image}}
+                        source={{ uri: message?.image }}
                       />
-
-                
                     </TouchableOpacity>
                     {message.reaction ? (
-                        <View
-                          style={{
-                            backgroundColor: 'white',
-                            borderRadius: 100,
-                            marginTop:verticalScale(157) ,
-                            width: 25,
+                      <View
+                        style={{
+                          backgroundColor: 'white',
+                          borderRadius: 100,
+                          marginTop: verticalScale(157),
+                          width: 25,
 
-                            height: 25,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            // alignSelf:"flex-end",
-                            position:"absolute",
-                            // bottom:0,
+                          height: 25,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          // alignSelf:"flex-end",
+                          position: 'absolute',
+                          // bottom:0,
 
-                            shadowColor: colors.gray,
-                            shadowOffset: {width: 0, height: 2},
-                            shadowOpacity: 5,
-                            shadowRadius: 3,
-                            elevation: 5,
-                            marginRight: 5,
-                            marginLeft: 20,
-                          }}>
-                          <Text>{message.reaction}</Text>
-                        </View>
-                      ) : (
-                        <></>
-                      )}
+                          shadowColor: colors.gray,
+                          shadowOffset: { width: 0, height: 2 },
+                          shadowOpacity: 5,
+                          shadowRadius: 3,
+                          elevation: 5,
+                          marginRight: 5,
+                          marginLeft: 20,
+                        }}>
+                        <Text>{message.reaction}</Text>
+                      </View>
+                    ) : (
+                      <></>
+                    )}
                     {/* <View style={{justifyContent: 'space-between'}} />
 
                     <View
@@ -460,6 +637,61 @@ const isFocused = useIsFocused();
                 </View>
               )}
 
+              {message.file == undefined || message?.file?.length == 0 ? (
+                <></>
+              ) : (
+                <View>
+                  {message.file.map(item => {
+                    return (
+                      <View style={styles.message2}>
+                        <CustomText
+                          label={item.fileName}
+                          color={colors.black}
+                          numberOfLines={1}
+                          fontSize={12}
+                          textAlign={'justify'}
+                        />
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            marginTop: 10,
+                            alignItems: 'center',
+                          }}>
+                          <CustomText
+                            label={item.type}
+                            color={colors.black}
+                            numberOfLines={1}
+                            fontSize={10}
+                            textAlign={'justify'}
+                          />
+                          <TouchableOpacity
+                            activeOpacity={0.5}
+                            onPress={() => {
+                              checkPermission(item.fielUrl)
+                            }}
+                            style={{
+                              width: moderateScale(30),
+                              // height:verticalScale(30),
+                              // backgroundColor:"red",
+                              alignItems: "center",
+                              justifyContent: "center"
+
+                            }}>
+                            <Image
+                              // resizeMode="contain"
+                              source={icons.download} style={{ width: 20, height: 20 }} />
+
+
+                          </TouchableOpacity>
+                        </View>
+                        {/* <Text>{item.fileName}</Text> */}
+                      </View>
+                    );
+                  })}
+                </View>
+              )}
+
               {/* <View style={{justifyContent: 'center', marginLeft: scale(10)}}>
                 <CustomImage
                   src={icons.orangeTickReadIcon}
@@ -483,19 +715,15 @@ const isFocused = useIsFocused();
       </View>
     );
   };
-  let listViewRef;
   return (
-    <View style={{flex: 1, paddingBottom: 60}}>
+    <View style={{ flex: 1, paddingBottom: 60 }}>
       <FlatList
         data={messages}
         renderItem={renderMessages}
         style={styles.chat}
         // initialScrollIndex={messages.length - 1}
-        ref={(ref)=>{
-          listViewRef=ref;
-        }}
         keyExtractor={item => item._id}
-        showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}        
       />
     </View>
   );
@@ -626,7 +854,7 @@ const styles = ScaledSheet.create({
     borderBottomRightRadius: verticalScale(22),
 
     shadowColor: colors.gray,
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 5,
     shadowRadius: 3,
     elevation: 5,
@@ -651,7 +879,7 @@ const styles = ScaledSheet.create({
     borderRadius: 30,
 
     shadowColor: colors.gray,
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 10,
     shadowRadius: 3,
     elevation: 5,
@@ -678,5 +906,20 @@ const styles = ScaledSheet.create({
     padding: 5,
 
     borderRadius: 30,
+  },
+  senderFile: {
+    // alignSelf:"flex-end",
+    // backgroundColor:"red",
+    width: '60%',
+    height: verticalScale(60),
+
+    backgroundColor: colors.primary,
+    alignSelf: 'flex-end',
+    paddingHorizontal: verticalScale(15),
+    paddingVertical: verticalScale(10),
+    borderBottomLeftRadius: verticalScale(20),
+    // borderBottomRightRadius: verticalScale(10),
+    borderTopLeftRadius: verticalScale(20),
+    borderTopRightRadius: verticalScale(20),
   },
 });
