@@ -258,7 +258,7 @@ const Chat = ({navigation, route}) => {
       });
     });
 
-    console.log(`uri: ${uri}`);
+    console.log(`audio uri: ${uri}`);
     ChooseFile(uri)
   };
 

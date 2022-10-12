@@ -27,15 +27,20 @@ import AudioRecorderPlayer, {
   PlayBackType,
   RecordBackType,
 } from 'react-native-audio-recorder-player';
+import songs from '../utils/songs';
+import * as RNFS from 'react-native-fs';
+import RNFetchBlob from 'rn-fetch-blob';
+import { testSound } from '../utils/Data';
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
-const CustomAudio = ({audio,userData,message}) => {
+const CustomAudio = ({audio, userData, message}) => {
   const [state, setState] = useState({recordTime: '00:00:00'});
   const [voiceProgress, setVoiceProgress] = useState(0);
   const [playing, setPlaying] = useState(false);
 
-  console.log("UserAithData",userData)
+  console.log('UserAithData', userData);
+  console.log('audioUrl', audio[0].audioUri);
 
   useEffect(() => {
     console.log('This is audio you are looking for:', audio);
@@ -74,7 +79,7 @@ const CustomAudio = ({audio,userData,message}) => {
         return;
       }
     }
-    const result = await audioRecorderPlayer.startRecorder(audio.audioUri);
+    const result = await audioRecorderPlayer.startRecorder();
     audioRecorderPlayer.addRecordBackListener(e => {
       setState({
         recordSecs: e.currentPosition,
@@ -82,7 +87,7 @@ const CustomAudio = ({audio,userData,message}) => {
       });
       return;
     });
-    console.log(result);
+    console.log("Local Audio",result);
   };
 
   onStopRecord = async () => {
@@ -96,9 +101,24 @@ const CustomAudio = ({audio,userData,message}) => {
 
   onStartPlay = async () => {
     console.log('onStartPlay');
+
+    const dirs = RNFetchBlob.fs.dirs;
+    // const path = Platform.select({
+    //   ios: 'hello.m4a',
+    //   android: `${this.dirs.CacheDir}/hello.mp3`,
+    // });
+
+    RNFS.readFile(`${dirs.CacheDir}/`+"sound.mp4", 'base64')
+      .then(o => console.log(o, 'base64 audio'))
+      .catch(e => console.log(e, 'err ==?> asdasd'));
+
+    // const path = `${RNFS.DocumentDirectoryPath}/${i}.aac`;
+    // RNFS.writeFile(path, audio[0].audioUri, 'base64').then(() => startPlayer(path));
+    // const internalUrl = `${Platform.OS === 'android' ? 'file://' : ''}${res.path()}`;
     if (!playing) {
       setPlaying(!playing);
-      const msg = await audioRecorderPlayer.startPlayer();
+      const msg = await audioRecorderPlayer.startPlayer(`${dirs.CacheDir}/`+"sound.mp4");
+
       console.log('This is Inside Play', msg);
       audioRecorderPlayer.addPlayBackListener(e => {
         setState({
@@ -151,17 +171,23 @@ const CustomAudio = ({audio,userData,message}) => {
           flex: 2,
           justifyContent: 'center',
           alignItems: 'center',
-        //   backgroundColor:'brown'
+          //   backgroundColor:'brown'
         }}>
         <View
-          style={{height: 45, width: 45, overflow: 'hidden', borderRadius: 20,marginLeft: 10}}>
-              <Component
-                  // resizeMode="cover"
+          style={{
+            height: 45,
+            width: 45,
+            overflow: 'hidden',
+            borderRadius: 20,
+            marginLeft: 10,
+          }}>
+          <Component
+            // resizeMode="cover"
 
-                  style={{ height: '100%', width: '100%' }}
-                  uniqueKey={Math.random()}
-                  source={{ uri: userData?.images?.[0] }}
-                />
+            style={{height: '100%', width: '100%'}}
+            uniqueKey={Math.random()}
+            source={{uri: userData?.images?.[0]}}
+          />
           {/* <Image source={{uri:userData?.images?.[0]}} resizeMode="contain" /> */}
         </View>
       </View>
@@ -170,11 +196,15 @@ const CustomAudio = ({audio,userData,message}) => {
           flex: 1,
           padding: 10,
           alignItems: 'center',
-          marginLeft:10
-        //   backgroundColor:'pink'
+          marginLeft: 10,
+          //   backgroundColor:'pink'
         }}
         onPress={onStartPlay}>
-        <FontAwesome5Icon name={playing ? 'pause' : 'play'} size={20} color={colors.white} />
+        <FontAwesome5Icon
+          name={playing ? 'pause' : 'play'}
+          size={20}
+          color={colors.white}
+        />
       </TouchableOpacity>
 
       {/* Progress.Bar */}
@@ -183,10 +213,10 @@ const CustomAudio = ({audio,userData,message}) => {
           flex: 7.5,
           paddingHorizontal: 7,
           justifyContent: 'center',
-          height:"100%",
-          
+          height: '100%',
+
           marginTop: verticalScale(20),
-        //   backgroundColor:'red'
+          //   backgroundColor:'red'
         }}>
         {state.playTime ? (
           <Progress.Bar
@@ -208,44 +238,37 @@ const CustomAudio = ({audio,userData,message}) => {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            alignItems:"center",
+            alignItems: 'center',
             // marginHorizontal: scale(5),
-            marginTop:10,
+            marginTop: 10,
           }}>
           <CustomText
-                    fontSize={9}
-
-            label={
-              state?.recordTime
-                ? state?.recordTime
-                : state?.playTime
-            }
+            fontSize={9}
+            label={state?.recordTime ? state?.recordTime : state?.playTime}
             color={colors.white}
           />
-          <View style={{flexDirection:"row",alignItems:"center"}}>
-          <CustomText
-          marginRight={5}
-          fontSize={9}
-           label={message.createdAt} color={colors.white} />
-          <View >
-                            <Ionicons
-                              name={
-                                message.status == true
-                                  ? 'ios-checkmark-done-outline'
-                                  : 'ios-checkmark'
-                              }
-                              size={moderateScale(15)}
-                              color={colors.white}
-                            />
-                          </View>
-
-
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <CustomText
+              marginRight={5}
+              fontSize={9}
+              label={message.createdAt}
+              color={colors.white}
+            />
+            <View>
+              <Ionicons
+                name={
+                  message.status == true
+                    ? 'ios-checkmark-done-outline'
+                    : 'ios-checkmark'
+                }
+                size={moderateScale(15)}
+                color={colors.white}
+              />
+            </View>
           </View>
-         
         </View>
       </View>
       {/* image */}
-    
     </View>
   );
 };

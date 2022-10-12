@@ -121,7 +121,7 @@ const EditProfile = ({navigation}) => {
     try {
       getSpecificeUser(id).then(data => {
         if (data) {
-          setIsEditPhoto(true);
+          // setIsEditPhoto(true);
           const pTags = [];
           data?.personality.map(item => pTags.push({personality: item}));
           const cTags = [];
@@ -132,7 +132,7 @@ const EditProfile = ({navigation}) => {
           // const furls = [];
           // data?.images.map(item => furls.push({ uri: item }))
           // console.log("furls",furls)
-          setIsEditPhoto(true);
+          // setIsEditPhoto(true);
           // console.log('UserData:', data);
           // setImages(furls);
 
@@ -276,18 +276,41 @@ const EditProfile = ({navigation}) => {
         //       temp.push('');
         //     }
         //   })
-          
-            console.log('step 3');
-            //This is Donig The Magic
-            temp2 = {
-              image1:images.image1? await uploadImage(images.image1, authID):"",
-              image2: images.image2? await uploadImage(images.image2, authID):"",
-              image3: images.image3? await uploadImage(images.image3, authID):"",
-              image4: images.image4? await uploadImage(images.image4, authID):"",
-              image5: images.image5? await uploadImage(images.image5, authID):"",
-              image6: images.image6? await uploadImage(images.image6, authID):"",
-            };
-        
+
+        console.log('step 3');
+        //This is Donig The Magic
+        temp2 = {
+          image1: images.image1
+            ? !images.image1.includes('https://firebase')
+              ? await uploadImage(images.image1, authID)
+              : images.image1
+            : '',
+          image2: images.image2
+            ? !images.image2.includes('https://firebase')
+              ? await uploadImage(images.image2, authID)
+              : images.image2
+            : '',
+          image3: images.image3
+            ? !images.image3.includes('https://firebase')
+              ? await uploadImage(images.image3, authID)
+              : images.image3
+            : '',
+          image4: images.image4
+            ? !images.image4.includes('https://firebase')
+              ? await uploadImage(images.image4, authID)
+              : images.image4
+            : '',
+          image5: images.image5
+            ? !images.image5.includes('https://firebase')
+              ? await uploadImage(images.image5, authID)
+              : images.image5
+            : '',
+          image6: images.image6
+            ? !images.image6.includes('https://firebase')
+              ? await uploadImage(images.image6, authID)
+              : images.image6
+            : '',
+        };
 
         console.log('step 4✌', temp2);
         // imageUri = images.filter(checkChanges);
@@ -338,7 +361,7 @@ const EditProfile = ({navigation}) => {
         // setLoading(false);
 
         if (authID) {
-          await saveUser(authID, {...data,images:temp2});
+          await saveUser(authID, {...data, images: temp2});
 
           setTimeout(() => {
             setLoading(false);
