@@ -34,10 +34,9 @@ const PhotoContainer = ({
         console.log('ImagesDetail✌', result.assets[0].uri);
         // setUri(result);
         setUri(result.assets[0].uri);
-
         let itemIndex = -1;
         if(isEditPhoto){
-          itemIndex = images.findIndex((item) => item.uri === uri);
+          itemIndex = images.findIndex((item) => item.index === label);
           console.log("====itemIndex",itemIndex)
         }else{
            itemIndex= images.findIndex((item) => item.index === index);
