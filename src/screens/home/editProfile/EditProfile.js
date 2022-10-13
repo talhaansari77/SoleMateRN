@@ -22,11 +22,9 @@ import SelectBtn from './molecules/SelectBtn';
 import HeightField from './molecules/HeightField';
 import TextArea from './molecules/TextArea';
 import styled from 'react-native-styled-components';
-import CustomButton from '../../../components/CustomButton';
 import {EditValidate} from './UseEditProfile';
 import PersonalityModal from './molecules/PersonalityModal';
 import AddMoreContainer from './molecules/AddMoreContainer';
-import PhotoContainer from './molecules/PhotoContainer';
 import {getAuthId, saveUser, uploadImage} from '../../../services/FirebaseAuth';
 import PictureBox from './molecules/PictureBox';
 import Loader from '../../../utils/Loader';
@@ -36,6 +34,7 @@ import {getCurrentFCMToken} from '../../../utils/PushNotification';
 import TwoInputModal from './molecules/TwoInputModal';
 import {getSpecificeUser} from '../../../services/FirebaseAuth';
 import uuid from 'react-native-uuid';
+import {loaders} from '../../../../assets/loader';
 
 const genders = [
   {id: 1, name: 'Male'},
@@ -81,13 +80,10 @@ const EditProfile = ({navigation}) => {
   const [personality, setPersonality] = useState([]);
   const [characteristics, setcharacteristics] = useState([]);
   const [characterModal, setCharacterModal] = useState(false);
-  // const [images, setImages] = useState([]);
   const [personalityModal, setPersonalityModal] = useState(false);
   const [editLocation, setEditLocation] = useState('');
   const [fcmToken, setFcmToken] = useState('');
   const [authID, setAuthID] = useState('');
-  // const [isEditPhoto, setIsEditPhoto] = useState(false);
-  // const [tempState, setTempState] = useState([]);
 
   // console.log('imagesUri', images);
   // console.log('birthday', birthday);
@@ -121,20 +117,12 @@ const EditProfile = ({navigation}) => {
     try {
       getSpecificeUser(id).then(data => {
         if (data) {
-          // setIsEditPhoto(true);
           const pTags = [];
           data?.personality.map(item => pTags.push({personality: item}));
           const cTags = [];
           data?.characteristics.map(item =>
             cTags.push({characteristics: item}),
           );
-
-          // const furls = [];
-          // data?.images.map(item => furls.push({ uri: item }))
-          // console.log("furls",furls)
-          // setIsEditPhoto(true);
-          // console.log('UserData:', data);
-          // setImages(furls);
 
           setFirstName(data?.firstName);
           setLastName(data?.lastName);
@@ -261,22 +249,6 @@ const EditProfile = ({navigation}) => {
       console.log('data');
       setLoading(true);
       try {
-        // let imageList = Object.values(images);
-        // var temp = [];
-
-        // imageList
-        //   .map(async (img, index) => {
-        //     if (img) {
-        //       console.log('step 2');
-        //       const link = await uploadImage(img, authID);
-        //       tempState.push(link);
-        //       console.log('This Temp Images', tempState);
-        //       // const obj = Object.assign({}, names)
-        //     } else {
-        //       temp.push('');
-        //     }
-        //   })
-
         console.log('step 3');
         //This is Donig The Magic
         temp2 = {
@@ -313,52 +285,6 @@ const EditProfile = ({navigation}) => {
         };
 
         console.log('step 4✌', temp2);
-        // imageUri = images.filter(checkChanges);
-        // if (imageUri.length > 0) {
-        //   let imageLink = [];
-        //   for (let index = 0; index < data.images.length; index++) {
-        //     const element = data.images[index];
-        //     console.log('ElementIndex', element);
-        //     const link = await uploadImage(element, authID);
-        //     imageLink.push(link);
-        //   }
-        // }
-        // data.images = imageLink
-        // imageUri = images.filter(checkChanges);
-        // if(imageUri.length>0){
-        //   console.log("valueTrue",imageUri)
-        //   let imageLink = [];
-        //   for (let index = 0; index < imageUri.length; index++) {
-        //     const element = imageUri[index];
-        //     const link = await uploadImage(element);
-        //     imageLink.push({uri:link, id: element.id});
-        //   }
-        //   data.images = data.images.map((item,)=>{
-        //     const temp = imageLink.find(subItem=>subItem?.id == item?.id)
-        //     return temp ? {uri: temp.uri, id: uuid.v1()} : item
-        //   })
-        // }
-        // else{
-        // let imageLink = [];
-        // for (let index = 0; index < data.images.length; index++) {
-        //   const element = data.images[index];
-        //   console.log('ElementIndex', element);
-        //   const link = await uploadImage(element, authID);
-        //   imageLink.push(link);
-        // }
-        // data.images = imageLink
-
-        // }
-
-        // let imageLink = [];
-        // for (let index = 0; index < data.images.length; index++) {
-        //   const element = data.images[index];
-        //   console.log('ElementIndex', element);
-        //   const link = await uploadImage(element, authID);
-        //   imageLink.push(link);
-        // }
-        // data.images = imageLink;
-        // setLoading(false);
 
         if (authID) {
           await saveUser(authID, {...data, images: temp2});
@@ -968,10 +894,7 @@ const EditProfile = ({navigation}) => {
         // backgroundColor={colors.primary}
       /> */}
       {/* </View> */}
-      <Loader
-        loading={loading}
-        file={require('../../../../assets/loader/heartLoading.json')}
-      />
+      <Loader loading={loading} file={loaders.heart} />
     </View>
   );
 };

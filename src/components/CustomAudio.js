@@ -30,14 +30,18 @@ import AudioRecorderPlayer, {
 import songs from '../utils/songs';
 import * as RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
-import { testSound } from '../utils/Data';
+import {testSound} from '../utils/Data';
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const CustomAudio = ({audio, userData, message}) => {
-  const [state, setState] = useState({recordTime: '00:00:00'});
+  const [state, setState] = useState({});
   const [voiceProgress, setVoiceProgress] = useState(0);
   const [playing, setPlaying] = useState(false);
+  let rt = audio?.[0]?.recordTime.split(':');
+  rt = rt[0] + ':' + rt[1];
+  // let pt = state?.playTime?.split(':')
+  // pt = pt[0]+":"+pt[1];
 
   console.log('UserAithData', userData);
   console.log('audioUrl', audio[0].audioUri);
@@ -87,7 +91,7 @@ const CustomAudio = ({audio, userData, message}) => {
       });
       return;
     });
-    console.log("Local Audio",result);
+    console.log('Local Audio', result);
   };
 
   onStopRecord = async () => {
@@ -101,23 +105,9 @@ const CustomAudio = ({audio, userData, message}) => {
 
   onStartPlay = async () => {
     console.log('onStartPlay');
-
-    const dirs = RNFetchBlob.fs.dirs;
-    // const path = Platform.select({
-    //   ios: 'hello.m4a',
-    //   android: `${this.dirs.CacheDir}/hello.mp3`,
-    // });
-
-    RNFS.readFile(`${dirs.CacheDir}/`+"sound.mp4", 'base64')
-      .then(o => console.log(o, 'base64 audio'))
-      .catch(e => console.log(e, 'err ==?> asdasd'));
-
-    // const path = `${RNFS.DocumentDirectoryPath}/${i}.aac`;
-    // RNFS.writeFile(path, audio[0].audioUri, 'base64').then(() => startPlayer(path));
-    // const internalUrl = `${Platform.OS === 'android' ? 'file://' : ''}${res.path()}`;
     if (!playing) {
       setPlaying(!playing);
-      const msg = await audioRecorderPlayer.startPlayer(`${dirs.CacheDir}/`+"sound.mp4");
+      const msg = await audioRecorderPlayer.startPlayer(audio[0].audioUri);
 
       console.log('This is Inside Play', msg);
       audioRecorderPlayer.addPlayBackListener(e => {
@@ -244,7 +234,13 @@ const CustomAudio = ({audio, userData, message}) => {
           }}>
           <CustomText
             fontSize={9}
-            label={state?.recordTime ? state?.recordTime : state?.playTime}
+            label={
+              state?.playTime
+                ? state.currentPositionSec / state.currentDurationSec == 1
+                  ? rt
+                  : state?.playTime
+                : rt
+            }
             color={colors.white}
           />
           <View style={{flexDirection: 'row', alignItems: 'center'}}>

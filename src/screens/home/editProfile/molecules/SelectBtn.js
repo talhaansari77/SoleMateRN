@@ -12,15 +12,21 @@ const SelectBtn = ({ label, txt1, txt2, index, onValue,state }) => {
 
   useEffect(() => {
     // setIsSelect(gender == "Male" ? 0 : gender == "Female"?1:-1);
+    // selecting Exiting Data
     if (state == "Yes") {
       setIsSelect(index)
       setStatus(state == "Yes"?1:0) 
-    }else{
+    }else if (state == "No"){
       setIsSelect(index)
       setStatus(state == "Yes"?1:0) 
+    }else{
+      setIsSelect(-1)
+      setStatus(-1) 
     }
 console.log('data Loaded');
   }, [state])
+
+
   return (
     <>
       <Spacer height={10} />

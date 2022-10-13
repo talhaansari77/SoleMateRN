@@ -259,7 +259,7 @@ const Chat = ({navigation, route}) => {
     });
 
     console.log(`audio uri: ${uri}`);
-    ChooseFile(uri)
+    // ChooseFile(uri)
   };
 
 
@@ -343,10 +343,11 @@ const Chat = ({navigation, route}) => {
   }
 
   const onStopRecord = async () => {
+    
     try {
       const result = await audioRecorderPlayer.stopRecorder();
       console.log('onStopRecord try', result);
-
+      ChooseFile(result)
       audioRecorderPlayer.removeRecordBackListener();
       setState({
         ...state,
@@ -356,6 +357,7 @@ const Chat = ({navigation, route}) => {
     } catch (error) {
       console.log('onStopRecord catch', error);
     }
+    
   };
 
   const saveReaction = async reaction => {
