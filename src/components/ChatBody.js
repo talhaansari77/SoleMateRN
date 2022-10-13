@@ -101,16 +101,18 @@ export const ChatBody = ({
     }
   }, [authId, otherId, isFocused,messages]);
 
-  useEffect(() => {
+//   useEffect(() => {
 
-    messages.map(item=>{
-      if (item.currentPositionSec / item.currentDurationSec === 1) {
-        setPlaying(false)
-    }
+//     messages.map(item=>{
+//       if (item.currentPositionSec / item.currentDurationSec === 1) {
+//         setPlaying(false)
+//     }
 
-    })
+//     })
   
-}, []);
+// }, [state]);
+
+
 
   const changeMessageStatus = async () => {
     const id = await getAuthId();
@@ -202,25 +204,50 @@ export const ChatBody = ({
     }
   };
 
+// const [state, setState] = useState({ recordTime: '00:00:00' });
+// useEffect(() => {
+//   console.log('Voice Data::',state);
+//   if (state.currentPositionSec / state.currentDurationSec === 1) {
+//       setPlaying(false)
+//   }
+// }, [state]);
  const onStartPlay = async (item) => {
     console.log('onStartPlay',item[0]?.audioUri);
-    if (!playing) {
-        setPlaying(!playing)
-        const dirs = RNFetchBlob.fs.dirs;
-// const path = Platform.select({
-//   ios: item[0]?.audioUri,
-//   android: `${dirs.CacheDir}/${item[0]?.audioUri} `,
-// });
+//     if (!playing) {
+//         setPlaying(!playing)
+//         const dirs = RNFetchBlob.fs.dirs;
+// // const path = Platform.select({
+// //   ios: item[0]?.audioUri,
+// //   android: `${dirs.CacheDir}/${item[0]?.audioUri} `,
+// // });
 
-const uri = await audioRecorderPlayer.startPlay(item[0]?.audioUri);
+// const uri = await audioRecorderPlayer.startPlay(item[0]?.audioUri);
 
-        // const msg = await audioRecorderPlayer.startPlayer(item[0]?.audioUri);
-        console.log(uri);
-      ;
-    } else {
-        setPlaying(!playing)
-        onStopPlay()
-    }
+//         // const msg = await audioRecorderPlayer.startPlayer(item[0]?.audioUri);
+//         console.log(uri);
+//       ;
+//     } else {
+//         setPlaying(!playing)
+//         onStopPlay()
+//     }
+ console.log('onStartPlay');
+        if (!playing) {
+            setPlaying(!playing)
+            const msg = await audioRecorderPlayer.startPlayer();
+            console.log(msg);
+            audioRecorderPlayer.addPlayBackListener(e => {
+                setState({
+                    currentPositionSec: e.currentPosition,
+                    currentDurationSec: e.duration,
+                    playTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
+                    duration: audioRecorderPlayer.mmssss(Math.floor(e.duration)),
+                });
+                return;
+            });
+        } else {
+            setPlaying(!playing)
+            onStopPlay()
+        }
 };
  
   const onStopPlay = async () => {
@@ -232,10 +259,6 @@ const uri = await audioRecorderPlayer.startPlay(item[0]?.audioUri);
     const isUser = message?.from == authId;
 
     console.log("MessageDays",message.days)
-    // let Today = moment().format('MMM-DD');
-    // Today= moment(message.days).diff(moment(Today), "days") >= 0
-    // let chatDate = Number(message.days.split("-").pop());
-    // chatDate = Number(moment().format('DD')) == chatDate ? '' : message.days
     let chatDate;
     if (index == 0) {
       chatDate = messages[index].days
@@ -248,10 +271,6 @@ const uri = await audioRecorderPlayer.startPlay(item[0]?.audioUri);
         }
       }
     }
-    // const tempFile=[message.file]
-    // console.log("FileName",message.file?.length)
-
-    // let name = month[message.days.getMonth()];
     return (
       <View
         style={{
@@ -494,12 +513,12 @@ const uri = await audioRecorderPlayer.startPlay(item[0]?.audioUri);
               ):
               <View>
                 <CustomAudio  
-                startPlay={()=>{
-                  onStartPlay(message.audio)
+                // startPlay={()=>{
+                //   onStartPlay(message.audio)
 
-                }}
-                playing={playing}
-                message={message.audio}
+                // }}
+                // playing={playing}
+                audio={message.audio}
                 />
 
               </View>
