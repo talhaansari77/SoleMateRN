@@ -1,55 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import commonStyles from '../../../utils/CommonStyles';
 import CustomTextInput from '../../../components/CustomTextInput';
-import { Spacer } from '../../../components/Spacer';
-import { moderateScale, verticalScale } from 'react-native-size-matters';
+import {Spacer} from '../../../components/Spacer';
+import {moderateScale, verticalScale} from 'react-native-size-matters';
 import CustomText from '../../../components/CustomText';
 import ConditionPassCon from './molecules/ConditionPassCon';
-import { View } from 'react-native';
+import {View} from 'react-native';
 import CustomButton from '../../../components/CustomButton';
-import { colors } from '../../../utils/Colors';
-import { styles } from '../ViewPager/styles';
+import {colors} from '../../../utils/Colors';
+import {styles} from '../ViewPager/styles';
 import LoginpWithCon from './LoginWithCon';
-import { ValidateInput } from '../signup/UseSignup';
+import {ValidateInput} from '../signup/UseSignup';
 import auth from '@react-native-firebase/auth';
 // import {AuthLogin} from '../../../services/FirebaseAuth';
-import { ValidateLogin } from './molecules/UseLogin';
+import {ValidateLogin} from './molecules/UseLogin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import { getFCMToken } from '../../../utils/PushNotification';
-import { getNewFcmToken } from '../../../services/SendNotification';
-import { saveUser } from '../../../services/FirebaseAuth';
+import {getFCMToken} from '../../../utils/PushNotification';
+import {getNewFcmToken} from '../../../services/SendNotification';
+import {saveUser} from '../../../services/FirebaseAuth';
 
-
-const Login = ({ navigation }) => {
+const Login = ({navigation}) => {
   const [eyeClick, setEyeClick] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [newFcmToken, setNewFcmToken] = useState("")
+  const [newFcmToken, setNewFcmToken] = useState('');
   const [submitError, setSubmitError] = useState({
     emailError: '',
     passwordError: '',
   });
 
   useEffect(() => {
+    getAuthToken();
+  }, []);
 
-    getAuthToken()
-   
-  }, [])
+  console.log('newFcmToken', newFcmToken);
 
-  console.log("newFcmToken",newFcmToken)
-
-  const getAuthToken=async ()=>{
-
-   await getNewFcmToken(setNewFcmToken)
+  const getAuthToken = async () => {
+    await getNewFcmToken(setNewFcmToken);
 
     // console.log("LoginFcm",token)
-
-  }
+  };
 
   const onHandleSubmit = async () => {
     const response = ValidateLogin(
@@ -70,13 +65,11 @@ const Login = ({ navigation }) => {
         if (userCredentials.user.uid) {
           AsyncStorage.setItem('userAuth', userCredentials.user.uid);
 
-          await saveUser(userCredentials.user.uid,{fcmToken:newFcmToken})
-
-
+          await saveUser(userCredentials.user.uid, {fcmToken: newFcmToken});
 
           navigation.reset({
             index: 0,
-            routes: [{ name: 'MainStack' }],
+            routes: [{name: 'MainStack'}],
           });
         }
       } catch (error) {
@@ -95,40 +88,34 @@ const Login = ({ navigation }) => {
     }
   };
   const handleGoogleSignup = async () => {
-    // console.log('GoogleLogin')
-    // try {
-    //   // Get the users ID token
-    //   const {idToken} = await GoogleSignin.signIn();
-
-    //   // Create a Google credential with the token
-    //   const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
-    //   // Sign-in the user with the credential
-    //   await auth().signInWithCredential(googleCredential);
-    // } catch (error) {
-    //   alert(error.message);
-    // }
     try {
       await GoogleSignin.hasPlayServices({
         // Check if device has Google Play Services installed
         // Always resolves to true on iOS
         showPlayServicesUpdateDialog: true,
       });
-      const { idToken } = await GoogleSignin.signIn();
+      const {idToken, user} = await GoogleSignin.signIn();
 
       // Create a Google credential with the token
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      // Checking Existing Methods
+      let signInMethods = await auth().fetchSignInMethodsForEmail(user.email);
 
-      // Sign-in the user with the credential
-      auth().signInWithCredential(googleCredential).then((userInfo) => {
-        console.log('UserInfo --->', userInfo.user)
-        if (!userInfo.additionalUserInfo.isNewUser) {
-          AsyncStorage.setItem('userAuth', userInfo.user.uid);
-          navigation.navigate("MainStack", { screen: "Profile" })
-        } else if (userInfo.user) {
-          alert("User Already Exist")
-        }
-      })
+      if (signInMethods.length > 0) {
+        // Sign-in the user with the credential
+        auth()
+          .signInWithCredential(googleCredential)
+          .then(userInfo => {
+            // console.log('UserInfo --->', userInfo.user);
+            // if (!userInfo.additionalUserInfo.isNewUser) {
+            AsyncStorage.setItem('userAuth', userInfo.user.uid);
+            navigation.navigate('MainStack', {screen: 'Profile'});
+            // }
+          })
+          .catch(e => alert('Error: ', e));
+      } else {
+        alert('No Such User Exist');
+      }
     } catch (error) {
       console.log('Message', JSON.stringify(error));
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -141,8 +128,6 @@ const Login = ({ navigation }) => {
         alert(error.message);
       }
     }
-
-
   };
 
   useEffect(() => {
@@ -179,9 +164,11 @@ const Login = ({ navigation }) => {
       />
       <Spacer height={verticalScale(20)} />
 
-      <LoginpWithCon onGoogle={() => {
-        handleGoogleSignup();
-      }} />
+      <LoginpWithCon
+        onGoogle={() => {
+          handleGoogleSignup();
+        }}
+      />
       <Spacer height={verticalScale(20)} />
 
       <CustomTextInput
@@ -191,7 +178,7 @@ const Login = ({ navigation }) => {
         error={submitError.emailError}
         onChangeText={em => {
           setEmail(em);
-          setSubmitError({ ...submitError, emailError: '' });
+          setSubmitError({...submitError, emailError: ''});
         }}
       />
       <Spacer height={verticalScale(20)} />
@@ -201,7 +188,7 @@ const Login = ({ navigation }) => {
         error={submitError.passwordError}
         onChangeText={pass => {
           setPassword(pass);
-          setSubmitError({ ...submitError, passwordError: '' });
+          setSubmitError({...submitError, passwordError: ''});
         }}
         password
         secureTextEntry={eyeClick}

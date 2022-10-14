@@ -1,32 +1,32 @@
-import { View, Text } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import {View, Text} from 'react-native';
+import React, {useState, useEffect} from 'react';
 import commonStyles from '../../../utils/CommonStyles';
 import SignupWithCon from './SignupWithCon';
 import CustomTextInput from '../../../components/CustomTextInput';
-import { Spacer } from '../../../components/Spacer';
-import { verticalScale, moderateScale } from 'react-native-size-matters';
+import {Spacer} from '../../../components/Spacer';
+import {verticalScale, moderateScale} from 'react-native-size-matters';
 import CustomText from '../../../components/CustomText';
 import ConditionPassCon from './molecules/ConditionPassCon';
 import CustomButton from '../../../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { colors } from '../../../utils/Colors';
+import {colors} from '../../../utils/Colors';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import { LoginManager, AccessToken } from 'react-native-fbsdk';
+import {LoginManager, AccessToken} from 'react-native-fbsdk';
 import {
   validateEmail,
   checkCharPassword,
   checkNum,
   checkSymbol,
 } from '../../../utils/Email_Password_Validation';
-import { ValidateInput } from './UseSignup';
-import { styles } from './styles';
-import { color } from 'react-native-elements/dist/helpers';
+import {ValidateInput} from './UseSignup';
+import {styles} from './styles';
+import {color} from 'react-native-elements/dist/helpers';
 // import {SignupEmailPassword} from '../../../services/FirebaseAuth';
 import auth from '@react-native-firebase/auth';
-const Signup = ({ navigation }) => {
+const Signup = ({navigation}) => {
   const [eyeClick, setEyeClick] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -65,13 +65,13 @@ const Signup = ({ navigation }) => {
       color: !password
         ? colors.gray
         : !checkCharPassword(password)
-          ? colors.red
-          : colors.gray,
+        ? colors.red
+        : colors.gray,
       color2: !password
         ? colors.gray
         : password.search(/[!/>@<"#$%&()¥|?>|='+*:~^;]/) == -1
-          ? colors.red
-          : colors.gray,
+        ? colors.red
+        : colors.gray,
     },
     {
       id: 2,
@@ -81,8 +81,8 @@ const Signup = ({ navigation }) => {
       color: !password
         ? colors.gray
         : !checkNum(password)
-          ? colors.red
-          : colors.gray,
+        ? colors.red
+        : colors.gray,
       onGetPassword: () => {
         getPassword();
       },
@@ -123,7 +123,7 @@ const Signup = ({ navigation }) => {
           setLoading(false);
           navigation.reset({
             index: 0,
-            routes: [{ name: 'EditProfile' }],
+            routes: [{name: 'EditProfile'}],
           });
         }
       } catch (error) {
@@ -154,10 +154,14 @@ const Signup = ({ navigation }) => {
     //     console.log("Login fail with error: " + error);
     //   }
     // );
-    console.log('FacebookButtonPressed')
+    console.log('FacebookButtonPressed');
     // Attempt login with permissions
     try {
-      const result = await LoginManager.logInWithPermissions(["public_profile", "email", "user_friends"]);
+      const result = await LoginManager.logInWithPermissions([
+        'public_profile',
+        'email',
+        'user_friends',
+      ]);
 
       if (result.isCancelled) {
         alert('User cancelled the login process');
@@ -171,7 +175,9 @@ const Signup = ({ navigation }) => {
       }
 
       // Create a Firebase credential with the AccessToken
-      const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+      const facebookCredential = auth.FacebookAuthProvider.credential(
+        data.accessToken,
+      );
 
       // Sign-in the user with the credential
       const userInfo = auth().signInWithCredential(facebookCredential);
@@ -179,7 +185,6 @@ const Signup = ({ navigation }) => {
     } catch (error) {
       alert('Error', error);
     }
-
   }
   const handleGoogleSignup = async () => {
     try {
@@ -189,20 +194,26 @@ const Signup = ({ navigation }) => {
         showPlayServicesUpdateDialog: true,
       });
       // Get the users ID token
-      const { idToken } = await GoogleSignin.signIn();
+      const {idToken, user} = await GoogleSignin.signIn();
 
       // Create a Google credential with the token
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
+      // Checking Existing Methods
+      let signInMethods = await auth().fetchSignInMethodsForEmail(user.email);
       // Sign-in the user with the credential
-      auth().signInWithCredential(googleCredential).then((userInfo) => {
-        console.log('UserInfo --->', userInfo.user)
-        if (!userInfo.additionalUserInfo.isNewUser) {
-          alert("User Already Exist")
-        } else if (userInfo.user) {
-          navigation.navigate("MainStack", { screen: "Profile" })
-        }
-      })
+      if (signInMethods.length > 0) {
+        alert('User Already Exist');
+      } else {
+        // Sign-in the user with the credential
+        auth()
+          .signInWithCredential(googleCredential)
+          .then(userInfo => {
+            console.log('UserInfo --->', userInfo.user);
+            AsyncStorage.setItem('userAuth', userInfo.user.uid);
+            navigation.navigate('MainStack', {screen: 'Profile'});
+          })
+          .catch(e => alert('Error: ', e));
+      }
 
       // setUserInfo(userInfo);
     } catch (error) {
@@ -217,8 +228,6 @@ const Signup = ({ navigation }) => {
         alert(error.message);
       }
     }
-
-
   };
   return (
     // <></>
@@ -241,7 +250,9 @@ const Signup = ({ navigation }) => {
         onGoogle={() => {
           handleGoogleSignup();
         }}
-        onFacebook={() => { onFacebookButtonPress() }}
+        onFacebook={() => {
+          onFacebookButtonPress();
+        }}
       />
       <Spacer height={verticalScale(20)} />
       <CustomTextInput
@@ -251,7 +262,7 @@ const Signup = ({ navigation }) => {
         error={submitError.emailError}
         onChangeText={em => {
           setEmail(em.trim());
-          setSubmitError({ ...submitError, emailError: '' });
+          setSubmitError({...submitError, emailError: ''});
         }}
       />
       <Spacer height={verticalScale(15)} />
@@ -261,7 +272,7 @@ const Signup = ({ navigation }) => {
         error={submitError.passwordError}
         onChangeText={pass => {
           setPassword(pass);
-          setSubmitError({ ...submitError, passwordError: '' });
+          setSubmitError({...submitError, passwordError: ''});
         }}
         password
         secureTextEntry={eyeClick}
@@ -276,7 +287,7 @@ const Signup = ({ navigation }) => {
         error={submitError.confPasswordError}
         onChangeText={conpass => {
           setConfirmPass(conpass);
-          setSubmitError({ ...submitError, confPasswordError: '' });
+          setSubmitError({...submitError, confPasswordError: ''});
         }}
         password
         secureTextEntry={eyeClick}

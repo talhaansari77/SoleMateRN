@@ -9,7 +9,6 @@ import {
   Platform,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-
 import {
   moderateScale,
   ms,
@@ -19,10 +18,6 @@ import {
 } from 'react-native-size-matters';
 import CustomText from './CustomText';
 import RNFetchBlob from 'rn-fetch-blob';
-// import CustomText from "../CustomText";
-// import CustomText from "./CustomText";
-// import moment from "moment";
-
 import {colors} from '../utils/Colors';
 import profileImages from '../../assets/Profile_images';
 import commonStyles from '../utils/CommonStyles';
@@ -38,16 +33,12 @@ import {useIsFocused} from '@react-navigation/native';
 import * as Progress from 'react-native-progress';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
-// import profileImages from '../../../../assets/Profile_images';
-
 import moment from 'moment';
 import CustomAudio from './CustomAudio';
-import ReceiverVoiceMessage from './ReceiverVoiceMessage';
 
+// Audio Recorder
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
-// import colors from "../../Utils/colors";
-// import { getMessages } from "../Services/chats";
 export const ChatBody = ({
   userId,
   relatedUserId,
@@ -85,6 +76,7 @@ export const ChatBody = ({
   // console.log('statusMessage', messages);
   console.log('messageSubscriber', messages?.date);
 
+  // on Start Load Messages
   useEffect(() => {
     const messageSubscriber = getMessages(
       otherId,
@@ -96,29 +88,18 @@ export const ChatBody = ({
     return () => messageSubscriber();
   }, [authId, otherId]);
 
+  // Changing Msg Status
   useEffect(() => {
     if (isFocused) {
       changeMessageStatus();
     }
   }, [authId, otherId, isFocused, messages]);
 
-  //   useEffect(() => {
-
-  //     messages.map(item=>{
-  //       if (item.currentPositionSec / item.currentDurationSec === 1) {
-  //         setPlaying(false)
-  //     }
-
-  //     })
-
-  // }, [state]);
-
+ 
+// MessageStatus changer 
   const changeMessageStatus = async () => {
     const id = await getAuthId();
-
-    // item.to == authId ? item.from : item.to
-
-    // console.log("MessageId"
+    
     if (messages)
       messages.map(async item => {
         const isUser = item.from == authId;
@@ -132,6 +113,7 @@ export const ChatBody = ({
     console.log('messageStatusUpdate');
   };
 
+  // File Downloader
   const downloadFile = file => {
     console.log('FileName', file);
     // Get today's date to add the time suffix in filename
@@ -169,10 +151,12 @@ export const ChatBody = ({
       });
   };
 
+  // getFileExtention
   const getFileExtention = fileUrl => {
     // To get the file extension
     return /[.]/.exec(fileUrl) ? /[^.]+$/.exec(fileUrl) : undefined;
   };
+  // checking Permission
   const checkPermission = async file => {
     console.log('CheckFile', file);
 
@@ -202,7 +186,7 @@ export const ChatBody = ({
       }
     }
   };
-
+// onStart Audio Play
   const onStartPlay = async item => {
     console.log('onStartPlay', item[0]?.audioUri);
 
@@ -226,11 +210,13 @@ export const ChatBody = ({
     }
   };
 
+  // audio Stopper
   const onStopPlay = async () => {
     console.log('onStopPlay');
     audioRecorderPlayer.stopPlayer();
     audioRecorderPlayer.removePlayBackListener();
   };
+  // renderMessages
   const renderMessages = ({item: message, index}) => {
     const isUser = message?.from == authId;
 
@@ -387,8 +373,6 @@ export const ChatBody = ({
                         />
                         <TouchableOpacity
                           onPress={() => {
-                            // console.log("itemFile",item.fielUrl)
-                            // checkPermission(item.fielUrl)
                           }}
                           style={styles.fileContainer3}>
                           <CustomText
@@ -399,13 +383,7 @@ export const ChatBody = ({
                             }}
                           />
 
-                          {/* <Text style={{alignSelf:"center"}}>c</Text> */}
-
-                          {/* <Ionicons
-                  name="ios-checkmark"
-                  size={moderateScale(20)}
-                  color={colors.primary}
-                /> */}
+                         
                           <View style={{marginLeft: 5}}>
                             <Ionicons
                               name={
@@ -419,7 +397,6 @@ export const ChatBody = ({
                           </View>
                         </TouchableOpacity>
                       </View>
-                      {/* <Text>{item.fileName}</Text> */}
                     </TouchableOpacity>
                   );
                 })}
@@ -433,11 +410,6 @@ export const ChatBody = ({
                 <CustomAudio
                   message={message}
                   userData={getAuthData}
-                  // startPlay={()=>{
-                  //   onStartPlay(message.audio)
-
-                  // }}
-                  // playing={playing}
                   audio={message.audio}
                   isUser={isUser}
                 />
@@ -456,11 +428,7 @@ export const ChatBody = ({
                   uniqueKey={Math.random()}
                   source={{uri: otherUserData?.images?.[0]}}
                 />
-                {/* <Image
-                  source={profileImages.profile01}
-                  resizeMode="cover"
-                  style={commonStyles.img}
-                /> */}
+              
               </View>
             </View>
 
@@ -490,7 +458,6 @@ export const ChatBody = ({
                       style={{
                         alignSelf: 'flex-end',
                       }}>
-                      {/* <Text>jjjjjjjjjj</Text> */}
 
                       <CustomText
                         label={message.createdAt}
@@ -586,7 +553,6 @@ export const ChatBody = ({
                             />
                           </TouchableOpacity>
                         </View>
-                        {/* <Text>{item.fileName}</Text> */}
                       </View>
                     );
                   })}
@@ -600,11 +566,6 @@ export const ChatBody = ({
                   <CustomAudio
                   message={message}
                   userData={getAuthData}
-                  // startPlay={()=>{
-                  //   onStartPlay(message.audio)
-
-                  // }}
-                  // playing={playing} 
                   audio={message.audio}
                   isUser={false}
                 />
@@ -623,9 +584,10 @@ export const ChatBody = ({
         data={messages}
         renderItem={renderMessages}
         style={styles.chat}
-        // initialScrollIndex={messages.length - 1}
         keyExtractor={item => item._id}
         showsVerticalScrollIndicator={false}
+        inverted
+        contentContainerStyle={{ flexDirection: 'column-reverse' }}
       />
     </View>
   );
