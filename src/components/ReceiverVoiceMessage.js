@@ -229,7 +229,7 @@ const ReceiverVoiceMessage = ({audio, userData, message}) => {
 
           style={{height: '100%', width: '100%'}}
           uniqueKey={Math.random()}
-          source={{uri: userData?.images?.[0]}}
+          source={{uri: userData?.images?.image1}}
         />
         {/* <Image source={{uri:userData?.images?.[0]}} resizeMode="contain" /> */}
       </View>

@@ -22,15 +22,8 @@ const ReportReason = ({navigation, route}) => {
   const [writeReason, setWriteReason] = useState('');
   const [loading, setLoading] = useState(false);
   const [AuthAllChat, setAuthAllChat] = useState(route?.params?.userAllChat);
-  // const [off, setOff] = useState(false)
 
-  // console.log('UserChatAll', route?.params?.userAllChat);
-  // otherUser:route?.params?.otherData,authUser:route?.params?.authData
-
-  // useEffect(() => {
-
-  // }, [])
-
+// reason array 
   const ReportListArray = [
     {
       id: 1,
@@ -65,24 +58,29 @@ const ReportReason = ({navigation, route}) => {
       name: 'they’ve become different people',
     },
   ];
+
+  // delete all chart user click the reason and send the  reason to this person via notification 
   const onSendReason = async () => {
     if (!reason || writeReason) {
       Toast.show('Please Select any reason');
     } else {
       try {
         setLoading(true);
+        // send reason  via notification
         NotificationSender(
           route?.params?.otherUser?.fcmToken,
           reason ? reason : writeReason,
           route?.params?.authUser?.firstName + ' End Conversation ',
         );
+        // delete  user  specific request 
         await deleteRequest(
           route?.params?.authUser.id,
           route?.params?.otherUser?.id,
         );
         if (AuthAllChat) {
           AuthAllChat.map(async item => {
-            // console.log('ItemAllChatId', item._id);
+
+            // delete user all cat
             await deleteChat(item._id);
 
             setTimeout(() => {
@@ -94,7 +92,6 @@ const ReportReason = ({navigation, route}) => {
       } catch (error) {}
     }
 
-    //  console.log(route?.params?.otherUser?.fcmToken,reason?reason:writeReason,route?.params?.authUser?.firstName)
   };
   return (
     <ScrollView
@@ -148,22 +145,13 @@ const ReportReason = ({navigation, route}) => {
               textFamily={'ProximaNova-Regular'}
               value={writeReason}
               onChangeText={em => {
+                // set user reason
                 setWriteReason(em.trim());
               }}
-              // onPress={() => {
-              //   setOff(true)
-              // }}
+             
             />
           </View>
-          {/* 
-        <View
-          style={{
-            shadowColor: "#171717",
-            shadowOffset: { height: 4 },
-            shadowOpacity: 0.2,
-            shadowRadius: 3,
-          }}
-        > */}
+        
           <CustomGradientButton
             marginTop={30}
             height={50}
@@ -172,14 +160,11 @@ const ReportReason = ({navigation, route}) => {
             fontFamily={'ProximaNova-Bold'}
             fontSize={20}
             title={'Send'}
-            // backgroundColor={colors.darkOrange}
             borderRadius={50}
             onPress={() => {
               onSendReason();
-              // navigation.navigate("Reported");
             }}
           />
-          {/* </View> */}
         </SafeAreaView>
       </Container>
 

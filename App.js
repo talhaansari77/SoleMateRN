@@ -16,21 +16,27 @@ export default function App() {
 
   const handleDynamicLink = async link => {
     console.log("this is Forground")
-    // Handle dynamic link inside your own application
     console.log('ForeGround DynamicLink-1:🖐', link);
     if (link?.url) {
       const id = link.url?.split('=').pop();
       await AsyncStorage.setItem("requestId",id)
       console.log('Forground Id:', id);
-
       const screenName = link.url?.split('&')[0].split('=').pop();
       const wihApp = link.url?.split('&')[1].split('=').pop();
       const linkDate = link.url?.split('&')[2].split('=').pop();
+      // const linkDate = link.url?.split('&')[2].split('=').pop();
+      console.log('linkDate', linkDate);
+      await AsyncStorage.setItem("linkDate",linkDate)
 
 
+      
       console.log('screenName:', screenName);
       console.log('wihApp:', wihApp);
-      console.log('linkDate:', linkDate);
+      if (screenName === 'Profile'){
+        // navigation.navigate('MainStack', {screen: 'Profile'});
+
+
+      }
       // if (screenName === 'Profile')
       //   navigation.navigate('MainStack', {screen: 'Profile'});
     }
@@ -45,7 +51,10 @@ export default function App() {
 
   
   useEffect(() => {
-    SplashScreen.hide();
+
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 1500);
     requestUserPermission();
     notificationServices();
   }, [])

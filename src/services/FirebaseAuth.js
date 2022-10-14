@@ -3,6 +3,8 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import uuid from 'react-native-uuid';
 import auth from '@react-native-firebase/auth';
+import firebase from "@react-native-firebase/app"
+import moment from 'moment';
 
 // import auth from '@react-native-firebase/auth';
 
@@ -17,6 +19,19 @@ import auth from '@react-native-firebase/auth';
 //     throw error;
 //   }
 // };
+
+export const getTime=async()=>{
+
+  return firebase.firestore.Timestamp.now()
+
+}
+
+export const fromNow = (time) => {
+  const fireBaseTime = new Date(
+    time.seconds * 100 + time.nanoseconds / 1000000
+  );
+  return moment(fireBaseTime).fromNow();
+};
 
 export const signout = async () => {
   return auth().signOut();

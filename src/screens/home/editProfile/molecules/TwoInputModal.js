@@ -1,38 +1,47 @@
-import { View, Text, Modal, StyleSheet } from "react-native";
-import React, { useState } from "react";
-import CustomTextInput from "../../../../components/CustomTextInput";
-import { Spacer } from "../../../../components/Spacer";
-import CustomButton from "../../../../components/CustomButton";
-import { verticalScale } from "react-native-size-matters";
-import { colors } from "../../../../utils/Colors";
+import {View, Modal, StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import CustomTextInput from '../../../../components/CustomTextInput';
+import {Spacer} from '../../../../components/Spacer';
+import CustomButton from '../../../../components/CustomButton';
+import {verticalScale} from 'react-native-size-matters';
+import {colors} from '../../../../utils/Colors';
+import Toast from 'react-native-simple-toast';
 
 const TwoInputModal = ({
   setModalVisible,
   modalVisible,
   iceBreakerQ,
   setIceBreakerQ,
-  questionIndex
+  questionIndex,
 }) => {
-  // const currentQuestion=iceBreakerQ.filter((q) => q.id === questionIndex)
-  const [question, setQuestion] = useState('')
-  const [answer, setAnswer] = useState('')
+  const [question, setQuestion] = useState('');
+  const [answer, setAnswer] = useState('');
   const onSaveIceBreakerQ = () => {
-    const newQuestionList = iceBreakerQ.filter((q) => {
+    const newQuestionList = iceBreakerQ.filter(q => {
       if (q.id == questionIndex) {
         q.id = questionIndex;
         q.question = question;
         q.answer = answer;
-        q.placeholder = "What ice breaker question would you like to answer";
-        return q
+        q.placeholder = 'What ice breaker question would you like to answer';
+        return q;
       } else {
-        return q
+        return q;
       }
-    })
-    // newQuestionList.push(newQuestion)
-    console.log('newQuestion', newQuestionList);
-    setIceBreakerQ(newQuestionList);
+    });
 
-    setModalVisible(!modalVisible);
+    if (!question) {
+      Toast.show('Question is required');
+    } else if (!answer) {
+      Toast.show('answer is  required');
+    } else {
+      console.log('newQuestion', newQuestionList);
+      setIceBreakerQ(newQuestionList);
+
+      setAnswer('');
+      setQuestion('');
+
+      setModalVisible(!modalVisible);
+    }
   };
 
   return (
@@ -43,19 +52,17 @@ const TwoInputModal = ({
         visible={modalVisible}
         onRequestClose={() => {
           setModalVisible(!modalVisible);
-        }}
-      >
+        }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <CustomTextInput
-              withLabel={"Ice Breaker Question"}
+              withLabel={'Ice Breaker Question'}
               height={52}
               placeholder="Question"
               value={question}
-              onChangeText={(add) => setQuestion(add)}
+              onChangeText={add => setQuestion(add)}
               onPress={() => {
-                // {addItems}
-                console.log(addItems, "addItems");
+                console.log(addItems, 'addItems');
               }}
             />
 
@@ -65,7 +72,7 @@ const TwoInputModal = ({
               height={52}
               placeholder="Answer"
               value={answer}
-              onChangeText={(add) => setAnswer(add)}
+              onChangeText={add => setAnswer(add)}
             />
 
             <Spacer height={verticalScale(20)} />
@@ -92,18 +99,18 @@ const TwoInputModal = ({
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modalView: {
     margin: 20,
-    width: "90%",
-    height: "45%",
-    backgroundColor: "white",
+    width: '90%',
+    height: '45%',
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,

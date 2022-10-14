@@ -18,6 +18,5 @@ export default ProfileNav;
 const Row = styled(View, {
   ...commonStyles.rowContainer,
   justifyContent: "space-between",
-  // backgroundColor:'red'
 });
 

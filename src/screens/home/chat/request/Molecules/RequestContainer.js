@@ -1,12 +1,10 @@
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import commonStyles from '../../../../../utils/CommonStyles';
 import {
   moderateScale,
   ScaledSheet,
   verticalScale,
 } from 'react-native-size-matters';
-import profileImages from '../../../../../../assets/Profile_images';
 import CustomText from '../../../../../components/CustomText';
 import {colors} from '../../../../../utils/Colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -14,15 +12,7 @@ import {getSpecificeUser} from '../../../../../services/FirebaseAuth';
 import Component from '../../../../../components/FastImage';
 import moment from 'moment';
 
-const RequestContainer = ({
-  name,
-  age,
-  qualification,
-  location,
-  onChating,
-  item,
-  userId,
-}) => {
+const RequestContainer = ({age, onChating, userId}) => {
   const [userData, setUserData] = useState({});
 
   useEffect(() => {
@@ -34,16 +24,9 @@ const RequestContainer = ({
   var age = a.diff(b, 'years');
 
   const getUser = async () => {
-    // const user = await getSpecificeUser(userId);
-    // console.log('UserData', user);
-
     getSpecificeUser(userId).then(data => {
       setUserData(data);
     });
-
-    // if (user) {
-    //   setUserData(user);
-    // }
   };
 
   return (
@@ -53,18 +36,11 @@ const RequestContainer = ({
       style={styles.mainConatiner}>
       <View style={{flexDirection: 'row'}}>
         <View style={styles.imgContainer}>
-        <Component
-            // resizeMode="cover"
-
+          <Component
             style={{height: '100%', width: '100%'}}
             uniqueKey={Math.random()}
-            source={{uri:userData?.images?.[0]}}
+            source={{uri: userData?.images?.image1}}
           />
-          {/* <Image
-            resizeMode="cover"
-            style={commonStyles.img}
-            source={profileImages.man}
-          /> */}
         </View>
         <View style={styles.detailContainer}>
           <CustomText
@@ -72,7 +48,6 @@ const RequestContainer = ({
             numberOfLines={1}
             fontFamily="ProximaNova-Bold"
             fontSize={verticalScale(10)}
-            // marginLeft={verticalScale(5)}
           />
           <View style={styles.subDetail}>
             <CustomText
@@ -81,7 +56,6 @@ const RequestContainer = ({
               color={colors.halfGray}
               numberOfLines={1}
               fontSize={verticalScale(10)}
-              // marginLeft={verticalScale(5)}
             />
             <View style={styles.line} />
             <CustomText
@@ -90,7 +64,6 @@ const RequestContainer = ({
               numberOfLines={1}
               color={colors.halfGray}
               fontSize={verticalScale(10)}
-              // marginLeft={verticalScale(5)}
             />
             <View style={styles.line} />
             <CustomText
@@ -99,7 +72,6 @@ const RequestContainer = ({
               color={colors.halfGray}
               numberOfLines={1}
               fontSize={verticalScale(10)}
-              // marginLeft={verticalScale(5)}
             />
           </View>
         </View>

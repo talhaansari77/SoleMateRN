@@ -5,7 +5,6 @@ import Welcome from '../../screens/auth/welcome';
 import Login from '../../screens/auth/login';
 import Signup from '../../screens/auth/signup';
 import OnBoarding from '../../screens/auth/onBoarding/OnBoarding';
-import ViewPager from '../../screens/auth/ViewPager';
 import Settings from '../../screens/home/settings';
 import MainSettings from '../../screens/home/settings/MainSettings';
 import GeneralSettings from '../../screens/home/settings/GeneralSettings';
@@ -53,6 +52,8 @@ const AuthStack = ({navigation}) => {
       const screenName = link.url?.split('&')[0].split('=').pop();
       const wihApp = link.url?.split('&')[1].split('=').pop();
       const linkDate = link.url?.split('&')[2].split('=').pop();
+
+      await AsyncStorage.setItem("linkDate",linkDate)
       
       console.log('user Id:', id);
       console.log("RequestIdData",id)

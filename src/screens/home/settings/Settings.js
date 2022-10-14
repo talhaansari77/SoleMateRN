@@ -1,38 +1,80 @@
-import {View, Text, Image, SafeAreaView, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import {View, SafeAreaView, TouchableOpacity} from 'react-native';
+import React, {useState, useEffect} from 'react';
 import styled from 'react-native-styled-components';
 import CustomText from '../../../components/CustomText';
 import {colors} from '../../../utils/Colors';
-import {verticalScale, scale, moderateScale} from 'react-native-size-matters';
+import {moderateScale} from 'react-native-size-matters';
 import icons from '../../../../assets/icons';
 import SettingItem from './molecules/SettingItem';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import Share from 'react-native-share';
-import base64 from 'react-native-base64';
-import profileImages from '../../../../assets/Profile_images';
-import {getAuthId} from '../../../services/FirebaseAuth';
+import {getAuthId, saveUser} from '../../../services/FirebaseAuth';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import moment from 'moment';
+import firebase from '@react-native-firebase/app';
 
-
-
-
+import {getSpecificeUser} from '../../../services/FirebaseAuth';
 const Settings = ({navigation}) => {
-  // prefix for Sharing Image
-  // 'data:image/jpeg;base64,/9j/'
+  const [authData, setauthData] = useState({});
+
+
+
+  useEffect(() => {
+
+    // get user Data
+    getAuthData();
+  }, []);
+
+  const getAuthData = async () => {
+    const id = await getAuthId();
+// get user all data
+    getSpecificeUser(id).then(data => {
+      setauthData(data);
+    });
+  };
+  // generate link using firabase deeplinking 
   const generateLink = async () => {
     const id = await getAuthId();
-    const linkDate = new Date();
+    // get request time 
+    // const time = moment().add(0.1 * 0.1, "hours");
+    // const totalTime=time.format("YYYY-MM-DD") + "T" + time.format("HH:mm")
 
-    console.log(linkDate)
+    // let newDate=new Date(moment().add(2, "days").format("YYYY-MM-DD"))
+    var newDate = new Date();
+
+    var totalDate=(moment(newDate).add(2,"days").format("YYYY-MM-DD"))
+
+
+  //  let  letTotalDate= new Date(moment().format(newDate, "YYYY-MM-DD"))
+
+    
+
+
+
+    // let DateData=  moment().format(newDate, "YYYY-MM-DD")
+    // let ExtendDate=moment(DateData).add(2)
+
+    console.log("NewDataIS",totalDate)
+
+    // let totalDate=
+
+    
+
+
+    // save user requst time ifuser  share profile the link user 
+    await saveUser(id, {requestTime:  totalDate})
     try {
       var link = await dynamicLinks().buildShortLink(
         {
-          link: `https://getsolemate.page.link/EwdR?screen=Profile&withApp=true&linkDate=${linkDate}&id=${id}`,
+          link: `https://getsolemate.page.link/EwdR?screen=Profile&withApp=true&linkDate=${totalDate}&id=${id}`,
           domainUriPrefix: 'https://getsolemate.page.link',
+
+          // generate  link in android and get  package  name in android foilder
           android: {
             packageName: 'com.Solmate',
             minimumVersion: '18',
           },
+          // generate link in ios  and get bundeld in xcode
           ios: {
             appStoreId: '123456789',
             bundleId: 'com.Solmate',
@@ -45,22 +87,22 @@ const Settings = ({navigation}) => {
     } catch (error) {
       console.log('error raised', error);
     }
-   
   };
 
+  // save user link link whatsapp and other
   const shareUser = async () => {
-    
-    // console.log('imageLink:', base64.encode(''));
-    // getting userProfile Link
+// get user age
+    var a = moment();
+    var b = moment(authData?.dob, 'YYYY');
+    var age = a.diff(b, 'years');
+   // set user name and age
+    const data = authData?.firstName + ' ' + authData?.lastName + ' - ' + age;
+// generate  link
     const profileLink = await generateLink();
-    // console.log('get builtLink:🖐', profileLink);
     const options = {
       url: profileLink,
-      // urls: [ShareImages.image2],
-      message: 'Lets get to know each other',
+      message: data,
     };
-
-    // Share
     await Share.open(options)
       .then(res => {
         console.log('Success', res);
@@ -70,6 +112,8 @@ const Settings = ({navigation}) => {
       });
   };
   const [count, setCount] = useState(-1);
+
+  // setting array
   const SettingsArray = [
     {
       id: 1,
@@ -111,21 +155,7 @@ const Settings = ({navigation}) => {
   ];
   return (
     <Container>
-      <View style={{padding:20}}>
-
-      {/* <TouchableOpacity activeOpacity={0.6}>
-        <View>
-          <CustomText
-            fontSize={16}
-            fontWeight={'700'}
-            alignSelf={'flex-end'}
-            marginRight={12}
-            marginTop={10}
-            color={colors.primary}>
-            Done
-          </CustomText>
-        </View>
-      </TouchableOpacity> */}
+      <View style={{padding: 20}}>
         <TouchableOpacity
           onPress={() => {
             navigation.goBack();
@@ -138,50 +168,46 @@ const Settings = ({navigation}) => {
           />
         </TouchableOpacity>
 
-      <TouchableOpacity activeOpacity={0.6}>
-        <View>
-          <CustomText
-            fontSize={20}
-            fontWeight={'700'}
-            marginBottom={35}
-            marginTop={20}>
-            Settings
-          </CustomText>
-        </View>
-      </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.6}>
+          <View>
+            <CustomText
+              fontSize={20}
+              fontWeight={'700'}
+              marginBottom={35}
+              marginTop={20}>
+              Settings
+            </CustomText>
+          </View>
+        </TouchableOpacity>
 
-      {SettingsArray.map((setting, index) => (
-        <View style={{display: 'flex'}}>
-          <SettingItem
-            name={setting.name}
-            coming={setting.comingSoon}
-            icon={setting.icon}
-            setCount={setCount}
-            count={count}
-            index={index}
-            key={index}
-            onPress={
-              setting.name === 'Generate link'
-                ? shareUser
-                : () => console.log('btn')
-            }
-          />
-          {/* <CustomText>
-          {setting.comingSoon ? "CommingSoon" : ""}
-          </CustomText> */}
-        </View>
-      ))}
-            </View>
+         {/* setting array */}
 
+        {SettingsArray.map((setting, index) => (
+          <View style={{display: 'flex'}}>
+            <SettingItem
+              name={setting.name}
+              coming={setting.comingSoon}
+              icon={setting.icon}
+              setCount={setCount}
+              count={count}
+              index={index}
+              key={index}
+              onPress={
+                // if name is equal equal Generate link then share  linkn
+                setting.name === 'Generate link'
+                  ? shareUser
+                  : () => console.log('btn')
+              }
+            />
+          </View>
+        ))}
+      </View>
     </Container>
   );
 };
 
 const Container = styled(SafeAreaView, {
   width: '100%',
-  // alignItems: "center",
-  // flexDirection: "column",
-  // padding: moderateScale(20),
   flex: 1,
 });
 

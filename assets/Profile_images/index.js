@@ -13,6 +13,8 @@ const profileImages = {
   prettyFace: require("./prettyFace.jpg"),
   editProfile01: require("./editProfile01.png"),
   editProfile01: require("./editProfile01.png"),
+  loginSignupGiral: require("./loginSignupGiral.jpg"),
+
 };
 
 export default profileImages;

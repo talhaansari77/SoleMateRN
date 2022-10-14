@@ -1,4 +1,5 @@
 import {View, Text} from 'react-native';
+import {View, Text, ScrollView, KeyboardAvoidingView} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import commonStyles from '../../../utils/CommonStyles';
 import SignupWithCon from './SignupWithCon';
@@ -28,6 +29,8 @@ import {color} from 'react-native-elements/dist/helpers';
 import auth from '@react-native-firebase/auth';
 const Signup = ({navigation}) => {
   const [eyeClick, setEyeClick] = useState(true);
+  const [showPassword, setShowPassword] = useState(true);
+  const [showConPassword, setShowConPassword] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -38,6 +41,7 @@ const Signup = ({navigation}) => {
     confPasswordError: '',
   });
 
+  // signup with google configration
   useEffect(() => {
     GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
@@ -55,8 +59,7 @@ const Signup = ({navigation}) => {
     });
   }, []);
 
-  // password.search(/[!/><"#$%&()¥|?>|=']/)==-1
-  console.log('conPas', password);
+  // password array
   const passData = [
     {
       id: 1,
@@ -88,6 +91,8 @@ const Signup = ({navigation}) => {
       },
     },
   ];
+
+  // generate password
   const getPassword = () => {
     var chars =
       'abcd@234@#$#$%^&*()=-{}/|-efghi234@#$jklm1234@#$%^&*()=-{}/|-567890,nopq234@#$rstu1234@#$%^&*()=-{}/|-567890,vwxyzABCDEFGHI@#$%^&*()=-{}/|-234567890,JKLMNOPQ@#$%^&*()=-{}/|-RSTUV@#$%^&*()=-{}/|-WXYZ1234567890,.!@#$%^&*()=-{}/|-';
@@ -102,6 +107,7 @@ const Signup = ({navigation}) => {
       setPassword(password);
     }
   };
+  // validation function
   const onHandleSubmit = async () => {
     const response = ValidateInput(
       email,
@@ -113,12 +119,13 @@ const Signup = ({navigation}) => {
     if (response) {
       setLoading(true);
       try {
+        // create user with email and password
         const userCredentials = await auth().createUserWithEmailAndPassword(
           email.trim(),
           password.trim(),
         );
-        // const res = await SignupEmailPassword(email, password);
         if (userCredentials.user.uid) {
+          // save user id in  AsyncStorage
           AsyncStorage.setItem('userAuth', userCredentials.user.uid);
           setLoading(false);
           navigation.reset({
@@ -162,17 +169,17 @@ const Signup = ({navigation}) => {
         'email',
         'user_friends',
       ]);
+  // async function onFacebookButtonPress() {
 
-      if (result.isCancelled) {
-        alert('User cancelled the login process');
-      }
+  //   try {
+  //     const result = await LoginManager.logInWithPermissions(["public_profile", "email", "user_friends"]);
 
-      // Once signed in, get the users AccesToken
-      const data = await AccessToken.getCurrentAccessToken();
+  //     if (result.isCancelled) {
+  //       alert('User cancelled the login process');
+  //     }
 
-      if (!data) {
-        alert('Something went wrong obtaining access token');
-      }
+  //     // Once signed in, get the users AccesToken
+  //     const data = await AccessToken.getCurrentAccessToken();
 
       // Create a Firebase credential with the AccessToken
       const facebookCredential = auth.FacebookAuthProvider.credential(
@@ -186,6 +193,21 @@ const Signup = ({navigation}) => {
       alert('Error', error);
     }
   }
+  //     if (!data) {
+  //       alert('Something went wrong obtaining access token');
+  //     }
+
+  //     // Create a Firebase credential with the AccessToken
+  //     const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+
+  //     // Sign-in the user with the credential
+  //     const userInfo = auth().signInWithCredential(facebookCredential);
+  //     alert('FB User Info --> ', JSON.stringify(userInfo));
+  //   } catch (error) {
+  //     alert('Error', error);
+  //   }
+
+  // }
   const handleGoogleSignup = async () => {
     try {
       await GoogleSignin.hasPlayServices({
@@ -219,11 +241,11 @@ const Signup = ({navigation}) => {
     } catch (error) {
       console.log('Message', JSON.stringify(error));
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        alert('User Cancelled the Login Flow');
+        alert('User Cancelled the Signup ');
       } else if (error.code === statusCodes.IN_PROGRESS) {
         alert('Signing In');
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        alert('Play Services Not Available or Outdated');
+        alert('Play Services Not Available');
       } else {
         alert(error.message);
       }
@@ -231,135 +253,141 @@ const Signup = ({navigation}) => {
   };
   return (
     // <></>
-    <View
-      style={[
-        commonStyles.commonMain,
-        {
-          padding: 25,
-        },
-      ]}>
-      <Spacer height={verticalScale(20)} />
-      <CustomText
-        label="Sign up"
-        fontFamily="ProximaNova-Bold"
-        // color={colors.facebookBlue}
-        fontSize={verticalScale(15)}
-      />
-      <Spacer height={verticalScale(15)} />
-      <SignupWithCon
-        onGoogle={() => {
-          handleGoogleSignup();
-        }}
-        onFacebook={() => {
-          onFacebookButtonPress();
-        }}
-      />
-      <Spacer height={verticalScale(20)} />
-      <CustomTextInput
-        value={email}
-        withLabel="Email adress"
-        placeholder={'example@gmail.com'}
-        error={submitError.emailError}
-        onChangeText={em => {
-          setEmail(em.trim());
-          setSubmitError({...submitError, emailError: ''});
-        }}
-      />
-      <Spacer height={verticalScale(15)} />
-      <CustomTextInput
-        withLabel="Password"
-        value={password}
-        error={submitError.passwordError}
-        onChangeText={pass => {
-          setPassword(pass);
-          setSubmitError({...submitError, passwordError: ''});
-        }}
-        password
-        secureTextEntry={eyeClick}
-        eyeClick={eyeClick}
-        setEyeClick={setEyeClick}
-        placeholder={'password'}
-      />
-      <Spacer height={verticalScale(15)} />
-      <CustomTextInput
-        withLabel="Confirm Password"
-        value={confirmPass}
-        error={submitError.confPasswordError}
-        onChangeText={conpass => {
-          setConfirmPass(conpass);
-          setSubmitError({...submitError, confPasswordError: ''});
-        }}
-        password
-        secureTextEntry={eyeClick}
-        eyeClick={eyeClick}
-        setEyeClick={setEyeClick}
-        placeholder={'Confirm password'}
-      />
-      <Spacer height={verticalScale(20)} />
-      <View
-        style={{
-          alignItems: 'center',
-          width: '100%',
-          justifyContent: 'center',
-        }}>
-        {passData?.map(item => {
-          return (
-            // <></>
-            // todo: Bug Here
-            <ConditionPassCon
-              txt1={item.txt1}
-              color={item.color}
-              color2={item.color2}
-              onGetPassword={item.onGetPassword}
-              txt2={item.txt2}
-            />
-          );
-        })}
-      </View>
-      <View
-        style={{
-          alignItems: 'center',
-          padding: 10,
-          flex: 1,
-          justifyContent: 'center',
-        }}>
-        <CustomButton
-          title="Continue"
-          // width="90%"
-          opacity={0.4}
-          loading={loading}
-          color={colors.white}
-          backgroundColor={colors.primary}
-          height={verticalScale(45)}
-          borderRadius={moderateScale(15)}
-          onPress={() => {
-            // navigation.navigate("MainStack")
-            onHandleSubmit();
-
-            // onHandleSumbit();
-          }}
-        />
-        <View style={styles.bottomConatiner}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'height' : 'height'}
+      style={{flex: 1}}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View
+          style={[
+            commonStyles.commonMain,
+            {
+              padding: 25,
+            },
+          ]}>
+          <Spacer height={verticalScale(20)} />
           <CustomText
-            label="Already have an account?"
-            fontFamily="ProximaNova-Regular"
-            fontSize={verticalScale(11)}
-            color={colors.gray}
-          />
-          <CustomText
-            label="Login"
+            label="Sign up"
             fontFamily="ProximaNova-Bold"
-            color={colors.black}
-            marginLeft={verticalScale(5)}
-            fontSize={verticalScale(11)}
-            onPress={
-              () => navigation.navigate('Login')
-              // onHandleSubmit()
-            }
+            fontSize={verticalScale(15)}
           />
+          <Spacer height={verticalScale(15)} />
+
+          {/* signup with google button */}
+          <SignupWithCon
+            onGoogle={() => {
+              handleGoogleSignup();
+            }}
+          />
+          <Spacer height={verticalScale(20)} />
+          <CustomTextInput
+            value={email}
+            withLabel="Email adress"
+            placeholder={'example@gmail.com'}
+            error={submitError.emailError}
+            onChangeText={em => {
+              setEmail(em.trim());
+              setSubmitError({...submitError, emailError: ''});
+            }}
+          />
+          <Spacer height={verticalScale(15)} />
+          <CustomTextInput
+            withLabel="Password"
+            value={password}
+            error={submitError.passwordError}
+            onChangeText={pass => {
+              setPassword(pass);
+              setSubmitError({...submitError, passwordError: ''});
+            }}
+            password
+            secureTextEntry={showPassword}
+            eyeClick={showPassword}
+            setEyeClick={setShowPassword}
+            placeholder={'password'}
+          />
+          <Spacer height={verticalScale(15)} />
+          <CustomTextInput
+            withLabel="Confirm Password"
+            value={confirmPass}
+            error={submitError.confPasswordError}
+            onChangeText={conpass => {
+              setConfirmPass(conpass);
+              setSubmitError({...submitError, confPasswordError: ''});
+            }}
+            password
+            secureTextEntry={showConPassword}
+            eyeClick={showConPassword}
+            setEyeClick={setShowConPassword}
+            placeholder={'Confirm password'}
+          />
+          <Spacer height={verticalScale(20)} />
+          <View
+            style={{
+              alignItems: 'center',
+              width: '100%',
+              justifyContent: 'center',
+            }}>
+            {passData?.map(item => {
+              return (
+                // check password  validation
+                <ConditionPassCon
+                  txt1={item.txt1}
+                  color={item.color}
+                  color2={item.color2}
+                  onGetPassword={item.onGetPassword}
+                  txt2={item.txt2}
+                />
+              );
+            })}
+          </View>
+          <View
+            style={{
+              alignItems: 'center',
+              marginTop: verticalScale(10),
+              flex: 1,
+              justifyContent: 'center',
+            }}>
+            {/* signup button */}
+            <CustomButton
+              title="Continue"
+              opacity={0.4}
+              loading={loading}
+              color={colors.white}
+              backgroundColor={'#8E59E2'}
+              height={verticalScale(45)}
+              borderRadius={moderateScale(15)}
+              onPress={() => {
+                //  check input validation
+                onHandleSubmit();
+              }}
+            />
+            <View style={styles.bottomConatiner}>
+              <CustomText
+                label="Already have an account?"
+                fontFamily="ProximaNova-Regular"
+                fontSize={verticalScale(11)}
+                color={colors.gray}
+              />
+
+              {/* login button */}
+              <CustomText
+                label="Login"
+                fontFamily="ProximaNova-Bold"
+                color={colors.black}
+                marginLeft={verticalScale(5)}
+                fontSize={verticalScale(11)}
+                onPress={() =>
+                  navigation.reset({
+                    index: 0,
+                    routes: [{name: 'Login'}],
+                  })
+                
+                }
+              />
+            </View>
+          </View>
         </View>
-      </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

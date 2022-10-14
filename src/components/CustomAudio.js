@@ -211,7 +211,7 @@ const CustomAudio = ({audio, userData, message, isUser}) => {
 
             style={styles.hw100}
             uniqueKey={Math.random()}
-            source={{uri: userData?.images?.[0]}}
+            source={{uri: userData?.images?.image1}}
           />
           {/* <Image source={{uri:userData?.images?.[0]}} resizeMode="contain" /> */}
         </View>
@@ -286,6 +286,7 @@ const CustomAudio = ({audio, userData, message, isUser}) => {
 };
 
 export default CustomAudio;
+
 
 const styles = ScaledSheet.create({
   rightAudioContainer1: {
@@ -396,10 +397,10 @@ const styles = ScaledSheet.create({
   leftAudioContainer7: {flexDirection: 'row', alignItems: 'center'},
 });
 
-const shadowProps = {
-  shadowColor: colors.gray,
-  shadowOffset: {width: 0, height: 1},
-  shadowOpacity: 2,
-  shadowRadius: 3,
-  elevation: 5,
-};
+// const shadowProps = {
+//   shadowColor: colors.gray,
+//   shadowOffset: {width: 0, height: 1},
+//   shadowOpacity: 2,
+//   shadowRadius: 3,
+//   elevation: 5,
+// };

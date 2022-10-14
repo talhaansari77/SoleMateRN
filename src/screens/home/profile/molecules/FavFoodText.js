@@ -6,7 +6,8 @@ import {colors} from '../../../../utils/Colors';
 import CustomText from '../../../../components/CustomText';
 import {moderateScale, scale} from 'react-native-size-matters';
 
-const FavFoodText = () => {
+const FavFoodText = icebreaker => {
+  console.log('IceBreakerQue', icebreaker?.icebreaker[1]?.question);
   return (
     <>
       {/* Fav Food */}
@@ -20,15 +21,14 @@ const FavFoodText = () => {
             fontSize={14}
             color={colors.gray}
             fontFamily={'ProximaNova-Bold'}>
-            My favorite food is
+            {icebreaker?.icebreaker?.[1]?.question}
           </CustomText>
-          <View style={{padding: moderateScale(20)}}>
+          <View style={{padding: moderateScale(10)}}>
             <CustomText
               fontSize={13}
               color={colors.black}
               fontFamily={'ProximaNova-Bold'}>
-              Instagram is great when it comes to OOTDs—outfit of the day—and
-              quick style inspirations,
+              {icebreaker?.icebreaker?.[1]?.answer}
             </CustomText>
           </View>
         </View>

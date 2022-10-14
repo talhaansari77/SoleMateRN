@@ -58,6 +58,9 @@ const icons = {
   tickPurple: require('./tickPurple.png'),
   document: require('./document.png'),
   download: require('./download.png'),
+  google: require('./google.png'),
+
+
 
 
   

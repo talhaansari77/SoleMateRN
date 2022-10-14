@@ -1,12 +1,12 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { colors } from '../../../../utils/Colors';
-import { Spacer } from '../../../../components/Spacer';
+import {View, Text, TouchableOpacity, Image} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {colors} from '../../../../utils/Colors';
+import {Spacer} from '../../../../components/Spacer';
 import GenderContainer from '../../../auth/AdditionInfo/molecules/GenderContainer';
 import CustomText from '../../../../components/CustomText';
-import { scale, ScaledSheet, verticalScale } from 'react-native-size-matters';
+import {scale, ScaledSheet, verticalScale} from 'react-native-size-matters';
 import icons from '../../../../../assets/icons';
-const SelectBtn = ({ label, txt1, txt2, index, onValue,state }) => {
+const SelectBtn = ({label, txt1, txt2, index, onValue, state}) => {
   const [status, setStatus] = useState(-1); //yes or no
   const [isSelect, setIsSelect] = useState(-1); //multiple
 
@@ -63,7 +63,7 @@ console.log('data Loaded');
                 flexDirection: 'row',
               },
             ]}>
-            <View style={{ flex: 7, alignItems: 'center' }}>
+            <View style={{flex: 7, alignItems: 'center'}}>
               <CustomText
                 label={txt1}
                 color={
@@ -75,10 +75,10 @@ console.log('data Loaded');
               />
             </View>
             {isSelect == index && status ? (
-              <View style={{ flex: 3, alignItems: 'center' }}>
+              <View style={{flex: 3, alignItems: 'center'}}>
                 <Image
                   source={icons.tickPurple}
-                  style={{ height: verticalScale(20), width: scale(20) }}
+                  style={{height: verticalScale(20), width: scale(20)}}
                   resizeMode={'contain'}
                 />
               </View>
@@ -87,7 +87,7 @@ console.log('data Loaded');
             )}
           </TouchableOpacity>
 
-          <Spacer width={10} />
+          <Spacer width={15} />
           {/* btn 2 */}
           <TouchableOpacity
             activeOpacity={0.6}
@@ -109,7 +109,7 @@ console.log('data Loaded');
               },
             ]}>
             <View
-              style={{ flex: 7, alignItems: 'center', justifyContent: 'center' }}>
+              style={{flex: 7, alignItems: 'center', justifyContent: 'center'}}>
               <CustomText
                 label={txt2}
                 color={
@@ -123,10 +123,10 @@ console.log('data Loaded');
               />
             </View>
             {isSelect == index && !status ? (
-              <View style={{ flex: 3, alignItems: 'center' }}>
+              <View style={{flex: 3, alignItems: 'center'}}>
                 <Image
                   source={icons.tickPurple}
-                  style={{ height: verticalScale(20), width: scale(20) }}
+                  style={{height: verticalScale(20), width: scale(20)}}
                   resizeMode={'contain'}
                 />
               </View>

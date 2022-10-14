@@ -1,13 +1,32 @@
 import moment from 'moment';
 import Toast from 'react-native-simple-toast';
 
-export const EditValidate = (data, submitError, setSubmitError) => {
-  console.log('BCJDBJC', data);
-  // if (data.images.length < 5) {
-  //   // Toast.show('This is a toast.');
-  //   Toast.show('All images are required');
-  //   return;
-  // }
+export const EditValidate = (data, submitError, setSubmitError, images) => {
+  if (!images.image1) {
+    Toast.show('All images are required');
+    return;
+  }
+  if (!images.image2) {
+    Toast.show('All images are required');
+    return;
+  }
+  if (!images.image3) {
+    Toast.show('All images are required');
+    return;
+  }
+  if (!images.image4) {
+    Toast.show('All images are required');
+    return;
+  }
+  if (!images.image5) {
+    Toast.show('All images are required');
+    return;
+  }
+  if (!images.image6) {
+    Toast.show('All images are required');
+    return;
+  }
+
   if (!data.firstName) {
     setSubmitError({
       ...submitError,
@@ -34,6 +53,18 @@ export const EditValidate = (data, submitError, setSubmitError) => {
       ...submitError,
       aboutError: 'About me is required',
     });
+    return;
+  }
+  if (!data?.iceBreakerQ[0]?.question && !data?.iceBreakerQ[0]?.answer) {
+    Toast.show('All Ice Breaker Questions are required');
+    return;
+  }
+  if (!data?.iceBreakerQ[1]?.question && !data?.iceBreakerQ[1]?.answer) {
+    Toast.show('All Ice Breaker Questions are required');
+    return;
+  }
+  if (!data?.iceBreakerQ[2]?.question && !data?.iceBreakerQ[2]?.answer) {
+    Toast.show('All Ice Breaker Questions are required');
     return;
   }
   if (data.personality.length < 1) {
@@ -93,6 +124,7 @@ export const EditValidate = (data, submitError, setSubmitError) => {
     });
     return;
   }
+
   if (!data.employment) {
     setSubmitError({
       ...submitError,
@@ -150,29 +182,29 @@ export const EditValidate = (data, submitError, setSubmitError) => {
     return;
   }
 
-  // if (!data.whatKids) {
-  //   Toast.show('Whats Kids is required');
-  //   return;
-  // }
-  // if (!data.hasKids) {
-  //   Toast.show('Has Kids is required');
-  //   return;
-  // }
-  // if (!data.willRelocate) {
-  //   Toast.show('willing Relocate is required');
-  //   return;
-  // }
-  // if (!data.jobStatus) {
-  //   Toast.show('Job Status is required');
-  //   return;
-  // }
-  // if (!data.drinking) {
-  //   Toast.show('Drinking is required');
-  //   return;
-  // }
-  // if (!data.smoking) {
-  //   Toast.show('Smoking is required');
-  //   return;
-  // }
+  if (!data.whatKids) {
+    Toast.show('Whats Kids is required');
+    return;
+  }
+  if (!data.hasKids) {
+    Toast.show('Has Kids is required');
+    return;
+  }
+  if (!data.willRelocate) {
+    Toast.show('willing Relocate is required');
+    return;
+  }
+  if (!data.jobStatus) {
+    Toast.show('Job Status is required');
+    return;
+  }
+  if (!data.drinking) {
+    Toast.show('Drinking is required');
+    return;
+  }
+  if (!data.smoking) {
+    Toast.show('Smoking is required');
+    return;
+  }
   return true;
 };

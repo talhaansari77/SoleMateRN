@@ -1,42 +1,28 @@
-import {View, ScrollView, TouchableOpacity, Platform} from 'react-native';
+import {View, ScrollView, Platform} from 'react-native';
 import React, {useEffect, useState} from 'react';
-// import { BlurView } from "expo-blur";
-import {colors} from '../../../utils/Colors';
 import styled from 'react-native-styled-components';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import moment from 'moment';
 import {useIsFocused, useFocusEffect} from '@react-navigation/native';
 
-import profileImages from '../../../../assets/Profile_images';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Entypo from 'react-native-vector-icons/Entypo';
 import {Divider} from 'react-native-elements';
-import CustomButton from '../../../components/CustomButton';
 import Header from './molecules/Header';
 import ProfileImage from './molecules/ProfileImage';
 import AboutMeText from './molecules/AboutMeText';
 import IceBreakQ from './molecules/IceBreakQ';
 import ProfileTags from './molecules/ProfileTags';
 import Infos from './molecules/Infos';
-import FavFoodText from './molecules/FavFoodText';
 import ActionBtn from './molecules/ActionBtn';
-import GetAppBtn from './molecules/GetAppBtn';
 import icons from '../../../../assets/icons';
 import {getAuthId, getSpecificeUser} from '../../../services/FirebaseAuth';
-import Loader from '../../../utils/Loader';
 import {checkUserRequest, createRequest} from '../../../services/request';
 import {Spacer} from '../../../components/Spacer';
-import {checkCharPassword} from '../../../utils/Email_Password_Validation';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const traits = [
-  {id: 1, trait: 'Gamer'},
-  {id: 2, trait: 'Lover'},
-  {id: 3, trait: 'Sports'},
-  {id: 4, trait: 'Good Look'},
-  {id: 5, trait: 'Charming'},
-  {id: 6, trait: 'fit'},
-];
+import {fromNow} from '../../../services/FirebaseAuth';
+
+// user basic info
+
 const basicInfo = [
   {
     id: 1,
@@ -48,36 +34,7 @@ const basicInfo = [
   {id: 3, title: 'Height', label: "5'6", icon: icons.resizeHeight},
   {id: 4, title: 'Language', label: 'English', icon: icons.language},
 ];
-const education = [
-  {id: 1, title: 'Occupation', label: 'California, US', icon: icons.work},
-  {id: 2, title: 'Education', label: 'Us', icon: icons.education},
-];
-const religiousness = [
-  {id: 1, title: 'Religion', label: 'California, US', icon: icons.moonStar},
-  {id: 2, title: 'Religiousity', label: 'Us', icon: icons.bookOpen},
-  {id: 3, title: 'Prayer level', label: "5'6", icon: icons.partlySunny},
-  {id: 4, title: 'Sector', label: 'English', icon: icons.expandArrow},
-];
-const expectation = [
-  {
-    id: 1,
-    title: 'Marital History',
-    label: 'California, US',
-    icon: icons.heartBeatBlack,
-  },
-  {id: 2, title: 'Marital Timing', label: 'Us', icon: icons.heartBlack},
-  {id: 3, title: 'Want Kind?', label: "5'6", icon: icons.babayCarriage},
-  {id: 4, title: 'Has Children?', label: 'English', icon: icons.baby},
-  {
-    id: 5,
-    title: 'Willing to Relocate',
-    label: 'California, US',
-    icon: icons.locationEdit,
-  },
-  {id: 6, title: 'Job Status', label: 'Us', icon: icons.work},
-  {id: 7, title: 'Drinking', label: "5'6", icon: icons.drink},
-  {id: 8, title: 'Smoking', label: 'English', icon: icons.smoking},
-];
+
 const Profile = ({navigation, route, actions = true, getApp = false}) => {
   const [authID, setAuthID] = useState('');
   const [authData, setAuthData] = useState([]);
@@ -85,37 +42,43 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
   const [requestId, setRequestId] = useState('');
   const isFocused = useIsFocused();
 
-
-  const [otherProfileID, setOtherProfileId] = useState();
-
-  // console.log('authData', authData);
-  // console.log('otherProfile', route.params?.id);
+  const [linkStatus, setLinkStatus] = useState(false);
 
   var a = moment();
   var b = moment(authData?.dob, 'YYYY');
   var age = a.diff(b, 'years');
+
+  // remove user id  in storage if user click any tab
 
   useFocusEffect(
     React.useCallback(() => {
       return async () => {
         console.log('blur');
         await AsyncStorage.removeItem('otherViewProfile');
-        // await AsyncStorage.removeItem("requestId");
       };
     }, []),
   );
 
   useEffect(() => {
+    // get auth data in firebase
     getAuthData();
-  }, [isFocused,requestId==null]);
+  }, [isFocused, requestId == null]);
+
+  // get auth data function
 
   const getAuthData = async () => {
     let otherViewProfile = await AsyncStorage?.getItem('otherViewProfile');
-    let  requestProfile=await AsyncStorage?.getItem("requestId",)
+    let requestProfile = await AsyncStorage?.getItem('requestId');
+    let linkDate = await AsyncStorage?.getItem('linkDate');
 
-    // let otherUserId = JSON.parse?.(requestProfile);
+    // let generateLinkTime = await AsyncStorage?.getItem('generateLinkTime');
+
+    // const response = fromNow(generateLinkTime).includes("day");
+
+    // console.log('generateLinkTime', response);
+
     setRequestId(requestProfile);
-    console.log('otherViewProfile', requestProfile);
+    // console.log('otherViewProfile', requestProfile);
 
     setLoading(true);
     await getAuthId().then(id => {
@@ -128,11 +91,26 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
           setLoading(false);
         });
       } else if (requestProfile) {
-        console.log('requestId',requestProfile);
-        getSpecificeUser(requestProfile).then(data => {
-          setAuthData(data);
-          setLoading(false);
-        });
+        var newDate = new Date();
+
+        var currentDate = moment(newDate).format('YYYY-MM-DD');
+   
+        if (moment(linkDate).diff(moment(currentDate), 'days') <=0) {
+          alert('Link is Expired');
+
+          RemoveLinkData();
+
+          getSpecificeUser(id).then(data => {
+            setAuthData(data);
+            setLoading(false);
+          });
+        } else {
+          setLinkStatus(true);
+          getSpecificeUser(requestProfile).then(data => {
+            setAuthData(data);
+            setLoading(false);
+          });
+        }
       } else {
         console.log('authUserId');
         getSpecificeUser(id).then(data => {
@@ -142,10 +120,20 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
       }
     });
   };
+
+  const RemoveLinkData = async () => {
+    await AsyncStorage.removeItem('requestId');
+    await AsyncStorage.removeItem('linkDate');
+  };
+
+  // cancel request
   const onCancel = async () => {
     setLoading(true);
     try {
+      // remove request in storage
       await AsyncStorage.removeItem('requestId');
+      await AsyncStorage.removeItem('linkDate');
+
       Toast.show('request Cancel');
 
       navigation.reset({
@@ -157,32 +145,44 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
     } catch (error) {}
   };
 
-  const onAccept = async () => {
-    if(requestId){
+  // accept request via link
 
-      console.log("RequestDataIS",requestId)
+  const onAccept = async () => {
+    if (requestId) {
+      console.log('RequestDataIS', requestId);
+
+      // check user request
       const notesStatus = await checkUserRequest(authID, requestId);
+      // if user already accept  request  the show toast
       if (!notesStatus) {
         const requestData = {
           from: authID,
-          to:requestId,
+          to: requestId,
           relationStatus: 0,
           lastMessage: {},
         };
+        // create user request
         await createRequest(requestData);
-        Toast.show('request sent');
+        Toast.show('request accept');
         await AsyncStorage.removeItem('requestId');
-  
+        await AsyncStorage.removeItem('linkDate');
+
         navigation.reset({
           index: 0,
           routes: [{name: 'MessagingStack'}],
         });
       } else {
         alert('You already in contact with');
-      }
+        Toast.show('You already in contact with');
+        await AsyncStorage.removeItem('requestId');
+        await AsyncStorage.removeItem('linkDate');
 
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'MessagingStack'}],
+        });
+      }
     }
-  
   };
   return (
     <View style={{flex: 1}}>
@@ -193,7 +193,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
           flex: 1,
         }}>
         {/* Actions */}
-        {requestId ? (
+        {linkStatus ? (
           <ActionBtn
             handleCancle={() => {
               onCancel();
@@ -217,6 +217,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
             showName
             name={authData?.firstName}
             age={age}
+            uniqueKey={Math.random()}
             location={authData?.location}
             src={{uri: authData?.images?.image1}}
             loading={loading}
@@ -226,13 +227,14 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
           <AboutMeText aboutMe={authData?.aboutMe} />
           <Divider />
           {/* Ice Break Question*/}
-          <IceBreakQ />
+          <IceBreakQ icebreaker={authData?.iceBreakerQ} />
           <Divider />
-          <ProfileImage src={{uri: authData?.images?.image2}} loading={loading} />
-          {/* Tags */}
+          <ProfileImage
+            src={{uri: authData?.images?.image2}}
+            loading={loading}
+          />
           <ProfileTags title={'Personality'} data={authData?.personality} />
           <Divider />
-          {/* info */}
           <Spacer height={20} />
           <Infos
             title={'Basic Info'}
@@ -255,11 +257,17 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
             infoList={basicInfo}
           />
           {/*ProfileImage*/}
-          <ProfileImage src={{uri: authData?.images?.image3}} loading={loading} />
+          <ProfileImage
+            src={{uri: authData?.images?.image3}}
+            uniqueKey={Math.random()}
+            loading={loading}
+          />
 
-          {/* <ProfileImage src={profileImages.prettyFace} showName={false} /> */}
           {/* favorite food */}
-          <FavFoodText />
+          {/* <IceBreakQ   icebreaker={authData?.iceBreakerQ}
+          /> */}
+          {/* <FavFoodText   icebreaker={authData?.iceBreakerQ}
+          /> */}
           <Divider />
           {/* Education and Career */}
           <Spacer height={20} />
@@ -273,12 +281,15 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
             name={authData?.occupation}
             name1={authData?.language}
             infoList={basicInfo}
+            icon1Width={12}
+            icon1Height={12}
           />
 
           {/* ProfileImage */}
-          <ProfileImage src={{uri: authData?.images?.image4}} loading={loading} />
-
-          {/* <ProfileImage src={profileImages.prettyFace} showName={false} /> */}
+          <ProfileImage
+            src={{uri: authData?.images?.image4}}
+            loading={loading}
+          />
 
           {/* Religiousness */}
           <Spacer height={20} />
@@ -291,6 +302,10 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
             name={authData?.religion}
             name1={authData?.religiousity}
             infoList={basicInfo}
+            icon2Width={14}
+            icon2Height={14}
+            icon1Width={12}
+            icon1Height={12}
           />
 
           <Infos
@@ -301,6 +316,8 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
             name={authData?.prayerLevel}
             name1={authData?.sector}
             infoList={basicInfo}
+            icon2Width={12}
+            icon2Height={12}
           />
 
           <Divider />
@@ -308,6 +325,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
           <ProfileTags
             title={'Characteristics'}
             data={authData?.characteristics}
+            uniqueKey={Math.random()}
           />
 
           <Divider />
@@ -342,6 +360,8 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
             name={authData?.willRelocate}
             name1={authData?.jobStatus}
             infoList={basicInfo}
+            icon2Width={12}
+            icon2Height={12}
           />
 
           <Infos
@@ -352,17 +372,13 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
             name={authData?.drinking}
             name1={authData?.smoking}
             infoList={basicInfo}
+            icon1Width={12}
+            icon1Height={12}
           />
 
           {/* End */}
         </ScrollView>
       </View>
-
-      {/* loading={loading}
-        file={require("../../../../assets/loaders/loader1.json")} */}
-      {/* <Loader
-    loading={loading}
-    file={require( "../../../../assets/loader/heartLoading.json")}/> */}
     </View>
   );
 };

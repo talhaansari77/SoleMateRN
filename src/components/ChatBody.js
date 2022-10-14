@@ -426,7 +426,7 @@ export const ChatBody = ({
 
                   style={styles.hw100}
                   uniqueKey={Math.random()}
-                  source={{uri: otherUserData?.images?.[0]}}
+                  source={{uri: otherUserData?.images?.image1}}
                 />
               
               </View>

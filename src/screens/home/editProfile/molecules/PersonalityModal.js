@@ -1,7 +1,6 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import CustomModal from '../../../../components/CustomModal';
-import commonStyles from '../../../../utils/CommonStyles';
 import {colors} from '../../../../utils/Colors';
 import CustomTextInput from '../../../../components/CustomTextInput';
 import CustomButton from '../../../../components/CustomButton';
@@ -16,6 +15,7 @@ const PersonalityModal = ({
   onSaveData,
   error,
   onChange,
+  label,
 }) => {
   return (
     <CustomModal
@@ -30,7 +30,7 @@ const PersonalityModal = ({
       borderRadius={moderateScale(10)}>
       <View style={styles.centeredView}>
         <CustomText
-          label={'Add Personality'}
+          label={label}
           color={colors.darkOrange}
           fontSize={13}
           fontFamily={'ProximaNova-Regular'}
@@ -77,8 +77,6 @@ const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     padding: 20,
-
-    // marginTop: 22,
   },
   modalView: {
     margin: 20,

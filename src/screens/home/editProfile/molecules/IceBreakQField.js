@@ -1,14 +1,11 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
+import { View, TouchableOpacity } from 'react-native';
+import React from 'react';
 import CustomText from '../../../../components/CustomText';
 import { colors } from '../../../../utils/Colors';
 import { Spacer } from '../../../../components/Spacer';
-import { moderateScale, verticalScale } from 'react-native-size-matters';
+import { moderateScale, } from 'react-native-size-matters';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import TwoInputModal from './TwoInputModal';
-import CustomTextInput from '../../../../components/CustomTextInput';
-import CustomButton from '../../../../components/CustomButton';
 
 const IceBreakQField = ({ iceBreakerQ, setQuestionIndex, ...props }) => {
 
@@ -52,10 +49,8 @@ const IceBreakQField = ({ iceBreakerQ, setQuestionIndex, ...props }) => {
                     fontSize={12}
                     label={q.question ? q.question : q.placeholder}
                     color={q.question ? colors.black : colors.primary} />
-                  {/* The last time I cried was */}
                   {q.question ? <CustomText color={colors.gray} label={q.answer} /> : <></>}
 
-                  {/* The Last Time I Cried My Heat Out! */}
                 </View>
 
                 <TouchableOpacity
@@ -66,8 +61,13 @@ const IceBreakQField = ({ iceBreakerQ, setQuestionIndex, ...props }) => {
                     width: 30,
                     borderRadius: 15,
                     justifyContent: 'center',
+                    shadowColor:"#ced4da",
                     alignItems: 'center',
-                    elevation: 5
+                    elevation: 5,
+                    shadowOpacity:5,
+                    shadowOffset: {width: 1, height: 1},
+
+
                   }}
                   onPress={() => {
                     props.setModalVisible(true)

@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import CustomText from '../../../../components/CustomText';
 import {colors} from '../../../../utils/Colors';
 import {Spacer} from '../../../../components/Spacer';
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: scale(5),
-    marginTop:verticalScale(12) 
+    marginTop: verticalScale(12),
   },
   addContainer: {
     backgroundColor: colors.primary,

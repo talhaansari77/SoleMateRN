@@ -1,17 +1,9 @@
-import {
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Modal,
-  StyleSheet,
-} from 'react-native';
+import {View, ScrollView, StyleSheet} from 'react-native';
 import React, {useState, useEffect} from 'react';
-import {Container} from '../profile/Profile';
 import {Spacer} from '../../../components/Spacer';
 import CustomText from '../../../components/CustomText';
 import {colors} from '../../../utils/Colors';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
-import {Divider, ListItem} from 'react-native-elements';
 import GenderContainer from '../../auth/AdditionInfo/molecules/GenderContainer';
 import Header from './molecules/Header';
 import InputField from './molecules/InputField';
@@ -28,11 +20,10 @@ import AddMoreContainer from './molecules/AddMoreContainer';
 import {getAuthId, saveUser, uploadImage} from '../../../services/FirebaseAuth';
 import PictureBox from './molecules/PictureBox';
 import Loader from '../../../utils/Loader';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import HeaderConatiner from '../chat/request/Molecules/HeaderConatiner';
-import {getCurrentFCMToken} from '../../../utils/PushNotification';
+
 import TwoInputModal from './molecules/TwoInputModal';
 import {getSpecificeUser} from '../../../services/FirebaseAuth';
+import {getNewFcmToken} from '../../../services/SendNotification';
 import uuid from 'react-native-uuid';
 import {loaders} from '../../../../assets/loader';
 
@@ -85,8 +76,34 @@ const EditProfile = ({navigation}) => {
   const [fcmToken, setFcmToken] = useState('');
   const [authID, setAuthID] = useState('');
 
-  // console.log('imagesUri', images);
-  // console.log('birthday', birthday);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  // iceBreaker array
+
+  const [iceBreakerQ, setIceBreakerQ] = useState([
+    {
+      id: 1,
+      question: '',
+      answer: '',
+      placeholder: 'What ice breaker question would you like to answer',
+    },
+    {
+      id: 2,
+      question: '',
+      answer: '',
+      placeholder: 'What ice breaker question would you like to answer',
+    },
+    {
+      id: 3,
+      question: '',
+      answer: '',
+      placeholder: 'What ice breaker question would you like to answer',
+    },
+  ]);
+
+  console.log('IceBreaker', iceBreakerQ?.[0]?.question);
+
+  // last container kids conatiner
 
   const questions = [
     {id: 1, question: 'Want Kids', onValue: setWhatKids, state: whatKids},
@@ -104,17 +121,20 @@ const EditProfile = ({navigation}) => {
   const [data] = useState([1, 2, 3, 4, 5, 6]);
 
   useEffect(() => {
+    // get current  auth id
     getCurrentID();
-  }, []);
-  useEffect(() => {
-    getAuthData();
+    // get fcmToken
     getCurrentToken();
   }, []);
-
+  useEffect(() => {
+    // get user data if exist
+    getAuthData();
+  }, []);
   const getAuthData = async () => {
     setLoading(true);
     const id = await getAuthId();
     try {
+      // get specific user in firebase
       getSpecificeUser(id).then(data => {
         if (data) {
           const pTags = [];
@@ -123,8 +143,8 @@ const EditProfile = ({navigation}) => {
           data?.characteristics.map(item =>
             cTags.push({characteristics: item}),
           );
-
-          setFirstName(data?.firstName);
+          // set all user data in state
+           setFirstName(data?.firstName);
           setLastName(data?.lastName);
           setAboutMe(data?.aboutMe);
           setfamilyOrigin(data?.familyOrigin);
@@ -140,7 +160,6 @@ const EditProfile = ({navigation}) => {
           setBirthday(data?.dob);
           setGender(data?.gender);
           setFeetHeight(data?.feetHeight);
-          // setInchesHeigh(data?.inchesHeight);
           setWhatKids(data?.whatKids);
           setHasKids(data?.hasKids);
           setWillRelocate(data?.willRelocate);
@@ -150,7 +169,6 @@ const EditProfile = ({navigation}) => {
           setEditLocation(data?.location);
           setFeetHeight(data?.height.split(' ')[0]);
           setInchesHeight(data?.height.split(' ')[1]);
-          // setBirthday()
           setPersonality(pTags);
           setcharacteristics(cTags);
           setIceBreakerQ(data?.iceBreakerQ);
@@ -165,7 +183,6 @@ const EditProfile = ({navigation}) => {
 
           setAuthData(data);
         }
-        // console.log('UserData:', data);
 
         setLoading(false);
       });
@@ -173,16 +190,19 @@ const EditProfile = ({navigation}) => {
       setLoading(false);
     }
   };
-  const getCurrentToken = async () => {
-    let fcmToken = await AsyncStorage.getItem('fcmToken');
 
-    setFcmToken(fcmToken);
+  // get  modeile fcm token
+  const getCurrentToken = async () => {
+    await getNewFcmToken(setFcmToken);
   };
+  // get auth id function
   const getCurrentID = async () => {
     await getAuthId().then(id => {
       setAuthID(id);
     });
   };
+
+  // error state
   const [submitError, setSubmitError] = useState({
     firstNameError: '',
     lastNameError: '',
@@ -205,14 +225,12 @@ const EditProfile = ({navigation}) => {
     characterError: '',
   });
 
-  function checkChanges(elements, index, array) {
-    return elements.uri.includes('file');
-  }
-
   const onHandleSubmit = async () => {
     let temp2 = {};
     console.log('I Am Submit ✌');
     console.log('I Am temp2 ✌1', temp2);
+
+    // user object
     const data = {
       firstName: firstName,
       lastName: lastName,
@@ -243,14 +261,16 @@ const EditProfile = ({navigation}) => {
       martialTimming: martialTimming,
       iceBreakerQ: iceBreakerQ,
     };
-    const response = EditValidate(data, submitError, setSubmitError);
+
+    // handel all vlaidation
+    const response = EditValidate(data, submitError, setSubmitError, images);
     console.log('step 1');
     if (response) {
       console.log('data');
       setLoading(true);
       try {
         console.log('step 3');
-        //This is Donig The Magic
+        // images object
         temp2 = {
           image1: images.image1
             ? !images.image1.includes('https://firebase')
@@ -283,9 +303,8 @@ const EditProfile = ({navigation}) => {
               : images.image6
             : '',
         };
-
-        console.log('step 4✌', temp2);
-
+    
+          // save user in firebase
         if (authID) {
           await saveUser(authID, {...data, images: temp2});
 
@@ -305,6 +324,8 @@ const EditProfile = ({navigation}) => {
       }
     }
   };
+
+  // save user character in array
   const onSaveCharacter = () => {
     if (!addMore) {
       return setSubmitError({
@@ -321,6 +342,8 @@ const EditProfile = ({navigation}) => {
       setCharacterModal(false);
     }
   };
+
+  // save user personality in array
   const onSavePersonality = () => {
     if (!addMore) {
       return setSubmitError({
@@ -338,33 +361,9 @@ const EditProfile = ({navigation}) => {
     }
   };
 
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const [iceBreakerQ, setIceBreakerQ] = useState([
-    {
-      id: 1,
-      question: '',
-      answer: '',
-      placeholder: 'What ice breaker question would you like to answer',
-    },
-    {
-      id: 2,
-      question: '',
-      answer: '',
-      placeholder: 'What ice breaker question would you like to answer',
-    },
-    {
-      id: 3,
-      question: '',
-      answer: '',
-      placeholder: 'What ice breaker question would you like to answer',
-    },
-  ]);
-
-  const [questionIndex, setQuestionIndex] = useState('');
-
   return (
     <View style={{flex: 1}}>
+      {/* ice breake modal */}
       <TwoInputModal
         setModalVisible={setModalVisible}
         modalVisible={modalVisible}
@@ -372,6 +371,8 @@ const EditProfile = ({navigation}) => {
         questionIndex={questionIndex}
         setIceBreakerQ={setIceBreakerQ}
       />
+      {/* Header */}
+
       <Header
         handleSubmit={onHandleSubmit}
         handleCancel={() => {
@@ -383,29 +384,14 @@ const EditProfile = ({navigation}) => {
         navigation={navigation}
       />
 
-      {/* Header */}
-
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/*<View style={styles.imageView}>
-           {data.map((item, index) => {
-            return (
-              <PhotoContainer
-                key={index}
-                index={index}
-                id={item?.id}
-                item={item}
-                isEditPhoto={isEditPhoto}
-                label={item}
-                images={images}
-                setImages={setImages}
-                width={moderateScale(100)}
-                height={verticalScale(95)}
-              />
-            );
-          })}
-        </View> */}
-
-        <View style={{flex: 1, paddingHorizontal: 20}}>
+        <View
+          style={{
+            flex: 1,
+            paddingHorizontal: 20,
+            marginTop: verticalScale(15),
+          }}>
+          {/* image container */}
           <PictureBox
             images={images}
             setImages={setImages}
@@ -420,8 +406,6 @@ const EditProfile = ({navigation}) => {
               fontFamily={'ProximaNova-Bold'}
               marginTop={verticalScale(5)}
             />
-            <Spacer height={10} />
-
             <View style={{padding: moderateScale(5)}}>
               {/* First Name */}
               <InputField
@@ -467,12 +451,6 @@ const EditProfile = ({navigation}) => {
               />
               {/* Personality */}
               <Spacer height={10} />
-              {/* <CustomText
-            label={"Personality"}
-            color={colors.darkOrange}
-            fontFamily={"medium"}
-            fontSize={11}
-          /> */}
               <CustomText label="Personality" color={colors.primary} />
               <View>
                 <View
@@ -489,15 +467,11 @@ const EditProfile = ({navigation}) => {
                     {/* Personality */}
                     {personality.map(item => {
                       console.log('personality', personality);
-                      return (
-                        <TagsField
-                          label={item.personality}
-                          //  addItems.={addItems}
-                        />
-                      );
+                      return <TagsField label={item.personality} />;
                     })}
 
                     <View>
+                      {/* add personality modal */}
                       <AddMoreContainer
                         onAddMore={() => {
                           setPersonalityModal(true);
@@ -508,6 +482,7 @@ const EditProfile = ({navigation}) => {
 
                   {/* Modal For Add More */}
                   <PersonalityModal
+                    label={"Add Personality'"}
                     setModelVisible={setPersonalityModal}
                     modalVisible={personalityModal}
                     setValue={setAddMore}
@@ -541,6 +516,7 @@ const EditProfile = ({navigation}) => {
                     })}
 
                     <View>
+                      {/* character modal */}
                       <AddMoreContainer
                         onAddMore={() => {
                           setCharacterModal(true);
@@ -551,6 +527,7 @@ const EditProfile = ({navigation}) => {
 
                   {/* Modal For Add More */}
                   <PersonalityModal
+                    label={'Add Characteristics'}
                     setModelVisible={setCharacterModal}
                     modalVisible={characterModal}
                     setValue={setAddMore}
@@ -577,13 +554,14 @@ const EditProfile = ({navigation}) => {
                   />
                   {/* Demographics */}
 
-                  <Spacer height={10} />
+                  <Spacer height={30} />
                   <View>
                     <CustomText
                       label={' Demographics'}
                       color={colors.primary}
                       fontFamily={'ProximaNova-Regular'}
                       fontSize={12}
+                      // marginLeft={-5}
                     />
                     {/* Family Origin */}
                     <Spacer height={10} />
@@ -894,7 +872,7 @@ const EditProfile = ({navigation}) => {
         // backgroundColor={colors.primary}
       /> */}
       {/* </View> */}
-      <Loader loading={loading} file={loaders.heart} />
+      {/* <Loader loading={loading} fo /> */}
     </View>
   );
 };
@@ -904,7 +882,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // marginTop: 22,
   },
   modalView: {
     margin: 20,
@@ -927,7 +904,6 @@ const styles = StyleSheet.create({
   imageView: {
     width: '100%',
     flexDirection: 'row',
-    // marginBottom: '50@vs',
     flexWrap: 'wrap',
     justifyContent: 'space-evenly',
   },

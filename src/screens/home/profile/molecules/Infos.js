@@ -1,22 +1,17 @@
-import {View, Text, Dimensions, Image} from 'react-native';
+import {View, Dimensions, Image} from 'react-native';
 import React from 'react';
-import {moderateScale, verticalScale} from 'react-native-size-matters';
 import CustomText from '../../../../components/CustomText';
 import {colors} from '../../../../utils/Colors';
 import {Spacer} from '../../../../components/Spacer';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const Infos = ({title, icon, label, name, icon1, label1, name1}) => {
+const Infos = ({title, icon, label, name, icon1, label1, name1,icon1Height,icon1Width,icon2Width,icon2Height}) => {
   return (
     <>
       {/* BasicINFO */}
       <View
         style={{
           width: '100%',
-          // padding: moderateScale(25),
           paddingLeft: 20,
-
-          // paddingRight: scale(5),
         }}>
         <CustomText
           fontSize={14}
@@ -41,7 +36,11 @@ const Infos = ({title, icon, label, name, icon1, label1, name1}) => {
               width: Dimensions.get('window').width / 2.5,
             }}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image source={icon} resizeMode={'contain'} />
+              <Image
+                source={icon}
+                resizeMode={'contain'}
+                style={{width:  icon1Width|| 15, height: icon1Height|| 15}}
+              />
               <CustomText color={colors.primary} marginLeft={3}>
                 {label}
               </CustomText>
@@ -54,13 +53,12 @@ const Infos = ({title, icon, label, name, icon1, label1, name1}) => {
 
           <View
             style={{
-              // alignItems: "center",
               width: Dimensions.get('window').width / 2.5,
             }}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Image
                 source={icon1}
-                style={{width: 12, height: 12}}
+                style={{width:   icon2Width||15, height: icon2Height ||15}}
                 resizeMode={'contain'}
               />
               <CustomText color={colors.primary} marginLeft={3}>

@@ -554,5 +554,4 @@ const Chat = ({navigation, route}) => {
     // </EmojiContext.Provider>
   );
 };
-
 export default Chat;

@@ -234,7 +234,6 @@ import React, { useEffect } from 'react';
 import profileImages from '../../../../assets/Profile_images';
 // import TrackPlayer from 'react-native-track-player';
 
-import SoundPlayer from 'react-native-sound-player';
 import songs from '../../../utils/songs';
 
 const RudioRecoder = () => {

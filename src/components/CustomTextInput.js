@@ -67,7 +67,7 @@ const CustomTextInput = ({
         <TextInput
           style={[
             {
-              width: props.inputWidth || password ? '88%' : '95%',
+              width: props.inputWidth || password ? '86%' : '95%',
               height: props.inputHeight || '100%',
               marginLeft: props.inputLeftMargin || 10,
               paddingRight: props.paddingRight || 10,
