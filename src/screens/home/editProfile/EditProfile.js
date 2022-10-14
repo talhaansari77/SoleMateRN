@@ -75,6 +75,7 @@ const EditProfile = ({navigation}) => {
   const [editLocation, setEditLocation] = useState('');
   const [fcmToken, setFcmToken] = useState('');
   const [authID, setAuthID] = useState('');
+  const [questionIndex, setQuestionIndex] = useState(null)
 
   const [modalVisible, setModalVisible] = useState(false);
 

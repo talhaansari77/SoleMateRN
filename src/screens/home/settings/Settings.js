@@ -35,32 +35,11 @@ const Settings = ({navigation}) => {
   // generate link using firabase deeplinking 
   const generateLink = async () => {
     const id = await getAuthId();
-    // get request time 
-    // const time = moment().add(0.1 * 0.1, "hours");
-    // const totalTime=time.format("YYYY-MM-DD") + "T" + time.format("HH:mm")
-
-    // let newDate=new Date(moment().add(2, "days").format("YYYY-MM-DD"))
+  
     var newDate = new Date();
 
     var totalDate=(moment(newDate).add(2,"days").format("YYYY-MM-DD"))
-
-
-  //  let  letTotalDate= new Date(moment().format(newDate, "YYYY-MM-DD"))
-
-    
-
-
-
-    // let DateData=  moment().format(newDate, "YYYY-MM-DD")
-    // let ExtendDate=moment(DateData).add(2)
-
     console.log("NewDataIS",totalDate)
-
-    // let totalDate=
-
-    
-
-
     // save user requst time ifuser  share profile the link user 
     await saveUser(id, {requestTime:  totalDate})
     try {

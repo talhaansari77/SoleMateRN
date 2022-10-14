@@ -71,7 +71,7 @@ const IceBreakQField = ({ iceBreakerQ, setQuestionIndex, ...props }) => {
                   }}
                   onPress={() => {
                     props.setModalVisible(true)
-                    setQuestionIndex(index+1)
+                    // setQuestionIndex(index+1)
                   }}>
                   {q.question ? <FontAwesome5 name="pen" color={colors.black} /> :
                     <FontAwesomeIcon name="plus" color={colors.white} />}

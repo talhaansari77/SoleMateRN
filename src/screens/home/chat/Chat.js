@@ -263,8 +263,8 @@ const Chat = ({navigation, route}) => {
       const path = NormalizedPath(uri);
       console.log('PathData', path);
 
-      const result = await RNFetchBlob.fs.readFile(path, 'base64');
-      UploadFileToFirebaseStorage(result, uri);
+      // const result = await RNFetchBlob.fs.readFile(path, 'base64');
+      // UploadFileToFirebaseStorage(result, uri);
       // const response = await readFile(path, "base64");
 
       console.log('PathDataResult', result);

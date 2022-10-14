@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
   Platform,
+  Text
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import * as Progress from 'react-native-progress';
@@ -30,7 +31,7 @@ const CustomAudio = ({audio, userData, message, isUser}) => {
   // let pt = state?.playTime?.split(':')
   // pt = pt[0]+":"+pt[1];
 
-  console.log('UserAithData', userData);
+  console.log('UserAithData', state);
   console.log('audioUrl', audio[0].audioUri);
 
   useEffect(() => {
@@ -91,13 +92,13 @@ const CustomAudio = ({audio, userData, message, isUser}) => {
   };
 
   const onStartPlay = async () => {
-    console.log('onStartPlay');
+    console.log('onStartPlayData');
     if (!playing) {
       setPlaying(!playing);
       const msg = await audioRecorderPlayer.startPlayer(audio[0].audioUri);
 
       console.log('This is Inside Play', msg);
-      audioRecorderPlayer.addPlayBackListener(e => {
+    await  audioRecorderPlayer.addPlayBackListener(e => {
         setState({
           currentPositionSec: e.currentPosition,
           currentDurationSec: e.duration,
@@ -229,19 +230,21 @@ const CustomAudio = ({audio, userData, message, isUser}) => {
       {/* Progress.Bar */}
       <View style={styles.rightAudioContainer5}>
         {state.playTime ? (
-          <Progress.Bar
-            progress={state.currentPositionSec / state.currentDurationSec}
-            height={2}
-            color={colors.white}
-            width={moderateScale(130)}
-          />
+          <View><Text>AudioStart</Text></View>
+          // <Progress.Bar
+          //   progress={state.currentPositionSec / state.currentDurationSec}
+          //   height={2}
+          //   color={colors.white}
+          //   width={moderateScale(130)}
+          // />
         ) : (
-          <Progress.Bar
-            progress={1}
-            height={2}
-            color={colors.white}
-            width={moderateScale(130)}
-          />
+        <View><Text>AudioStop</Text></View>
+          // <Progress.Bar
+          //   progress={1}
+          //   height={2}
+          //   color={colors.white}
+          //   width={moderateScale(130)}
+          // />
         )}
         {/* <Spacer height={5} /> */}
         <View style={styles.rightAudioContainer6}>
