@@ -48,13 +48,28 @@ export const EditValidate = (data, submitError, setSubmitError, images) => {
     });
     return;
   }
-  if (!data.aboutMe) {
+  if (!data.dob) {
     setSubmitError({
       ...submitError,
-      aboutError: 'About me is required',
+      birthdayError: 'Birthday is required',
     });
     return;
   }
+  if (moment().diff(data.dob, 'years', false) < 17) {
+    setSubmitError({
+      ...submitError,
+      birthdayError: 'Your age must be 17',
+    });
+    return;
+  }
+  if (!data.gender) {
+    setSubmitError({
+      ...submitError,
+      genderError: 'Gender is required',
+    });
+    return;
+  }
+  
   if (!data?.iceBreakerQ[0]?.question && !data?.iceBreakerQ[0]?.answer) {
     Toast.show('All Ice Breaker Questions are required');
     return;
@@ -71,25 +86,9 @@ export const EditValidate = (data, submitError, setSubmitError, images) => {
     Toast.show('Atleast one Personality is required');
     return;
   }
-  if (data.characteristics.length < 1) {
-    Toast.show('Atleast one Characteristics is required');
-    return;
-  }
-  if (!data.dob) {
-    setSubmitError({
-      ...submitError,
-      birthdayError: 'Birthday is required',
-    });
-    return;
-  }
-  if (moment().diff(data.dob, 'years', false) < 17) {
-    setSubmitError({
-      ...submitError,
-      birthdayError: 'Your age must be 17',
-    });
-    return;
-  }
-  if (!data.familyOrigin) {
+  
+
+  if (!data. familyOrigin) {
     setSubmitError({
       ...submitError,
       familyError: 'Family Origin is required',
@@ -103,13 +102,7 @@ export const EditValidate = (data, submitError, setSubmitError, images) => {
     });
     return;
   }
-  if (!data.gender) {
-    setSubmitError({
-      ...submitError,
-      genderError: 'Gender is required',
-    });
-    return;
-  }
+
   if (!data.location) {
     setSubmitError({
       ...submitError,
@@ -153,13 +146,7 @@ export const EditValidate = (data, submitError, setSubmitError, images) => {
     });
     return;
   }
-  if (!data.prayerLevel) {
-    setSubmitError({
-      ...submitError,
-      prayerLevelError: 'Prayer Level is required',
-    });
-    return;
-  }
+  
   if (!data.sector) {
     setSubmitError({
       ...submitError,
@@ -194,10 +181,7 @@ export const EditValidate = (data, submitError, setSubmitError, images) => {
     Toast.show('willing Relocate is required');
     return;
   }
-  if (!data.jobStatus) {
-    Toast.show('Job Status is required');
-    return;
-  }
+  
   if (!data.drinking) {
     Toast.show('Drinking is required');
     return;

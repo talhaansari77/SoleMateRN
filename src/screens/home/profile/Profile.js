@@ -20,19 +20,30 @@ import {Spacer} from '../../../components/Spacer';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fromNow} from '../../../services/FirebaseAuth';
+import InfoTag from './molecules/InfoTag';
+import CustomText from '../../../components/CustomText';
+import {colors} from '../../../utils/Colors';
+import InfoRender from './molecules/InfoRender';
 
 // user basic info
 
-const basicInfo = [
-  {
-    id: 1,
-    title: 'Current Location',
-    label: 'California, US',
-    icon: icons.location,
-  },
-  {id: 2, title: 'Family Origin', label: 'Us', icon: icons.featherFlag},
-  {id: 3, title: 'Height', label: "5'6", icon: icons.resizeHeight},
-  {id: 4, title: 'Language', label: 'English', icon: icons.language},
+const religiousnessIcons = [icons.moonStar, icons.bookOpen, icons.expandArrow];
+const educationIcons = [icons.work, icons.education];
+const basicInfoIcons = [
+  icons.location,
+  icons.featherFlag,
+  icons.resizeHeight,
+  icons.language,
+];
+const expectationIcons = [
+  icons.heartBeatBlack,
+  icons.heartBlack,
+  icons.babayCarriage,
+  icons.baby,
+  icons.location,
+  icons.smoking,
+  icons.work,
+  icons.drink,
 ];
 
 const Profile = ({navigation, route, actions = true, getApp = false}) => {
@@ -61,7 +72,7 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
 
   useEffect(() => {
     // get auth data in firebase
-    getAuthData();
+    getAuthData().then(() => {});
   }, [isFocused, requestId == null]);
 
   // get auth data function
@@ -94,8 +105,8 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
         var newDate = new Date();
 
         var currentDate = moment(newDate).format('YYYY-MM-DD');
-   
-        if (moment(linkDate).diff(moment(currentDate), 'days') <=0) {
+
+        if (moment(linkDate).diff(moment(currentDate), 'days') <= 0) {
           alert('Link is Expired');
 
           RemoveLinkData();
@@ -236,26 +247,14 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
           <ProfileTags title={'Personality'} data={authData?.personality} />
           <Divider />
           <Spacer height={20} />
-          <Infos
+
+          
+          <InfoRender
             title={'Basic Info'}
-            icon={icons.location}
-            icon1={icons.featherFlag}
-            label={'Current Location'}
-            label1={'Family Origin'}
-            name={authData?.location}
-            name1={authData?.familyOrigin}
-            infoList={basicInfo}
+            dataList={authData?.basicInfo}
+            icons={basicInfoIcons}
           />
 
-          <Infos
-            icon={icons.resizeHeight}
-            icon1={icons.language}
-            label={'Height'}
-            label1={'Language'}
-            name={authData?.height}
-            name1={authData?.language}
-            infoList={basicInfo}
-          />
           {/*ProfileImage*/}
           <ProfileImage
             src={{uri: authData?.images?.image3}}
@@ -270,21 +269,13 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
           /> */}
           <Divider />
           {/* Education and Career */}
-          <Spacer height={20} />
+          <Spacer height={20} />          
 
-          <Infos
+          <InfoRender
             title={'Education and Career'}
-            icon={icons.work}
-            icon1={icons.education}
-            label={'Occupation'}
-            label1={'Education'}
-            name={authData?.occupation}
-            name1={authData?.language}
-            infoList={basicInfo}
-            icon1Width={12}
-            icon1Height={12}
+            dataList={authData?.education}
+            icons={educationIcons}
           />
-
           {/* ProfileImage */}
           <ProfileImage
             src={{uri: authData?.images?.image4}}
@@ -293,88 +284,20 @@ const Profile = ({navigation, route, actions = true, getApp = false}) => {
 
           {/* Religiousness */}
           <Spacer height={20} />
-          <Infos
+          <InfoRender
             title={'Religiousness'}
-            icon={icons.moonStar}
-            icon1={icons.bookOpen}
-            label={'Religion'}
-            label1={'Religiousity'}
-            name={authData?.religion}
-            name1={authData?.religiousity}
-            infoList={basicInfo}
-            icon2Width={14}
-            icon2Height={14}
-            icon1Width={12}
-            icon1Height={12}
+            dataList={authData?.religiousness}
+            icons={religiousnessIcons}
           />
-
-          <Infos
-            icon={icons.partlySunny}
-            icon1={icons.expandArrow}
-            label={'Prayer level'}
-            label1={'Sector'}
-            name={authData?.prayerLevel}
-            name1={authData?.sector}
-            infoList={basicInfo}
-            icon2Width={12}
-            icon2Height={12}
-          />
-
-          <Divider />
-          {/* Characteristics */}
-          <ProfileTags
-            title={'Characteristics'}
-            data={authData?.characteristics}
-            uniqueKey={Math.random()}
-          />
-
           <Divider />
           <Spacer height={30} />
           {/* Partner Expectation */}
-
-          <Infos
-            title={'Partner Expectation '}
-            icon={icons.heartBeatBlack}
-            icon1={icons.heartBlack}
-            label={'Marital History'}
-            label1={'Marital Timing'}
-            name={authData?.martialHistory}
-            name1={authData?.martialTimming}
-            infoList={basicInfo}
+          <InfoRender
+            title={'Partner Expectation'}
+            dataList={authData?.partnerExpectations}
+            icons={expectationIcons}
           />
-
-          <Infos
-            icon={icons.babayCarriage}
-            icon1={icons.baby}
-            label={'Want Kind?'}
-            label1={'Has Children?'}
-            name={authData?.whatKids}
-            name1={authData?.hasKids}
-            infoList={basicInfo}
-          />
-          <Infos
-            icon={icons.locationEdit}
-            icon1={icons.work}
-            label={'Willing to Relocate'}
-            label1={'Job Status'}
-            name={authData?.willRelocate}
-            name1={authData?.jobStatus}
-            infoList={basicInfo}
-            icon2Width={12}
-            icon2Height={12}
-          />
-
-          <Infos
-            icon={icons.drink}
-            icon1={icons.smoking}
-            label={'Drinking'}
-            label1={'Smoking'}
-            name={authData?.drinking}
-            name1={authData?.smoking}
-            infoList={basicInfo}
-            icon1Width={12}
-            icon1Height={12}
-          />
+          
 
           {/* End */}
         </ScrollView>

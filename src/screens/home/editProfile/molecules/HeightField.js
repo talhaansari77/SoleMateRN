@@ -34,7 +34,7 @@ const HeightField = ({
             paddingHorizontal: scale(10),
           }}>
           <View
-            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            style={{flex: 1, justifyContent: 'center'}}>
             <CustomText color={colors.primary} marginLeft={scale(5)}>
               Feet
             </CustomText>
@@ -61,6 +61,7 @@ const HeightField = ({
 
                     setFeetHeight(feet);
                   }}
+                  keyboardType={'numeric'}
                   placeholder={'6'}
                   placeholderTextColor={{color: colors.gray}}
                   style={{paddingLeft: '50%', color: colors.black, padding: 0}}
@@ -102,6 +103,7 @@ const HeightField = ({
                     setSubmitError({...submitError, heightError: ''});
                     setInchesHeight(inches);
                   }}
+                  keyboardType={'numeric'}
                   placeholder={'6 '}
                   placeholderTextColor={{color: colors.gray}}
                   style={{color: colors.black, padding: 0, paddingLeft: '50%'}}

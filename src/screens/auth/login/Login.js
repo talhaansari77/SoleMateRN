@@ -6,12 +6,13 @@ import {Spacer} from '../../../components/Spacer';
 import {moderateScale, verticalScale} from 'react-native-size-matters';
 import CustomText from '../../../components/CustomText';
 import ConditionPassCon from './molecules/ConditionPassCon';
+import {colors} from '../../../utils/Colors';
 import {styles} from '../ViewPager/styles';
+// import LoginpWithCon from './LoginWithCon';
 import {ValidateInput} from '../signup/UseSignup';
 import auth from '@react-native-firebase/auth';
 // import {AuthLogin} from '../../../services/FirebaseAuth';
 import CustomButton from '../../../components/CustomButton';
-import {colors} from '../../../utils/Colors';
 import {ValidateLogin} from './molecules/UseLogin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -59,7 +60,6 @@ const Login = ({navigation}) => {
       setLoading(true);
 
       //  login with email and password
-
       try {
         const userCredentials = await auth().signInWithEmailAndPassword(
           email.trim(),
@@ -69,7 +69,6 @@ const Login = ({navigation}) => {
           AsyncStorage.setItem('userAuth', userCredentials.user.uid);
 
           // save user data
-
           await saveUser(userCredentials.user.uid, {fcmToken: newFcmToken});
 
           navigation.reset({

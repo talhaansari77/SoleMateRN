@@ -4,6 +4,7 @@ import CustomText from '../../../../components/CustomText';
 import {colors} from '../../../../utils/Colors';
 import {verticalScale} from 'react-native-size-matters';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import { Spacer } from '../../../../components/Spacer';
 
 const InputField = ({label, arrow = true, onChangeText, value, error}) => {
   return (
@@ -15,11 +16,12 @@ const InputField = ({label, arrow = true, onChangeText, value, error}) => {
           fontSize={11}>
           {label}
         </CustomText>
+        <Spacer  height={10}/>
 
         <View
           style={{
             borderBottomWidth: 1,
-            paddingVertical: verticalScale(7),
+            paddingVertical: verticalScale(0),
             justifyContent: 'space-between',
             flexDirection: 'row',
             alignItems: 'center',
@@ -29,13 +31,13 @@ const InputField = ({label, arrow = true, onChangeText, value, error}) => {
             onChangeText={onChangeText}
             style={{width: '90%', color: colors.black}}
           />
-          {arrow ? (
+          {/* {arrow ? (
             <TouchableOpacity activeOpacity={0.6}>
               <FontAwesomeIcon name="chevron-right" />
             </TouchableOpacity>
           ) : (
             <></>
-          )}
+          )} */}
         </View>
         {error ? (
           <CustomText

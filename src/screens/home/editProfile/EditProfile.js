@@ -1,4 +1,4 @@
-import {View, ScrollView, StyleSheet} from 'react-native';
+import {View, ScrollView, StyleSheet, Text} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {Spacer} from '../../../components/Spacer';
 import CustomText from '../../../components/CustomText';
@@ -20,12 +20,23 @@ import AddMoreContainer from './molecules/AddMoreContainer';
 import {getAuthId, saveUser, uploadImage} from '../../../services/FirebaseAuth';
 import PictureBox from './molecules/PictureBox';
 import Loader from '../../../utils/Loader';
-
 import TwoInputModal from './molecules/TwoInputModal';
 import {getSpecificeUser} from '../../../services/FirebaseAuth';
 import {getNewFcmToken} from '../../../services/SendNotification';
 import uuid from 'react-native-uuid';
 import {loaders} from '../../../../assets/loader';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import DropDownPicker from 'react-native-dropdown-picker';
+import {Divider} from 'react-native-elements/dist/divider/Divider';
+import {languagesList} from '../../../utils/languagesList';
+import {
+  empSuggList,
+  iceBreakerQList,
+  imageTemplate,
+  religionSuggList,
+  religiousitySuggList,
+  sectorsList,
+} from '../../../utils/Data';
 
 const genders = [
   {id: 1, name: 'Male'},
@@ -33,21 +44,14 @@ const genders = [
 ];
 
 const EditProfile = ({navigation}) => {
-  const [images, setImages] = useState({
-    image1: '',
-    image2: '',
-    image3: '',
-    image4: '',
-    image5: '',
-    image6: '',
-  });
+  const [images, setImages] = useState(imageTemplate);
   const [authData, setAuthData] = useState({});
   const [isSelect, setIsSelect] = useState(-1);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [aboutMe, setAboutMe] = useState('');
   const [familyOrigin, setfamilyOrigin] = useState('');
-  const [language, setLanguage] = useState('');
+  const [language, setLanguage] = useState([]);
   const [employment, setEmployment] = useState('');
   const [occupation, setOccupation] = useState('');
   const [religion, setReligion] = useState('');
@@ -64,7 +68,7 @@ const EditProfile = ({navigation}) => {
   const [whatKids, setWhatKids] = useState('');
   const [hasKids, setHasKids] = useState('');
   const [willRelocate, setWillRelocate] = useState('');
-  const [jobStatus, setJobStatus] = useState('');
+  // const [jobStatus, setJobStatus] = useState('');
   const [drinking, setDrinking] = useState('');
   const [smoking, setSmoking] = useState('');
   const [addMore, setAddMore] = useState('');
@@ -75,32 +79,53 @@ const EditProfile = ({navigation}) => {
   const [editLocation, setEditLocation] = useState('');
   const [fcmToken, setFcmToken] = useState('');
   const [authID, setAuthID] = useState('');
-  const [questionIndex, setQuestionIndex] = useState(null)
+  const [selected, setSelected] = useState('');
+  const [questionIndex, setQuestionIndex] = useState(-1);
+  const [questionFromList, setQuestionFromList] = useState(-1);
+  const [visible, setVisible] = useState(false);
+  // If they select none, make it not appear on the user end when people view his profile.
+  const [openEmpSugg, setOpenEmpSugg] = useState(false);
+  const [empValue, setEmpValue] = useState(null);
+  const [empSugg, setEmpSugg] = useState(empSuggList);
+
+  // - List: Islam, Christianity, Judaism, Hinduism, Athiest, Agnostic
+  const [openReligionSugg, setOpenReligionSugg] = useState(false);
+  const [religionValue, setReligionValue] = useState(null);
+  const [religionSugg, setReligionSugg] = useState(religionSuggList);
+  // - Religiousity: Heavily Practicing, Somewhat Practicing, Not Practicing
+  const [openReligiousitySugg, setOpenReligiousitySugg] = useState(false);
+  const [religiousityValue, setReligiousityValue] = useState(null);
+  const [religiousitySugg, setReligiousitySugg] =
+    useState(religiousitySuggList);
+
+  // - Islam: Sunni, Shia
+  const [openIslamicSectors, setOpenIslamicSectors] = useState(false);
+  const [islamicSectorValue, setIslamicSectorValue] = useState(null);
+  const [islamicSectors, setIslamicSectors] = useState([
+    {value: 1, label: 'Sunni'},
+    {value: 2, label: 'Shia'},
+  ]);
+  // - Christianity: Catholic, Protestant, Baptist, Latter-Day Saints, Lutheran, Non-Denimonational
+  const [openChristianitySectors, setOpenChristianitySectors] = useState(false);
+  const [christianitySectorValue, setChristianitySectorValue] = useState(null);
+  const [christianitySectors, setChristianitySectors] = useState([
+    {value: 1, label: 'Catholic'},
+    {value: 2, label: 'Protestant'},
+    {value: 3, label: 'Baptist'},
+    {value: 4, label: 'Latter-Day Saints'},
+    {value: 5, label: 'Lutheran'},
+    {value: 6, label: 'Non-Denimonational'},
+  ]);
+
+  const [openSectors, setOpenSectors] = useState(false);
+  const [sectorsValue, setSectorsValue] = useState(null);
+  const [sectors, setSectors] = useState(sectorsList);
 
   const [modalVisible, setModalVisible] = useState(false);
 
   // iceBreaker array
 
-  const [iceBreakerQ, setIceBreakerQ] = useState([
-    {
-      id: 1,
-      question: '',
-      answer: '',
-      placeholder: 'What ice breaker question would you like to answer',
-    },
-    {
-      id: 2,
-      question: '',
-      answer: '',
-      placeholder: 'What ice breaker question would you like to answer',
-    },
-    {
-      id: 3,
-      question: '',
-      answer: '',
-      placeholder: 'What ice breaker question would you like to answer',
-    },
-  ]);
+  const [iceBreakerQ, setIceBreakerQ] = useState(iceBreakerQList);
 
   console.log('IceBreaker', iceBreakerQ?.[0]?.question);
 
@@ -115,10 +140,11 @@ const EditProfile = ({navigation}) => {
       onValue: setWillRelocate,
       state: willRelocate,
     },
-    {id: 4, question: 'Job Status', onValue: setJobStatus, state: jobStatus},
-    {id: 5, question: 'Drinking', onValue: setDrinking, state: drinking},
-    {id: 6, question: 'Smoking', onValue: setSmoking, state: smoking},
+    // {id: 4, question: 'Job Status', onValue: setJobStatus, state: jobStatus},
+    {id: 4, question: 'Drinking', onValue: setDrinking, state: drinking},
+    {id: 5, question: 'Smoking', onValue: setSmoking, state: smoking},
   ];
+
   const [data] = useState([1, 2, 3, 4, 5, 6]);
 
   useEffect(() => {
@@ -131,6 +157,7 @@ const EditProfile = ({navigation}) => {
     // get user data if exist
     getAuthData();
   }, []);
+
   const getAuthData = async () => {
     setLoading(true);
     const id = await getAuthId();
@@ -145,7 +172,7 @@ const EditProfile = ({navigation}) => {
             cTags.push({characteristics: item}),
           );
           // set all user data in state
-           setFirstName(data?.firstName);
+          setFirstName(data?.firstName);
           setLastName(data?.lastName);
           setAboutMe(data?.aboutMe);
           setfamilyOrigin(data?.familyOrigin);
@@ -164,7 +191,6 @@ const EditProfile = ({navigation}) => {
           setWhatKids(data?.whatKids);
           setHasKids(data?.hasKids);
           setWillRelocate(data?.willRelocate);
-          setJobStatus(data?.jobStatus);
           setDrinking(data?.drinking);
           setSmoking(data?.smoking);
           setEditLocation(data?.location);
@@ -203,6 +229,22 @@ const EditProfile = ({navigation}) => {
     });
   };
 
+  useEffect(() => {
+    console.log('religion===>>', religion);
+
+    if (religion === 'Islam') {
+      let data = sectorsList.filter(
+        s => s.parent === 'Islam' || s.label === 'Islam',
+      );
+      setSectors(data);
+    } else if (religion === 'Christianity') {
+      let data = sectorsList.filter(
+        s => s.parent === 'Christianity' || s.label === 'Christianity',
+      );
+      setSectors(data);
+    }
+  }, [religion]);
+
   // error state
   const [submitError, setSubmitError] = useState({
     firstNameError: '',
@@ -218,7 +260,6 @@ const EditProfile = ({navigation}) => {
     occupationError: '',
     religionError: '',
     religiousityError: '',
-    prayerLevelError: '',
     sectorError: '',
     martialHistoryError: '',
     martialTimmingError: '',
@@ -233,6 +274,58 @@ const EditProfile = ({navigation}) => {
 
     // user object
     const data = {
+      id: authID,
+      fcmToken: fcmToken,
+      firstName: firstName,
+      lastName: lastName,
+      aboutMe: aboutMe,
+      gender: gender,
+      iceBreakerQ: iceBreakerQ,
+      dob: birthday,
+      personality: personality.map(item => item.personality),
+      basicInfo: [
+        {label: 'Current Location', status: editLocation},
+        {label: 'Family Origin', status: familyOrigin},
+        {label: 'Height', status: feetHeight + ' ' + inchesHeight},
+        {label: 'Language', status: language},
+      ],
+      education: [
+        {label: 'Occupation', status: occupation},
+        {label: 'Employment', status: employment},
+      ],
+
+      religiousness: [
+        {
+          label: 'Religion',
+          status: religion,
+          hasDetail:
+            religion === 'Athiest' || religion === 'Agnostic' ? false : true,
+        },
+        {
+          label: 'Religiousity',
+          status: religiousity,
+          hasDetail:
+            religion === 'Athiest' || religion == 'Agnostic' ? false : true,
+        },
+        {
+          label: 'Sector',
+          status: sector,
+          hasDetail:
+            religion === 'Athiest' || religion === 'Agnostic' ? false : true,
+        },
+      ],
+      partnerExpectations: [
+        {label: 'MartialTimming', status: martialTimming},
+        {label: 'MartialHistory', status: martialHistory},
+        {label: 'WhatKids', status: whatKids},
+        {label: 'HasKids', status: hasKids},
+        {label: 'Drinking', status: drinking},
+        {label: 'Smoking', status: smoking},
+        {label: 'WillRelocate', status: willRelocate},
+      ],
+    };
+
+    const data1 = {
       firstName: firstName,
       lastName: lastName,
       aboutMe: aboutMe,
@@ -240,7 +333,6 @@ const EditProfile = ({navigation}) => {
       familyOrigin: familyOrigin,
       language: language,
       personality: personality.map(item => item.personality),
-      characteristics: characteristics.map(item => item.characteristics),
       gender: gender,
       location: editLocation,
       height: feetHeight + ' ' + inchesHeight,
@@ -250,12 +342,10 @@ const EditProfile = ({navigation}) => {
       id: authID,
       religion: religion,
       religiousity: religiousity,
-      prayerLevel: prayerLevel,
       sector: sector,
       whatKids: whatKids,
       hasKids: hasKids,
       willRelocate: willRelocate,
-      jobStatus: jobStatus,
       drinking: drinking,
       smoking: smoking,
       martialHistory: martialHistory,
@@ -263,8 +353,8 @@ const EditProfile = ({navigation}) => {
       iceBreakerQ: iceBreakerQ,
     };
 
-    // handel all vlaidation
-    const response = EditValidate(data, submitError, setSubmitError, images);
+    // handle all vlaidation
+    const response = EditValidate(data1, submitError, setSubmitError, images);
     console.log('step 1');
     if (response) {
       console.log('data');
@@ -304,8 +394,8 @@ const EditProfile = ({navigation}) => {
               : images.image6
             : '',
         };
-    
-          // save user in firebase
+
+        // save user in firebase
         if (authID) {
           await saveUser(authID, {...data, images: temp2});
 
@@ -361,6 +451,9 @@ const EditProfile = ({navigation}) => {
       setPersonalityModal(false);
     }
   };
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState([]);
+  const [items, setItems] = useState(languagesList);
 
   return (
     <View style={{flex: 1}}>
@@ -371,9 +464,10 @@ const EditProfile = ({navigation}) => {
         iceBreakerQ={iceBreakerQ}
         questionIndex={questionIndex}
         setIceBreakerQ={setIceBreakerQ}
+        questionFromList={questionFromList}
+        visible={visible}
+        setVisible={setVisible}
       />
-      {/* Header */}
-
       <Header
         handleSubmit={onHandleSubmit}
         handleCancel={() => {
@@ -419,7 +513,7 @@ const EditProfile = ({navigation}) => {
                 }}
                 error={submitError.firstNameError}
               />
-              <Spacer height={15} />
+              <Spacer height={10} />
               {/* Last Name */}
               <InputField
                 label={'Last Name'}
@@ -431,7 +525,9 @@ const EditProfile = ({navigation}) => {
                 }}
                 error={submitError.lastNameError}
               />
-              <Spacer height={15} />
+
+              <Spacer height={20} />
+
               {/* About Me */}
 
               <TextArea
@@ -444,11 +540,68 @@ const EditProfile = ({navigation}) => {
                 error={submitError.aboutError}
               />
               <Spacer height={20} />
+              {/* Birthday */}
+              <BirthdayField
+                birthday={birthday}
+                setBirthday={setBirthday}
+                submitError={submitError}
+                setSubmitError={setSubmitError}
+                error={submitError.birthdayError}
+              />
+              <Spacer height={15} />
+              {/* Gender */}
+              <Spacer height={10} />
+              {/* <PH10> */}
+              <CustomText
+                label={'Gender'}
+                color={colors.darkOrange}
+                fontFamily={'ProximaNova-Regular'}
+                marginTop={verticalScale(7)}
+                fontSize={11}
+              />
+              <Spacer height={10} />
+              <View
+                style={{
+                  justifyContent: 'space-evenly',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                {genders.map((g, index) => (
+                  <>
+                    <GenderContainer
+                      txt={g.name}
+                      gender={gender}
+                      setGender={setGender}
+                      index={index}
+                      setSubmitError={setSubmitError}
+                      submitError={submitError}
+                      error={submitError.genderError}
+                      isSelect={isSelect}
+                      setIsSelect={setIsSelect}
+                    />
+                    {/* <Spacer width={10} /> */}
+                  </>
+                ))}
+              </View>
+              {submitError.genderError ? (
+                <CustomText
+                  color={colors.red}
+                  fontFamily={'ProximaNova-Regular'}
+                  fontSize={11}
+                  marginTop={4}>
+                  * {submitError.genderError}
+                </CustomText>
+              ) : null}
+              {/* </PH10> */}
+              <Spacer height={15} />
               {/* Ice Breaker Question */}
               <IceBreakQField
                 setModalVisible={setModalVisible}
                 iceBreakerQ={iceBreakerQ}
                 setQuestionIndex={setQuestionIndex}
+                setQuestionFromList={setQuestionFromList}
+                visible={visible}
+                setVisible={setVisible}
               />
               {/* Personality */}
               <Spacer height={10} />
@@ -497,62 +650,7 @@ const EditProfile = ({navigation}) => {
                       onSavePersonality();
                     }}
                   />
-                  {/* Characteristics */}
 
-                  <CustomText
-                    label="Characteristics"
-                    color={colors.darkOrange}
-                    marginTop={verticalScale(10)}
-                  />
-
-                  <View
-                    style={{
-                      width: '100%',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      flexWrap: 'wrap',
-                    }}>
-                    {characteristics.map(item => {
-                      return <TagsField label={item.characteristics} />;
-                    })}
-
-                    <View>
-                      {/* character modal */}
-                      <AddMoreContainer
-                        onAddMore={() => {
-                          setCharacterModal(true);
-                        }}
-                      />
-                    </View>
-                  </View>
-
-                  {/* Modal For Add More */}
-                  <PersonalityModal
-                    label={'Add Characteristics'}
-                    setModelVisible={setCharacterModal}
-                    modalVisible={characterModal}
-                    setValue={setAddMore}
-                    value={addMore}
-                    onChange={add => {
-                      setAddMore(add);
-                      setSubmitError({...submitError, characterError: ''});
-                    }}
-                    error={submitError.characterError}
-                    onSaveData={() => {
-                      onSaveCharacter();
-                    }}
-                  />
-
-                  <Spacer height={20} />
-
-                  {/* Birthday */}
-                  <BirthdayField
-                    birthday={birthday}
-                    setBirthday={setBirthday}
-                    submitError={submitError}
-                    setSubmitError={setSubmitError}
-                    error={submitError.birthdayError}
-                  />
                   {/* Demographics */}
 
                   <Spacer height={30} />
@@ -568,7 +666,7 @@ const EditProfile = ({navigation}) => {
                     <Spacer height={10} />
                     <PH10>
                       <InputField
-                        label={'Family Origin'}
+                        label={'Ethnicity'}
                         value={familyOrigin}
                         onChangeText={family => {
                           setfamilyOrigin(family),
@@ -578,62 +676,48 @@ const EditProfile = ({navigation}) => {
                       />
                     </PH10>
                     {/* Language */}
-                    <Spacer height={10} />
+                    <Spacer height={15} />
                     <PH10>
-                      <InputField
-                        label={'Language'}
+                      {/* <InputField
+                        label={'Language(s)'}
                         value={language}
                         onChangeText={lang => {
                           setLanguage(lang),
                             setSubmitError({...submitError, languageError: ''});
                         }}
                         error={submitError.languageError}
-                      />
-                    </PH10>
-                    {/* Gender */}
-                    <Spacer height={10} />
-                    <PH10>
+                      /> */}
                       <CustomText
-                        label={'Gender'}
-                        color={colors.darkOrange}
+                        label={'Language(s)'}
+                        color={colors.primary}
                         fontFamily={'ProximaNova-Regular'}
-                        marginTop={verticalScale(7)}
-                        fontSize={11}
+                        fontSize={12}
                       />
-                      <Spacer height={10} />
-                      <View
-                        style={{
-                          justifyContent: 'center',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                        }}>
-                        {genders.map((g, index) => (
-                          <>
-                            <GenderContainer
-                              txt={g.name}
-                              gender={gender}
-                              setGender={setGender}
-                              index={index}
-                              setSubmitError={setSubmitError}
-                              submitError={submitError}
-                              error={submitError.genderError}
-                              isSelect={isSelect}
-                              setIsSelect={setIsSelect}
-                            />
-                            <Spacer width={10} />
-                          </>
-                        ))}
-                      </View>
-                      {submitError.genderError ? (
-                        <CustomText
-                          color={colors.red}
-                          fontFamily={'ProximaNova-Regular'}
-                          fontSize={11}
-                          marginTop={4}>
-                          * {submitError.genderError}
-                        </CustomText>
-                      ) : null}
+                      <DropDownPicker
+                        open={open}
+                        value={language}
+                        items={items}
+                        setOpen={setOpen}
+                        setValue={setLanguage}
+                        setItems={setItems}
+                        placeholder={'Select Your Lanuage'}
+                        placeholderStyle={{color: colors.placeholder}}
+                        multiple={true}
+                        mode="BADGE"
+                        badgeDotColors={['#e76f51']}
+                        badgeColors={[colors.primary]}
+                        style={{borderWidth: 0}}
+                        flatListProps={{
+                          nestedScrollEnabled: true,
+                          showsVerticalScrollIndicator: true,
+                        }}
+                        containerProps={{
+                          height: open === true ? 230 : null,
+                        }}
+                      />
+                      <Divider color={colors.black} width={1} />
                     </PH10>
+
                     {/* Current Location */}
                     <Spacer height={15} />
                     <PH10>
@@ -685,19 +769,35 @@ const EditProfile = ({navigation}) => {
                     {/* Employment */}
                     <Spacer height={10} />
                     <PH10>
-                      <InputField
+                      <CustomText
                         label={'Employment'}
-                        value={employment}
-                        onChangeText={emp => {
-                          setEmployment(emp),
-                            setSubmitError({
-                              ...submitError,
-                              employmentError: '',
-                            });
-                        }}
-                        error={submitError.employmentError}
+                        color={colors.primary}
+                        fontFamily={'ProximaNova-Regular'}
+                        fontSize={12}
                       />
+                      <Spacer height={10} />
+                      <DropDownPicker
+                        open={openEmpSugg}
+                        value={employment}
+                        items={empSugg}
+                        setOpen={setOpenEmpSugg}
+                        setValue={setEmployment}
+                        setItems={setEmpSugg}
+                        placeholder={'Your Employment'}
+                        placeholderStyle={{color: colors.placeholder}}
+                        style={{borderWidth: 0}}
+                        flatListProps={{
+                          nestedScrollEnabled: true,
+                          showsVerticalScrollIndicator: true,
+                        }}
+                        containerProps={{
+                          height: openEmpSugg === true ? 230 : null,
+                        }}
+                      />
+
+                      <Divider color={colors.black} width={1} />
                     </PH10>
+
                     {/* Occupation */}
                     <Spacer height={15} />
                     <PH10>
@@ -729,7 +829,7 @@ const EditProfile = ({navigation}) => {
                     {/* Religion */}
                     <Spacer height={10} />
                     <PH10>
-                      <InputField
+                      {/* <InputField
                         label={'Religion'}
                         value={religion}
                         onChangeText={rel => {
@@ -737,12 +837,83 @@ const EditProfile = ({navigation}) => {
                             setSubmitError({...submitError, religionError: ''});
                         }}
                         error={submitError.religionError}
+                      /> */}
+                      <CustomText
+                        label={'Religion'}
+                        color={colors.primary}
+                        fontFamily={'ProximaNova-Regular'}
+                        fontSize={12}
                       />
+                      <DropDownPicker
+                        open={openReligionSugg}
+                        value={religion}
+                        items={religionSugg}
+                        setOpen={setOpenReligionSugg}
+                        setValue={setReligion}
+                        setItems={setReligionSugg}
+                        placeholder={'Select Your Religion'}
+                        placeholderStyle={{color: colors.placeholder}}
+                        style={{borderWidth: 0}}
+                        flatListProps={{
+                          nestedScrollEnabled: true,
+                          showsVerticalScrollIndicator: true,
+                        }}
+                        containerProps={{
+                          height: openReligionSugg === true ? 230 : null,
+                        }}
+                      />
+
+                      <Divider color={colors.black} width={1} />
                     </PH10>
+                    {/* Sector */}
+                    {religion === 'Islam' || religion === 'Christianity' ? (
+                      <>
+                        <Spacer height={15} />
+                        <PH10>
+                          {/* <InputField
+                        label={'Sector'}
+                        value={sector}
+                        onChangeText={sec => { 
+                          setSector(sec),
+                            setSubmitError({...submitError, sectorError: ''});
+                        }}
+                        error={submitError.sectorError}
+                      /> */}
+                          <CustomText
+                            label={'Sector'}
+                            color={colors.primary}
+                            fontFamily={'ProximaNova-Regular'}
+                            fontSize={12}
+                          />
+                          <Spacer height={10} />
+                          <DropDownPicker
+                            open={openSectors}
+                            value={sector}
+                            items={sectors}
+                            setOpen={setOpenSectors}
+                            setValue={setSector}
+                            setItems={setSectors}
+                            placeholder={'Which Sector Do You Belong'}
+                            placeholderStyle={{color: colors.placeholder}}
+                            style={{borderWidth: 0}}
+                            flatListProps={{
+                              nestedScrollEnabled: true,
+                              showsVerticalScrollIndicator: true,
+                            }}
+                            containerProps={{
+                              height: openSectors === true ? 160 : null,
+                            }}
+                          />
+                          <Divider color={colors.black} width={1} />
+                        </PH10>
+                      </>
+                    ) : (
+                      <></>
+                    )}
                     {/* Religiousity */}
                     <Spacer height={15} />
                     <PH10>
-                      <InputField
+                      {/* <InputField
                         label={'Religiousity'}
                         value={religiousity}
                         onChangeText={relg => {
@@ -753,36 +924,34 @@ const EditProfile = ({navigation}) => {
                             });
                         }}
                         error={submitError.religiousityError}
+                      /> */}
+                      <CustomText
+                        label={'Religiousity'}
+                        color={colors.primary}
+                        fontFamily={'ProximaNova-Regular'}
+                        fontSize={12}
                       />
-                    </PH10>
-                    {/* Prayer Level */}
-                    <Spacer height={15} />
-                    <PH10>
-                      <InputField
-                        label={'Prayer Level'}
-                        value={prayerLevel}
-                        onChangeText={pry => {
-                          setPrayerLevel(pry),
-                            setSubmitError({
-                              ...submitError,
-                              prayerLevelError: '',
-                            });
+                      <Spacer height={10} />
+                      <DropDownPicker
+                        open={openReligiousitySugg}
+                        value={religiousity}
+                        items={religiousitySugg}
+                        setOpen={setOpenReligiousitySugg}
+                        setValue={setReligiousity}
+                        setItems={setReligiousitySugg}
+                        placeholder={'How Religious Are You'}
+                        placeholderStyle={{color: colors.placeholder}}
+                        style={{borderWidth: 0}}
+                        flatListProps={{
+                          nestedScrollEnabled: true,
+                          showsVerticalScrollIndicator: true,
                         }}
-                        error={submitError.prayerLevelError}
-                      />
-                    </PH10>
-                    {/* Sector */}
-                    <Spacer height={15} />
-                    <PH10>
-                      <InputField
-                        label={'Sector'}
-                        value={sector}
-                        onChangeText={sec => {
-                          setSector(sec),
-                            setSubmitError({...submitError, sectorError: ''});
+                        containerProps={{
+                          height: openReligiousitySugg === true ? 160 : null,
                         }}
-                        error={submitError.sectorError}
                       />
+
+                      <Divider color={colors.black} width={1} />
                     </PH10>
                   </View>
 
@@ -873,7 +1042,7 @@ const EditProfile = ({navigation}) => {
         // backgroundColor={colors.primary}
       /> */}
       {/* </View> */}
-      {/* <Loader loading={loading} fo /> */}
+      <Loader loading={loading} file={loaders.heart} />
     </View>
   );
 };
