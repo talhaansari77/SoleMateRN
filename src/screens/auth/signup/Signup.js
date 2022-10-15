@@ -27,6 +27,7 @@ import {color} from 'react-native-elements/dist/helpers';
 // import {SignupEmailPassword} from '../../../services/FirebaseAuth';
 import auth from '@react-native-firebase/auth';
 const Signup = ({navigation}) => {
+  const [eyeClick, setEyeClick] = useState(true);
   const [showPassword, setShowPassword] = useState(true);
   const [showConPassword, setShowConPassword] = useState(true);
   const [email, setEmail] = useState('');
@@ -142,6 +143,31 @@ const Signup = ({navigation}) => {
     }
   };
 
+  async function onFacebookButtonPress() {
+    // LoginManager.logInWithPermissions(["email", "public_profile", "user_friends"]).then(
+    //   function(result) {
+    //     if (result.isCancelled) {
+    //       alert("Login cancelled");
+    //     } else {
+    //       alert(
+    //         "Login success with permissions: " +
+    //           result.grantedPermissions.toString()
+    //       );
+    //     }
+    //   },
+    //   function(error) {
+    //     alert("Login fail with error: " + error);
+    //     console.log("Login fail with error: " + error);
+    //   }
+    // );
+    console.log('FacebookButtonPressed');
+    // Attempt login with permissions
+    try {
+      const result = await LoginManager.logInWithPermissions([
+        'public_profile',
+        'email',
+        'user_friends',
+      ]);
   // async function onFacebookButtonPress() {
 
   //   try {
@@ -154,6 +180,18 @@ const Signup = ({navigation}) => {
   //     // Once signed in, get the users AccesToken
   //     const data = await AccessToken.getCurrentAccessToken();
 
+      // Create a Firebase credential with the AccessToken
+      const facebookCredential = auth.FacebookAuthProvider.credential(
+        data.accessToken,
+      );
+
+      // Sign-in the user with the credential
+      const userInfo = auth().signInWithCredential(facebookCredential);
+      alert('FB User Info --> ', JSON.stringify(userInfo));
+    } catch (error) {
+      alert('Error', error);
+    }
+  }
   //     if (!data) {
   //       alert('Something went wrong obtaining access token');
   //     }
@@ -177,27 +215,28 @@ const Signup = ({navigation}) => {
         showPlayServicesUpdateDialog: true,
       });
       // Get the users ID token
-      const {idToken} = await GoogleSignin.signIn();
+      const {idToken, user} = await GoogleSignin.signIn();
 
       // Create a Google credential with the token
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
+      // Checking Existing Methods
+      let signInMethods = await auth().fetchSignInMethodsForEmail(user.email);
       // Sign-in the user with the credential
-      auth()
-        .signInWithCredential(googleCredential)
-        .then(userInfo => {
-          if (!userInfo.additionalUserInfo.isNewUser) {
-            alert('User Already Exist');
-          } else if (userInfo.user) {
-            console.log('UserInfo');
+      if (signInMethods.length > 0) {
+        alert('User Already Exist');
+      } else {
+        // Sign-in the user with the credential
+        auth()
+          .signInWithCredential(googleCredential)
+          .then(userInfo => {
+            console.log('UserInfo --->', userInfo.user);
             AsyncStorage.setItem('userAuth', userInfo.user.uid);
-            setLoading(false);
-            navigation.reset({
-              index: 0,
-              routes: [{name: 'EditProfile'}],
-            });
-          }
-        });
+            navigation.navigate('MainStack', {screen: 'Profile'});
+          })
+          .catch(e => alert('Error: ', e));
+      }
+
+      // setUserInfo(userInfo);
     } catch (error) {
       console.log('Message', JSON.stringify(error));
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {

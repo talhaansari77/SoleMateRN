@@ -5,15 +5,20 @@ import CustomTextInput from '../../../components/CustomTextInput';
 import {Spacer} from '../../../components/Spacer';
 import {moderateScale, verticalScale} from 'react-native-size-matters';
 import CustomText from '../../../components/CustomText';
+import ConditionPassCon from './molecules/ConditionPassCon';
+import {styles} from '../ViewPager/styles';
+import {ValidateInput} from '../signup/UseSignup';
+import auth from '@react-native-firebase/auth';
+// import {AuthLogin} from '../../../services/FirebaseAuth';
 import CustomButton from '../../../components/CustomButton';
 import {colors} from '../../../utils/Colors';
-import auth from '@react-native-firebase/auth';
 import {ValidateLogin} from './molecules/UseLogin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+import {getFCMToken} from '../../../utils/PushNotification';
 import {getNewFcmToken} from '../../../services/SendNotification';
 import {saveUser} from '../../../services/FirebaseAuth';
 import SignupWithCon from '../signup/SignupWithCon';
@@ -32,6 +37,7 @@ const Login = ({navigation}) => {
   useEffect(() => {
     getAuthToken();
   }, []);
+
 
   //  get fcmToken
   const getAuthToken = async () => {
@@ -95,23 +101,28 @@ const Login = ({navigation}) => {
         // Always resolves to true on iOS
         showPlayServicesUpdateDialog: true,
       });
-      const {idToken} = await GoogleSignin.signIn();
+      const {idToken, user} = await GoogleSignin.signIn();
 
       // Create a Google credential with the token
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      // Checking Existing Methods
+      let signInMethods = await auth().fetchSignInMethodsForEmail(user.email);
 
-      // Sign-in the user with the credential
-      auth()
-        .signInWithCredential(googleCredential)
-        .then(async userInfo => {
-          if (!userInfo.additionalUserInfo.isNewUser) {
+      if (signInMethods.length > 0) {
+        // Sign-in the user with the credential
+        auth()
+          .signInWithCredential(googleCredential)
+          .then(userInfo => {
+            // console.log('UserInfo --->', userInfo.user);
+            // if (!userInfo.additionalUserInfo.isNewUser) {
             AsyncStorage.setItem('userAuth', userInfo.user.uid);
-            await saveUser(userInfo.user.uid, {fcmToken: newFcmToken});
             navigation.navigate('MainStack', {screen: 'Profile'});
-          } else if (userInfo.user) {
-            alert('you not exist please signup first');
-          }
-        });
+            // }
+          })
+          .catch(e => alert('Error: ', e));
+      } else {
+        alert('No Such User Exist');
+      }
     } catch (error) {
       console.log('Message', JSON.stringify(error));
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {

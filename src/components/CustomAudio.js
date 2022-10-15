@@ -20,6 +20,8 @@ import {
 } from 'react-native-size-matters';
 import Component from './FastImage';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import RNFetchBlob from 'rn-fetch-blob';
+
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
@@ -92,7 +94,31 @@ const CustomAudio = ({audio, userData, message, isUser}) => {
   };
 
   const onStartPlay = async () => {
-    console.log('onStartPlayData');
+//     // const response=
+//     const filename = Date.now().toString();
+// MovToMp4(audio[0].audioUri, filename + ".mp4")
+//   .then(function (results) {
+//     //here you can upload the video...
+//     console.log("ConvertMp4",results);
+//   });
+// const respon=await RNFetchBlob.fetch(audio[0].audioUri)
+//     console.log("ConvertMp4",respon);
+
+// RNFetchBlob
+//   .config({
+//     // add this option that makes response data to be stored as a file,
+//     // this is much more performant.
+//     fileCache : true,
+//   })
+//   .fetch(audio[0].audioUri, {
+//    " Content-Type": multipart/form-data
+//   })
+//   .then((res) => {
+//     // the temp file path
+//     console.log('The file saved to ', res.path())
+//   })
+
+  
     if (!playing) {
       setPlaying(!playing);
       const msg = await audioRecorderPlayer.startPlayer(audio[0].audioUri);
@@ -193,7 +219,7 @@ const CustomAudio = ({audio, userData, message, isUser}) => {
 
           style={styles.hw100}
           uniqueKey={Math.random()}
-          source={{uri: userData?.images?.[0]}}
+          source={{uri: userData?.images?.image1}}
         />
         {/* <Image source={{uri:userData?.images?.[0]}} resizeMode="contain" /> */}
       </View>
@@ -230,21 +256,19 @@ const CustomAudio = ({audio, userData, message, isUser}) => {
       {/* Progress.Bar */}
       <View style={styles.rightAudioContainer5}>
         {state.playTime ? (
-          <View><Text>AudioStart</Text></View>
-          // <Progress.Bar
-          //   progress={state.currentPositionSec / state.currentDurationSec}
-          //   height={2}
-          //   color={colors.white}
-          //   width={moderateScale(130)}
-          // />
+          <Progress.Bar
+            progress={state.currentPositionSec / state.currentDurationSec}
+            height={2}
+            color={colors.white}
+            width={moderateScale(130)}
+          />
         ) : (
-        <View><Text>AudioStop</Text></View>
-          // <Progress.Bar
-          //   progress={1}
-          //   height={2}
-          //   color={colors.white}
-          //   width={moderateScale(130)}
-          // />
+          <Progress.Bar
+            progress={1}
+            height={2}
+            color={colors.white}
+            width={moderateScale(130)}
+          />
         )}
         {/* <Spacer height={5} /> */}
         <View style={styles.rightAudioContainer6}>

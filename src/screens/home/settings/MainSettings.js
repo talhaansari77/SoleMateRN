@@ -49,6 +49,7 @@ function MainSettings({navigation}) {
     navigation.reset({
       index: 0,
       routes: [{name: 'AuthStack'}],
+      // screen:'Login'
     });
   };
   return (

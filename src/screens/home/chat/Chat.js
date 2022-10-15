@@ -11,6 +11,7 @@ import {
   Pressable,
   Platform,
   PermissionsAndroid,
+  KeyboardAvoidingView
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ProfileNav from '../profile/molecules/ProfileNav';
@@ -42,6 +43,7 @@ import AudioRecorderPlayer, {
   AudioSourceAndroidType,
   PlayBackType,
   RecordBackType,
+  AVModeIOSOption,
 } from 'react-native-audio-recorder-player';
 import {
   sendMessage,
@@ -55,10 +57,7 @@ import {
 import AddDocuments from './molecules/AddDocuments';
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-// import Emoji from '../../../components/Emoji';
-// import EmojisTab from '../../../components/EmojisTab';
-// import EmojiContext from '../../../utils/context';
-// import emojis from '../../../utils/emojis.json';
+
 import {emojjisData} from '../../../utils/Data';
 import AddReaction from './molecules/AddReaction';
 import {getSpecificeUser} from '../../../services/FirebaseAuth';
@@ -67,13 +66,14 @@ const Tab = createMaterialTopTabNavigator();
 import {uploadImage} from '../../../services/FirebaseAuth';
 import axios from 'axios';
 import {getCurrentFCMToken} from '../../../utils/PushNotification';
-
 import {NotificationSender} from '../../../services/SendNotification';
 import RNFetchBlob from 'rn-fetch-blob';
 
+// Audio Recorder
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const Chat = ({navigation, route}) => {
+  // Screen State
   const [textMessage, setTextMessage] = useState('');
   const [showEndConversion, setShowEndConversion] = useState(false);
   const [documentsModal, setDocumentsModal] = useState(false);
@@ -89,6 +89,7 @@ const Chat = ({navigation, route}) => {
   const [getAllChat, setGetAllChat] = useState([]);
   const [playing, setPlaying] = useState(false);
 
+  // Audio Details
   const [state, setState] = useState({
     recordSecs: 0,
     recordTime: '00:00:00',
@@ -98,10 +99,12 @@ const Chat = ({navigation, route}) => {
     duration: '00:00:00',
     recorderState: 'init',
   });
+  // getting user app token for notification
   useEffect(() => {
     getUserFcm();
   }, []);
 
+  // Stop Audio Play
   const onStopPlay = async () => {
     console.log('onStopPlay');
     audioRecorderPlayer.stopPlayer();
@@ -109,14 +112,8 @@ const Chat = ({navigation, route}) => {
     setState({...state, recorderState: 'stopPlayer'});
   };
 
-  // useEffect(() => {
-  //   if (state.duration == state.playTime && state.recorderState != 'init') {
-  //     onStopPlay();
-  //   }
-  // }, [state.playTime]);
-
   console.log('TextMessage', textMessage);
-
+  // getting user app token for notification
   const getUserFcm = async () => {
     getSpecificeUser(route?.params?.otherUserId).then(data => {
       setOtherUserData(data);
@@ -129,8 +126,7 @@ const Chat = ({navigation, route}) => {
     });
   };
 
-  // console.log('ReactionObject', );
-
+  // Saving chat on Firebase
   const onSend = async (result, file, audioUri) => {
     console.log('fileData', file, result, audioUri);
     let imgResponse = '';
@@ -174,13 +170,14 @@ const Chat = ({navigation, route}) => {
       tempFile ? tempFile : '',
       tempAudio ? tempAudio : '',
     );
+    // updateLastMessage
     updateLastMessage(
       route.params?.authId,
       route?.params?.otherUserId,
       messageData,
     );
 
-    // fcmToken,message,title
+    // fcmToken,message,title ----NotificationSender
     NotificationSender(
       otherUserData?.fcmToken,
       textMessage
@@ -196,15 +193,9 @@ const Chat = ({navigation, route}) => {
     );
     setTextMessage('');
     setImage('');
-    // Sending Notifications
-    // console.log('Sending Notifications');
-
-    // let newDate=new Date()
-
-    // let orginalDate=moment(newDate).format("YYYY-MM-DD")
-    // console.log('Resimage', result);
   };
 
+  // Start Voice Recorder
   const onStartRecord = async () => {
     if (Platform.OS === 'android') {
       try {
@@ -238,6 +229,7 @@ const Chat = ({navigation, route}) => {
     const audioSet = {
       AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
       AudioSourceAndroid: AudioSourceAndroidType.MIC,
+      AVModeIOS:AVModeIOSOption.measurement,
       AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
       AVNumberOfChannelsKeyIOS: 2,
       AVFormatIDKeyIOS: AVEncodingOption.aac,
@@ -256,15 +248,18 @@ const Chat = ({navigation, route}) => {
     // ChooseFile(uri)
   };
 
+  // Uploading Audio to Firebase
   const ChooseFile = async uri => {
     // pick the single file
 
     try {
+      // extracting Upload Path
       const path = NormalizedPath(uri);
       console.log('PathData', path);
 
-      // const result = await RNFetchBlob.fs.readFile(path, 'base64');
-      // UploadFileToFirebaseStorage(result, uri);
+      const result = await RNFetchBlob.fs.readFile(path, 'base64');
+      // Firebase Upload
+      UploadFileToFirebaseStorage(result, uri);
       // const response = await readFile(path, "base64");
 
       console.log('PathDataResult', result);
@@ -272,7 +267,7 @@ const Chat = ({navigation, route}) => {
       console.log('error', error);
     }
   };
-
+  // Path extractor
   const NormalizedPath = path => {
     if (Platform.OS == 'ios' || Platform.OS == 'android') {
       const filePrefix = 'file://';
@@ -287,7 +282,7 @@ const Chat = ({navigation, route}) => {
     }
     return path;
   };
-
+  // Firebase Uploader
   const UploadFileToFirebaseStorage = async (result, file) => {
     const resData = 0;
     const fileData = 0;
@@ -327,6 +322,7 @@ const Chat = ({navigation, route}) => {
     );
   };
 
+  // Stop Recorder
   const onStopRecord = async () => {
     try {
       const result = await audioRecorderPlayer.stopRecorder();
@@ -342,24 +338,13 @@ const Chat = ({navigation, route}) => {
       console.log('onStopRecord catch', error);
     }
   };
-
+  //Saving Message Reaction
   const saveReaction = async reaction => {
-    // console.log("reactionObject",reactionObject._id)
-    // reactionObject
-
-    // uniqueId,from, to, image,date,reaction
-
-    // await UpdateUser(authId, {
-    //   wishlist: firebase.firestore.FieldValue.arrayUnion({
-    //     wishlist_id: id,
-    //     createdAt: firebase.firestore.Timestamp.now(),
-    //   }),
-
     await updateMessage(reactionObject._id, {
       reaction: reaction,
     });
   };
-
+  // Render Msgs
   const renderItem = ({item, index}) => {
     return (
       <TouchableOpacity
@@ -373,10 +358,14 @@ const Chat = ({navigation, route}) => {
     );
   };
 
+  // Main Function
   return (
-    // <EmojiContext.Provider value={{emoji, setEmoji}}>
+    <KeyboardAvoidingView
+    behavior={Platform.OS === 'ios' ? 'height' : 'height'}
+    style={{flex: 1}}>
     <SafeAreaView style={commonStyles.commonMain}>
       <View style={styles.mainContainer}>
+        {/* Screen Header */}
         <HeaderConatiner
           label={otherUserData?.firstName}
           back={() => {
@@ -389,6 +378,7 @@ const Chat = ({navigation, route}) => {
 
         <Spacer height={verticalScale(1)} />
         <View style={styles.innerMainContainer}>
+          {/* Chat Component */}
           <ChatBody
             setReactionObject={setReactionObject}
             reactionModal={reactionModal}
@@ -437,6 +427,7 @@ const Chat = ({navigation, route}) => {
                     width: '90%',
                     color: colors.black,
                     paddingLeft: 10,
+                    paddingRight:verticalScale(5)
                   }}
                   value={textMessage}
                   onChangeText={value => setTextMessage(value)}
@@ -534,64 +525,7 @@ const Chat = ({navigation, route}) => {
           </View>
         ) : (
           <></>
-        )}
-
-        {/* {settingModal ? (
-          <View>
-            <View
-              style={{
-                width: '100%',
-                height: verticalScale(150),
-                backgroundColor: colors.white,
-                top: verticalScale(-78),
-                alignItems: 'center',
-              }}>
-              <View
-                style={{
-                  paddingVertical: 30,
-                  width: '100%',
-                  alignItems: 'center',
-                }}>
-                <CustomButton
-                  title={"View Samer's Profile"}
-                  fontSize={verticalScale(18)}
-                  borderRadius={25}
-                  backgroundColor={colors.primary}
-                  width="90%"
-                  fontFamily="ProximaNova-Bold"
-                />
-              </View>
-              <View style={{width: '100%', alignItems: 'center'}}>
-                <CustomButton
-                  backgroundColor={colors.darkOrange}
-                  borderRadius={25}
-                  fontSize={verticalScale(18)}
-                  fontFamily="ProximaNova-Bold"
-                  onPress={() => {
-                    navigation.navigate('Report');
-
-                    // Report
-                  }}
-                  width="90%"
-                  title={'End Conversation'}
-                />
-              </View>
-            </View>
-            <View
-              style={{
-                // height: "70%",
-                backgroundColor: 'rgba(0,0,0,0.7)',
-
-                opacity: 0.5,
-                marginTop: verticalScale(-80),
-              }}
-            />
-          </View>
-        ) : (
-          <></>
-        )} */}
-
-        {/* <SettingModal  settingModal={settingModal}setSettingModal={setSettingModal}/> */}
+        )}        
       </View>
 
       {showEmojis && (
@@ -624,7 +558,9 @@ const Chat = ({navigation, route}) => {
         setReactionModal={setReactionModal}
       />
     </SafeAreaView>
-    // </EmojiContext.Provider>
+
+</KeyboardAvoidingView>
+
   );
 };
 export default Chat;
