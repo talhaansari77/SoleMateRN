@@ -552,7 +552,7 @@
 				DEVELOPMENT_TEAM = N96Z256D52;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ZeeFoods/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Solmate;
+				INFOPLIST_KEY_CFBundleDisplayName = Sol;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -584,7 +584,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = N96Z256D52;
 				INFOPLIST_FILE = ZeeFoods/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Solmate;
+				INFOPLIST_KEY_CFBundleDisplayName = Sol;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
