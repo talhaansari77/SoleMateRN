@@ -19,6 +19,7 @@ import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const CustomAudio = ({audio, userData, message}) => {
+  
   const [state, setState] = useState({});
   const [playing, setPlaying] = useState(false);
   let rt = audio?.[0]?.recordTime.split(':');

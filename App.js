@@ -14,12 +14,6 @@ LogBox.ignoreAllLogs();
 
 export default function App() {
 
-  useEffect(() => {
-
-    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
-    return () => unsubscribe();
-  }, []);
-
   const handleDynamicLink = async link => {
     console.log("this is Forground")
     // Handle dynamic link inside your own application
@@ -31,14 +25,25 @@ export default function App() {
 
       const screenName = link.url?.split('&')[0].split('=').pop();
       const wihApp = link.url?.split('&')[1].split('=').pop();
+      const linkDate = link.url?.split('&')[2].split('=').pop();
+
 
       console.log('screenName:', screenName);
       console.log('wihApp:', wihApp);
-      if (screenName === 'Profile')
-        navigation.navigate('MainStack', {screen: 'Profile'});
+      console.log('linkDate:', linkDate);
+      // if (screenName === 'Profile')
+      //   navigation.navigate('MainStack', {screen: 'Profile'});
     }
 
   };
+
+  useEffect(() => {
+
+    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    return () => unsubscribe();
+  }, [dynamicLinks]);
+
+  
   useEffect(() => {
     SplashScreen.hide();
     requestUserPermission();
