@@ -87,59 +87,78 @@ export const EditValidate = (data, submitError, setSubmitError, images) => {
     return;
   }
   
-
-  if (!data. familyOrigin) {
+  if (!data.dob) {
+    setSubmitError({
+      ...submitError,
+      birthdayError: 'Birthday is required',
+    });
+    return;
+  }
+  if (moment().diff(data.dob, 'years', false) < 17) {
+    setSubmitError({
+      ...submitError,
+      birthdayError: 'Your age must be 17',
+    });
+    return;
+  }
+  if (data.basicInfo[0].label === 'Current Location' && !data.basicInfo[0].status) {
+    setSubmitError({
+      ...submitError,
+      editlocationError: 'Location is required',
+    });
+    return; 
+  }
+  if (data.basicInfo[1].label === 'Family Origin' && !data.basicInfo[1].status) {
     setSubmitError({
       ...submitError,
       familyError: 'Family Origin is required',
     });
     return;
   }
-  if (!data.language) {
-    setSubmitError({
-      ...submitError,
-      languageError: 'Language is required',
-    });
-    return;
-  }
-
-  if (!data.location) {
-    setSubmitError({
-      ...submitError,
-      editlocationError: 'Location is required',
-    });
-    return;
-  }
-  if (!data.height) {
+  if (data.basicInfo[2].label === 'Height' && !data.basicInfo[2].status) {
     setSubmitError({
       ...submitError,
       heightError: 'height is required',
     });
     return;
   }
-
-  if (!data.employment) {
-    setSubmitError({
+  if (data.basicInfo[3].label === 'Language' && data.basicInfo[3].status.length<=0) {
+    setSubmitError({ 
       ...submitError,
-      employmentError: 'Employment is required',
+      languageError: 'Language is required',
     });
     return;
   }
-  if (!data.occupation) {
+  if (!data.gender) {
+    setSubmitError({
+      ...submitError,
+      genderError: 'Gender is required',
+    });
+    return;
+  }
+  if (data.education[0].label === 'Occupation' && !data.education[0].status) {
     setSubmitError({
       ...submitError,
       occupationError: 'Occupation is required',
     });
     return;
   }
-  if (!data.religion) {
+  if (data.education[1].label === 'Employment' && !data.education[1].status) {
+    setSubmitError({
+      ...submitError,
+      employmentError: 'Employment is required',
+    });
+    return;
+  }
+  
+  if (data.religiousness[0].label === 'Religion' && !data.religiousness[0].status) {
     setSubmitError({
       ...submitError,
       religionError: 'Religion is required',
     });
     return;
   }
-  if (!data.religiousity) {
+  if (data.religiousness[1].label === 'Religiousity' && !data.religiousness[1].status) {
     setSubmitError({
       ...submitError,
       religiousityError: 'Religiousity is required',
@@ -147,48 +166,49 @@ export const EditValidate = (data, submitError, setSubmitError, images) => {
     return;
   }
   
-  if (!data.sector) {
+  if (data.religiousness[2].label === 'Sector' && !data.religiousness[2].status) {
     setSubmitError({
       ...submitError,
       sectorError: 'Sector is required',
     });
     return;
   }
-  if (!data.martialHistory) {
-    setSubmitError({
-      ...submitError,
-      martialHistoryError: 'Martial History is required',
-    });
-    return;
-  }
-  if (!data.martialTimming) {
+  if (data.partnerExpectations[0].label === 'Martial Timming' && !data.partnerExpectations[0].status) {
     setSubmitError({
       ...submitError,
       martialTimmingError: 'Martial Timming is required',
     });
     return;
   }
+  if (data.partnerExpectations[1].label === 'Martial History' && !data.partnerExpectations[1].status) {
+    setSubmitError({
+      ...submitError,
+      martialHistoryError: 'Martial History is required',
+    });
+    return;
+  }  
 
-  if (!data.whatKids) {
-    Toast.show('Whats Kids is required');
-    return;
-  }
-  if (!data.hasKids) {
-    Toast.show('Has Kids is required');
-    return;
-  }
-  if (!data.willRelocate) {
-    Toast.show('willing Relocate is required');
-    return;
-  }
+  // if (data.partnerExpectations[2].label === 'WhatKids' && !data.status) {
+  //   Toast.show('Whats Kids is required');
+  //   return;
+  // }
+  // if (data.partnerExpectations[3].label === 'HasKids' && !data.status) {
+  //   Toast.show('Has Kids is required');
+  //   return;
+  // }
+  // if (data.partnerExpectations[4].label === 'Drinking' && !data.status) {
+  //   Toast.show('Drinking is required');
+  //   return;
+  // }
+  // if (data.partnerExpectations[5].label === 'Smoking' && !data.status) {
+  //   Toast.show('Smoking is required');
+  //   return;
+  // }
+  // if (data.partnerExpectations[6].label === 'WillRelocate' && !data.status) {
+  //   Toast.show('willing Relocate is required');
+  //   return;
+  // }
   
-  if (!data.drinking) {
-    Toast.show('Drinking is required');
-    return;
-  }
-  if (!data.smoking) {
-    Toast.show('Smoking is required');
-    return;
-  }
+  
   return true;
 };
