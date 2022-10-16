@@ -174,6 +174,7 @@ export const EditValidate = (data, submitError, setSubmitError, images) => {
     return;
   }
 
+
   // if (data.partnerExpectations[2].label === 'WhatKids' && !data.status) {
   //   Toast.show('Whats Kids is required');
   //   return;
