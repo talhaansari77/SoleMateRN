@@ -1,9 +1,6 @@
 import {
   StyleSheet,
   View,
-  FlatList,
-  Image,
-  Text,
   TouchableOpacity,
   PermissionsAndroid,
   Platform,
@@ -11,32 +8,18 @@ import {
 import React, {useEffect, useState} from 'react';
 import * as Progress from 'react-native-progress';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-import profileImages from '../../assets/Profile_images';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomText from './CustomText';
 import {colors} from '../utils/Colors';
 import {verticalScale, scale, moderateScale} from 'react-native-size-matters';
 import Component from './FastImage';
-import {Spacer} from './Spacer';
-import AudioRecorderPlayer, {
-  AVEncoderAudioQualityIOSType,
-  AVEncodingOption,
-  AudioEncoderAndroidType,
-  AudioSet,
-  AudioSourceAndroidType,
-  PlayBackType,
-  RecordBackType,
-} from 'react-native-audio-recorder-player';
-import songs from '../utils/songs';
-import * as RNFS from 'react-native-fs';
-import RNFetchBlob from 'rn-fetch-blob';
-import {testSound} from '../utils/Data';
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const CustomAudio = ({audio, userData, message}) => {
   const [state, setState] = useState({});
-  const [voiceProgress, setVoiceProgress] = useState(0);
   const [playing, setPlaying] = useState(false);
   let rt = audio?.[0]?.recordTime.split(':');
   rt = rt[0] + ':' + rt[1];
