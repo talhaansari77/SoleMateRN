@@ -17,6 +17,7 @@ import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const ReceiverVoiceMessage = ({audio, userData, message}) => {
+  
   const [state, setState] = useState({});
   const [playing, setPlaying] = useState(false);
   let rt = audio?.[0]?.recordTime.split(':');
@@ -25,7 +26,6 @@ const ReceiverVoiceMessage = ({audio, userData, message}) => {
   // pt = pt[0]+":"+pt[1];
 
   console.log('UserAithData', userData);
-  console.log('audioUrl', audio[0].audioUri);
 
   useEffect(() => {
     console.log('This is audio you are looking for:', audio);
@@ -72,7 +72,7 @@ const ReceiverVoiceMessage = ({audio, userData, message}) => {
       });
       return;
     });
-    console.log('Local Audio', result);
+    console.log(result);
   };
 
   onStopRecord = async () => {
@@ -89,7 +89,6 @@ const ReceiverVoiceMessage = ({audio, userData, message}) => {
     if (!playing) {
       setPlaying(!playing);
       const msg = await audioRecorderPlayer.startPlayer(audio[0].audioUri);
-
       console.log('This is Inside Play', msg);
       audioRecorderPlayer.addPlayBackListener(e => {
         setState({
@@ -123,12 +122,13 @@ const ReceiverVoiceMessage = ({audio, userData, message}) => {
       style={{
         padding: 5,
         height: 67,
-        width: '70%',
+        width: '90%',
         borderRadius: 15,
-        backgroundColor: colors.primary,
+        backgroundColor: colors.white,
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
+        marginLeft: 10,
         shadowColor: colors.gray,
         shadowOffset: {width: 0, height: 1},
         shadowOpacity: 2,
@@ -139,42 +139,23 @@ const ReceiverVoiceMessage = ({audio, userData, message}) => {
 
       <View
         style={{
-          flex: 2,
           justifyContent: 'center',
           alignItems: 'center',
-          //   backgroundColor:'brown'
-        }}>
-        <View
-          style={{
-            height: 45,
-            width: 45,
-            overflow: 'hidden',
-            borderRadius: 20,
-            marginLeft: 10,
-          }}>
-          <Component
-            // resizeMode="cover"
-
-            style={{height: '100%', width: '100%'}}
-            uniqueKey={Math.random()}
-            source={{uri: userData?.images?.[0]}}
-          />
-          {/* <Image source={{uri:userData?.images?.[0]}} resizeMode="contain" /> */}
-        </View>
-      </View>
+          backgroundColor: 'brown',
+          flexDirection: 'row',
+        }}></View>
       <TouchableOpacity
         style={{
           flex: 1,
           padding: 10,
           alignItems: 'center',
-          marginLeft: 10,
           //   backgroundColor:'pink'
         }}
         onPress={onStartPlay}>
         <FontAwesome5Icon
           name={playing ? 'pause' : 'play'}
           size={20}
-          color={colors.white}
+          color={colors.gray}
         />
       </TouchableOpacity>
 
@@ -193,14 +174,14 @@ const ReceiverVoiceMessage = ({audio, userData, message}) => {
           <Progress.Bar
             progress={state.currentPositionSec / state.currentDurationSec}
             height={2}
-            color={colors.white}
+            color={colors.gray}
             width={moderateScale(130)}
           />
         ) : (
           <Progress.Bar
             progress={1}
             height={2}
-            color={colors.white}
+            color={colors.gray}
             width={moderateScale(130)}
           />
         )}
@@ -222,30 +203,36 @@ const ReceiverVoiceMessage = ({audio, userData, message}) => {
                   : state?.playTime
                 : rt
             }
-            color={colors.white}
+            color={colors.gray}
           />
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <CustomText
               marginRight={5}
               fontSize={9}
               label={message.createdAt}
-              color={colors.white}
+              color={colors.gray}
             />
-            <View>
-              <Ionicons
-                name={
-                  message.status == true
-                    ? 'ios-checkmark-done-outline'
-                    : 'ios-checkmark'
-                }
-                size={moderateScale(15)}
-                color={colors.white}
-              />
-            </View>
           </View>
         </View>
       </View>
       {/* image */}
+      <View
+        style={{
+          height: 45,
+          width: 45,
+          overflow: 'hidden',
+          borderRadius: 20,
+          marginLeft: 10,
+        }}>
+        <Component
+          // resizeMode="cover"
+
+          style={{height: '100%', width: '100%'}}
+          uniqueKey={Math.random()}
+          source={{uri: userData?.images?.[0]}}
+        />
+        {/* <Image source={{uri:userData?.images?.[0]}} resizeMode="contain" /> */}
+      </View>
     </View>
   );
 };
