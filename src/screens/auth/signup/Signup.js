@@ -232,7 +232,7 @@ const Signup = ({navigation}) => {
           .then(userInfo => {
             console.log('UserInfo --->', userInfo.user);
             AsyncStorage.setItem('userAuth', userInfo.user.uid);
-            navigation.navigate('MainStack', {screen: 'Profile'});
+            navigation.navigate('EditProfile');
           })
           .catch(e => alert('Error: ', e));
       }

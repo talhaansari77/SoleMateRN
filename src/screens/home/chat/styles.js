@@ -31,7 +31,7 @@ export const styles = ScaledSheet.create({
     maxHeight:verticalScale(100),
     padding:5,
     minHeight:verticalScale(32),
-    // height: verticalScale(32),
+    // height: verticalScale(35),
     borderColor: colors.primary,
     borderWidth: 1,
     alignItems: 'center',

@@ -42,6 +42,7 @@ const IceBreakQField = ({
               onPress={
                 q.question
                   ? () => {
+                    console.log("QuestionData",q.question)
                       setQuestionFromList(q.question);
                       setIndex(index);
                       setVisible(false);
@@ -70,7 +71,6 @@ const IceBreakQField = ({
                   label={q.question ? q.question : q.button}
                   color={q.question ? colors.black : colors.primary}
                 />
-                {/* {q.question ? <CustomText color={colors.gray} /> : <></>} */}
               </View>
 
               <TouchableOpacity
@@ -90,6 +90,8 @@ const IceBreakQField = ({
                 onPress={
                   q.button
                     ? () => {
+                        setVisible(false);
+                        setTimeout(() => {}, 1000);
                         props.setModalVisible(true);
                       }
                     : () => {}

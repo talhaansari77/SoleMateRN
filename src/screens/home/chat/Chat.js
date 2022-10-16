@@ -361,7 +361,7 @@ const Chat = ({navigation, route}) => {
   // Main Function
   return (
     <KeyboardAvoidingView
-    behavior={Platform.OS === 'ios' ? 'height' : 'height'}
+    behavior={Platform.OS === 'ios' ? 'height' : verticalScale(100)}
     style={{flex: 1}}>
     <SafeAreaView style={commonStyles.commonMain}>
       <View style={styles.mainContainer}>

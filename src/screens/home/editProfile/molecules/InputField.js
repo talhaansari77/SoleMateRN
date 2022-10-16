@@ -1,4 +1,4 @@
-import {View, TextInput, TouchableOpacity} from 'react-native';
+import {View, TextInput, TouchableOpacity, Platform} from 'react-native';
 import React from 'react';
 import CustomText from '../../../../components/CustomText';
 import {colors} from '../../../../utils/Colors';
@@ -16,13 +16,14 @@ const InputField = ({label, arrow = true, onChangeText, value, error}) => {
           fontSize={11}>
           {label}
         </CustomText>
-        <Spacer  height={10}/>
+        {/* <Spacer  height={10}/> */}
 
         <View
           style={{
             borderBottomWidth: 1,
             paddingVertical: verticalScale(0),
             justifyContent: 'space-between',
+            height:Platform.OS=="ios"?verticalScale(25):  verticalScale(40),
             flexDirection: 'row',
             alignItems: 'center',
           }}>

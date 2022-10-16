@@ -93,7 +93,7 @@ const Login = ({navigation}) => {
   };
 
   // Signin with google
-  const handleGoogleSignup = async () => {
+  const handleGoogleLogin = async () => {
     try {
       await GoogleSignin.hasPlayServices({
         // Check if device has Google Play Services installed
@@ -111,11 +111,19 @@ const Login = ({navigation}) => {
         // Sign-in the user with the credential
         auth()
           .signInWithCredential(googleCredential)
-          .then(userInfo => {
+          .then( async(userInfo) => {
             // console.log('UserInfo --->', userInfo.user);
             // if (!userInfo.additionalUserInfo.isNewUser) {
-            AsyncStorage.setItem('userAuth', userInfo.user.uid);
-            navigation.navigate('MainStack', {screen: 'Profile'});
+              AsyncStorage.setItem('userAuth', userInfo.user.uid);
+
+              // save user data
+              await saveUser(userInfo.user.uid, {fcmToken: newFcmToken});
+    
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'MainStack'}],
+              });
+           
             // }
           })
           .catch(e => alert('Error: ', e));
@@ -177,7 +185,7 @@ const Login = ({navigation}) => {
           {/* siginwithGoogle button */}
           <SignupWithCon
             onGoogle={() => {
-              handleGoogleSignup();
+              handleGoogleLogin();
             }}
           />
 

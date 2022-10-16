@@ -24,9 +24,10 @@ const IceBreakQ = icebreaker => {
           </CustomText>
           <View style={{paddingVertical: verticalScale(5)}}>
             <CustomText
-              fontSize={13}
-              color={colors.black}
-              fontFamily={'ProximaNova-Bold'}>
+              fontSize={11}
+              color={colors.grey1}
+              marginLeft={10}
+              fontFamily={'ProximaNova-Regular'}>
               {icebreaker?.icebreaker?.[0]?.answer}
             </CustomText>
           </View>

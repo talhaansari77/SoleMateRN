@@ -14,6 +14,7 @@ const HeightField = ({
   submitError,
   setSubmitError,
 }) => {
+  console.log("")
   return (
     <>
       <View style={{paddingHorizontal: scale(10)}}>

@@ -20,6 +20,7 @@ const TwoInputModal = ({
   
 
 }) => {
+  console.log("ChangeQuestion",questionFromList)
   const isFocused = useIsFocused();
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
@@ -46,16 +47,16 @@ const TwoInputModal = ({
       setIceBreakerQ(newQuestionList);
 
       setAnswer('');
-      setQuestion(''); 
+      setQuestion('');  
 
       setModalVisible(!modalVisible);
-      setVisible(!visible);  
+      setVisible(false);  
     }
   };
  
 useEffect(() => { 
   setQuestion(questionFromList)
-}, [])
+}, [questionFromList])
 
 
   return (
@@ -96,7 +97,11 @@ useEffect(() => {
             <Spacer height={verticalScale(10)} />
 
             <CustomButton
-              onPress={() => setModalVisible(!modalVisible)}
+              onPress={() => {
+                setModalVisible(!modalVisible)
+                setQuestion("")
+              }
+              }
               title="Cancel"
               color={colors.black}
               backgroundColor={colors.white}
@@ -113,16 +118,16 @@ useEffect(() => {
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   modalView: {
     margin: 20,
     width: '90%',
-    height: '45%',
+    height: '40%',
+    marginTop:"40%",
     backgroundColor: 'white',
     borderRadius: 20,
-    padding: 35,
+    padding: 20,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {

@@ -59,7 +59,7 @@ const RequestContainer = ({age, onChating, userId}) => {
             />
             <View style={styles.line} />
             <CustomText
-              label={userData?.location}
+              label={userData?.basicInfo?.[0]?.status}
               fontFamily={'ProximaNova-Regular'}
               numberOfLines={1}
               color={colors.halfGray}
@@ -67,7 +67,7 @@ const RequestContainer = ({age, onChating, userId}) => {
             />
             <View style={styles.line} />
             <CustomText
-              label={userData?.occupation}
+              label={userData?.education?.[0]?.status}
               fontFamily={'ProximaNova-Regular'}
               color={colors.halfGray}
               numberOfLines={1}
@@ -107,7 +107,7 @@ const styles = ScaledSheet.create({
     justifyContent: 'space-between',
     padding: '2@s',
     paddingLeft: '15@s',
-    width: '45%',
+    width: '60%',
   },
   subDetail: {
     flexDirection: 'row',
