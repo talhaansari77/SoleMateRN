@@ -48,13 +48,7 @@ export const EditValidate = (data, submitError, setSubmitError, images) => {
     });
     return;
   }
-  if (!data.aboutMe) {
-    setSubmitError({
-      ...submitError,
-      aboutError: 'About me is required',
-    });
-    return;
-  }
+  
   if (!data?.iceBreakerQ[0]?.question && !data?.iceBreakerQ[0]?.answer) {
     Toast.show('All Ice Breaker Questions are required');
     return;
@@ -71,10 +65,7 @@ export const EditValidate = (data, submitError, setSubmitError, images) => {
     Toast.show('Atleast one Personality is required');
     return;
   }
-  if (data.characteristics.length < 1) {
-    Toast.show('Atleast one Characteristics is required');
-    return;
-  }
+  
   if (!data.dob) {
     setSubmitError({
       ...submitError,
@@ -153,13 +144,7 @@ export const EditValidate = (data, submitError, setSubmitError, images) => {
     });
     return;
   }
-  if (!data.prayerLevel) {
-    setSubmitError({
-      ...submitError,
-      prayerLevelError: 'Prayer Level is required',
-    });
-    return;
-  }
+  
   if (!data.sector) {
     setSubmitError({
       ...submitError,
@@ -194,10 +179,7 @@ export const EditValidate = (data, submitError, setSubmitError, images) => {
     Toast.show('willing Relocate is required');
     return;
   }
-  if (!data.jobStatus) {
-    Toast.show('Job Status is required');
-    return;
-  }
+  
   if (!data.drinking) {
     Toast.show('Drinking is required');
     return;

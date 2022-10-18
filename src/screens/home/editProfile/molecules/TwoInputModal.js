@@ -1,11 +1,12 @@
 import {View, Modal, StyleSheet} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import CustomTextInput from '../../../../components/CustomTextInput';
 import {Spacer} from '../../../../components/Spacer';
 import CustomButton from '../../../../components/CustomButton';
 import {verticalScale} from 'react-native-size-matters';
 import {colors} from '../../../../utils/Colors';
 import Toast from 'react-native-simple-toast';
+import { useIsFocused } from '@react-navigation/native'; 
 
 const TwoInputModal = ({
   setModalVisible,
@@ -13,7 +14,13 @@ const TwoInputModal = ({
   iceBreakerQ,
   setIceBreakerQ,
   questionIndex,
+  questionFromList,
+  visible,
+  setVisible,
+  
+
 }) => {
+  const isFocused = useIsFocused();
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const onSaveIceBreakerQ = () => {
@@ -28,6 +35,7 @@ const TwoInputModal = ({
         return q;
       }
     });
+    // console.log("newQuestionList",newQuestionList)
 
     if (!question) {
       Toast.show('Question is required');
@@ -38,11 +46,17 @@ const TwoInputModal = ({
       setIceBreakerQ(newQuestionList);
 
       setAnswer('');
-      setQuestion('');
+      setQuestion(''); 
 
       setModalVisible(!modalVisible);
+      setVisible(!visible);  
     }
   };
+ 
+useEffect(() => { 
+  setQuestion(questionFromList)
+}, [])
+
 
   return (
     <View>

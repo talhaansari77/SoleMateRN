@@ -6,17 +6,13 @@ import {Spacer} from '../../../components/Spacer';
 import {moderateScale, verticalScale} from 'react-native-size-matters';
 import CustomText from '../../../components/CustomText';
 import ConditionPassCon from './molecules/ConditionPassCon';
-import {View} from 'react-native';
-import CustomButton from '../../../components/CustomButton';
 import {colors} from '../../../utils/Colors';
 import {styles} from '../ViewPager/styles';
-import LoginpWithCon from './LoginWithCon';
+// import LoginpWithCon from './LoginWithCon';
 import {ValidateInput} from '../signup/UseSignup';
 import auth from '@react-native-firebase/auth';
 // import {AuthLogin} from '../../../services/FirebaseAuth';
 import CustomButton from '../../../components/CustomButton';
-import {colors} from '../../../utils/Colors';
-import auth from '@react-native-firebase/auth';
 import {ValidateLogin} from './molecules/UseLogin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -24,8 +20,6 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import {getFCMToken} from '../../../utils/PushNotification';
-import {getNewFcmToken} from '../../../services/SendNotification';
-import {saveUser} from '../../../services/FirebaseAuth';
 import {getNewFcmToken} from '../../../services/SendNotification';
 import {saveUser} from '../../../services/FirebaseAuth';
 import SignupWithCon from '../signup/SignupWithCon';

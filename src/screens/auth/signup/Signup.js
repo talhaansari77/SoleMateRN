@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+
 import {View, Text, ScrollView, KeyboardAvoidingView} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import commonStyles from '../../../utils/CommonStyles';
@@ -79,8 +79,8 @@ const Signup = ({navigation}) => {
     {
       id: 2,
       txt1: '+ 1 number',
-      txt2: '* get our password',
-      color2: colors.gray,
+      // txt2: '* get our password',
+      // color2: colors.gray,
       color: !password
         ? colors.gray
         : !checkNum(password)

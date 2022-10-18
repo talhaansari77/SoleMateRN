@@ -19,7 +19,7 @@ const InputField = ({label, arrow = true, onChangeText, value, error}) => {
         <View
           style={{
             borderBottomWidth: 1,
-            paddingVertical: verticalScale(7),
+            paddingVertical: verticalScale(0),
             justifyContent: 'space-between',
             flexDirection: 'row',
             alignItems: 'center',

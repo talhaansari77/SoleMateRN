@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {createStackNavigator} from '@react-navigation/stack';
+import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import AuthStack from './AuthStack';
 import MainStack from './MainStack';
 import SettingStack from './SettingStack';
@@ -17,11 +17,12 @@ const RootNavigator = () => {
     },
   };
 
-
   const Stack = createStackNavigator();
   return (
     <NavigationContainer theme={MyTheme}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        // initialRouteName="EditProfile"
+        screenOptions={{headerShown: false}}>
         <Stack.Screen name="AuthStack" component={AuthStack} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
 
