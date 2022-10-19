@@ -11,6 +11,7 @@ import {
   Pressable,
   Platform,
   PermissionsAndroid,
+  KeyboardAvoidingView
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ProfileNav from '../profile/molecules/ProfileNav';
@@ -42,6 +43,7 @@ import AudioRecorderPlayer, {
   AudioSourceAndroidType,
   PlayBackType,
   RecordBackType,
+  AVModeIOSOption,
 } from 'react-native-audio-recorder-player';
 import {
   sendMessage,
@@ -227,6 +229,7 @@ const Chat = ({navigation, route}) => {
     const audioSet = {
       AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
       AudioSourceAndroid: AudioSourceAndroidType.MIC,
+      AVModeIOS:AVModeIOSOption.measurement,
       AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
       AVNumberOfChannelsKeyIOS: 2,
       AVFormatIDKeyIOS: AVEncodingOption.aac,
@@ -357,6 +360,9 @@ const Chat = ({navigation, route}) => {
 
   // Main Function
   return (
+    <KeyboardAvoidingView
+    behavior={Platform.OS === 'ios' ? 'height' : 'height'}
+    style={{flex: 1}}>
     <SafeAreaView style={commonStyles.commonMain}>
       <View style={styles.mainContainer}>
         {/* Screen Header */}
@@ -421,6 +427,7 @@ const Chat = ({navigation, route}) => {
                     width: '90%',
                     color: colors.black,
                     paddingLeft: 10,
+                    paddingRight:verticalScale(5)
                   }}
                   value={textMessage}
                   onChangeText={value => setTextMessage(value)}
@@ -551,7 +558,9 @@ const Chat = ({navigation, route}) => {
         setReactionModal={setReactionModal}
       />
     </SafeAreaView>
-    // </EmojiContext.Provider>
+
+</KeyboardAvoidingView>
+
   );
 };
 export default Chat;

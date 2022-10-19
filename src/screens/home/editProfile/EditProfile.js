@@ -261,6 +261,7 @@ const EditProfile = ({navigation}) => {
       lastName: lastName,
       aboutMe: aboutMe,
       gender: gender,
+      iceBreakerQ: iceBreakerQ,
       dob: birthday,
       personality: personality.map(item => item.personality),
       iceBreakerQ: iceBreakerQ,
@@ -307,8 +308,36 @@ const EditProfile = ({navigation}) => {
       ],
     };
 
+    const data1 = {
+      firstName: firstName,
+      lastName: lastName,
+      aboutMe: aboutMe,
+      dob: birthday,
+      familyOrigin: familyOrigin,
+      language: language,
+      personality: personality.map(item => item.personality),
+      gender: gender,
+      location: editLocation,
+      height: feetHeight + ' ' + inchesHeight,
+      employment: employment,
+      occupation: occupation,
+      fcmToken: fcmToken,
+      id: authID,
+      religion: religion,
+      religiousity: religiousity,
+      sector: sector,
+      whatKids: whatKids,
+      hasKids: hasKids,
+      willRelocate: willRelocate,
+      drinking: drinking,
+      smoking: smoking,
+      martialHistory: martialHistory,
+      martialTimming: martialTimming,
+      iceBreakerQ: iceBreakerQ,
+    };
+
     // handle all vlaidation
-    const response = EditValidate(data, submitError, setSubmitError, images);
+    const response = EditValidate(data1, submitError, setSubmitError, images);
     console.log('step 1');
     if (response) {
       console.log('data');
@@ -422,7 +451,6 @@ const EditProfile = ({navigation}) => {
         visible={visible}
         setVisible={setVisible}
       />
-
       <Header
         handleSubmit={onHandleSubmit}
         handleCancel={() => {
@@ -468,7 +496,7 @@ const EditProfile = ({navigation}) => {
                 }}
                 error={submitError.firstNameError}
               />
-              <Spacer height={15} />
+              <Spacer height={10} />
               {/* Last Name */}
               <InputField
                 label={'Last Name'}
@@ -667,7 +695,7 @@ const EditProfile = ({navigation}) => {
                           showsVerticalScrollIndicator: true,
                         }}
                         containerProps={{
-                          height: open === true ? 220 : null,
+                          height: open === true ? 230 : null,
                         }}
                       />
                       <Divider color={colors.black} width={1} />
@@ -747,7 +775,7 @@ const EditProfile = ({navigation}) => {
                           showsVerticalScrollIndicator: true,
                         }}
                         containerProps={{
-                          height: openEmpSugg === true ? 220 : null,
+                          height: openEmpSugg === true ? 230 : null,
                         }}
                       />
 
@@ -801,7 +829,6 @@ const EditProfile = ({navigation}) => {
                         fontFamily={'ProximaNova-Regular'}
                         fontSize={12}
                       />
-                      <Spacer height={10} />
                       <DropDownPicker
                         open={openReligionSugg}
                         value={religion}
@@ -817,7 +844,7 @@ const EditProfile = ({navigation}) => {
                           showsVerticalScrollIndicator: true,
                         }}
                         containerProps={{
-                          height: openReligionSugg === true ? 220 : null,
+                          height: openReligionSugg === true ? 230 : null,
                         }}
                       />
 
@@ -860,7 +887,7 @@ const EditProfile = ({navigation}) => {
                               showsVerticalScrollIndicator: true,
                             }}
                             containerProps={{
-                              height: openSectors === true ? 220 : null,
+                              height: openSectors === true ? 160 : null,
                             }}
                           />
                           <Divider color={colors.black} width={1} />
@@ -907,7 +934,7 @@ const EditProfile = ({navigation}) => {
                           showsVerticalScrollIndicator: true,
                         }}
                         containerProps={{
-                          height: openReligiousitySugg === true ? 200 : null,
+                          height: openReligiousitySugg === true ? 160 : null,
                         }}
                       />
 

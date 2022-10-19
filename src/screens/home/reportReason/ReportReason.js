@@ -21,9 +21,12 @@ const ReportReason = ({navigation, route}) => {
   const [reason, setReason] = useState('');
   const [writeReason, setWriteReason] = useState('');
   const [loading, setLoading] = useState(false);
+  const [reasonStatus, setReasonStatus] = useState(false)
   const [AuthAllChat, setAuthAllChat] = useState(route?.params?.userAllChat);
 
 // reason array 
+
+console.log("AllChat",AuthAllChat)
   const ReportListArray = [
     {
       id: 1,
@@ -59,18 +62,22 @@ const ReportReason = ({navigation, route}) => {
     },
   ];
 
+  useEffect(() => {
+    setAuthAllChat(route?.params?.userAllChat)
+   
+  }, [])
+  
+
   // delete all chart user click the reason and send the  reason to this person via notification 
   const onSendReason = async () => {
-    if (!reason || writeReason) {
-      Toast.show('Please Select any reason');
-    } else {
+    
       try {
         setLoading(true);
         // send reason  via notification
         NotificationSender(
           route?.params?.otherUser?.fcmToken,
-          reason ? reason : writeReason,
-          route?.params?.authUser?.firstName + ' End Conversation ',
+          writeReason ? writeReason : "has decided to end the conversation",
+          route?.params?.authUser?.firstName ,
         );
         // delete  user  specific request 
         await deleteRequest(
@@ -90,16 +97,13 @@ const ReportReason = ({navigation, route}) => {
           });
         }
       } catch (error) {}
-    }
+    
 
   };
   return (
-    <ScrollView
-    showsVerticalScrollIndicator={false}
-    >
+   
       <Container>
-        <SafeAreaView>
-        <TouchableOpacity
+      <TouchableOpacity
         onPress={() => {
           navigation.navigate('Request');
         }}
@@ -110,6 +114,9 @@ const ReportReason = ({navigation, route}) => {
           color={colors.primary}
         />
       </TouchableOpacity>
+        <SafeAreaView style={{flex:1,}}>
+      
+
           <View>
             <CustomText
               marginTop={10}
@@ -122,7 +129,7 @@ const ReportReason = ({navigation, route}) => {
               ending the conversation?
             </CustomText>
           </View>
-          <View style={{marginTop: 10}}>
+          {/* <View style={{marginTop: 10}}>
             {ReportListArray.map((reportlist, index) => (
               <ReportItem
                 name={reportlist.name}
@@ -134,23 +141,45 @@ const ReportReason = ({navigation, route}) => {
                 key={index}
               />
             ))}
-          </View>
-          <View style={{marginTop: 10}}>
-            <CustomTextInput
-              borderColor={colors.black}
-              height={45}
-              placeholder={'Write your own reason......'}
-              paddingHorizontal={8}
-              textColor={colors.black}
-              textFamily={'ProximaNova-Regular'}
-              value={writeReason}
-              onChangeText={em => {
-                // set user reason
-                setWriteReason(em.trim());
-              }}
-             
-            />
-          </View>
+          </View> */}
+          <View style={{flex:1,alignItems:"center",justifyContent:"center"}}>
+
+          {
+            reasonStatus?(
+              <View style={{marginTop: 10,}}>
+              <CustomTextInput
+                borderColor={colors.black}
+                height={45}
+                placeholder={'Write your own reason......'}
+                paddingHorizontal={8}
+                textColor={colors.black}
+                textFamily={'ProximaNova-Regular'}
+                value={writeReason}
+                onChangeText={em => {
+                  // set user reason
+                  setWriteReason(em.trim());
+                }}
+               
+              />
+            </View>
+
+            ):<></>
+          }
+       
+          <CustomGradientButton
+            marginTop={30}
+            height={50}
+            loading={loading}
+            width={390}
+            fontFamily={'ProximaNova-Bold'}
+            fontSize={20}
+            title={'Add Reason'}
+            borderRadius={50}
+            onPress={() => {
+              setReasonStatus(true)
+
+            }}
+          />
         
           <CustomGradientButton
             marginTop={30}
@@ -165,14 +194,20 @@ const ReportReason = ({navigation, route}) => {
               onSendReason();
             }}
           />
-        </SafeAreaView>
-      </Container>
 
-      <Loader
+</View>
+
+
+        </SafeAreaView>
+        <Loader
         loading={loading}
         file={require('../../../../assets/loader/heartLoading.json')}
       />
-    </ScrollView>
+
+      </Container>
+      
+
+    
   );
 };
 
@@ -180,6 +215,7 @@ const Container = styled(View, {
   width: '100%',
   padding: moderateScale(25),
   flex: 1,
+
 });
 
 export default ReportReason;

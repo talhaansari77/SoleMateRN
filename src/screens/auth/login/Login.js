@@ -60,7 +60,6 @@ const Login = ({navigation}) => {
       setLoading(true);
 
       //  login with email and password
-
       try {
         const userCredentials = await auth().signInWithEmailAndPassword(
           email.trim(),
@@ -70,7 +69,6 @@ const Login = ({navigation}) => {
           AsyncStorage.setItem('userAuth', userCredentials.user.uid);
 
           // save user data
-
           await saveUser(userCredentials.user.uid, {fcmToken: newFcmToken});
 
           navigation.reset({

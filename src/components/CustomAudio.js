@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
   Platform,
+  Text
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import * as Progress from 'react-native-progress';
@@ -19,6 +20,8 @@ import {
 } from 'react-native-size-matters';
 import Component from './FastImage';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import RNFetchBlob from 'rn-fetch-blob';
+
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
@@ -30,7 +33,7 @@ const CustomAudio = ({audio, userData, message, isUser}) => {
   // let pt = state?.playTime?.split(':')
   // pt = pt[0]+":"+pt[1];
 
-  console.log('UserAithData', userData);
+  console.log('UserAithData', state);
   console.log('audioUrl', audio[0].audioUri);
 
   useEffect(() => {
@@ -91,13 +94,37 @@ const CustomAudio = ({audio, userData, message, isUser}) => {
   };
 
   const onStartPlay = async () => {
-    console.log('onStartPlay');
+//     // const response=
+//     const filename = Date.now().toString();
+// MovToMp4(audio[0].audioUri, filename + ".mp4")
+//   .then(function (results) {
+//     //here you can upload the video...
+//     console.log("ConvertMp4",results);
+//   });
+// const respon=await RNFetchBlob.fetch(audio[0].audioUri)
+//     console.log("ConvertMp4",respon);
+
+// RNFetchBlob
+//   .config({
+//     // add this option that makes response data to be stored as a file,
+//     // this is much more performant.
+//     fileCache : true,
+//   })
+//   .fetch(audio[0].audioUri, {
+//    " Content-Type": multipart/form-data
+//   })
+//   .then((res) => {
+//     // the temp file path
+//     console.log('The file saved to ', res.path())
+//   })
+
+  
     if (!playing) {
       setPlaying(!playing);
       const msg = await audioRecorderPlayer.startPlayer(audio[0].audioUri);
 
       console.log('This is Inside Play', msg);
-      audioRecorderPlayer.addPlayBackListener(e => {
+    await  audioRecorderPlayer.addPlayBackListener(e => {
         setState({
           currentPositionSec: e.currentPosition,
           currentDurationSec: e.duration,
@@ -192,7 +219,7 @@ const CustomAudio = ({audio, userData, message, isUser}) => {
 
           style={styles.hw100}
           uniqueKey={Math.random()}
-          source={{uri: userData?.images?.[0]}}
+          source={{uri: userData?.images?.image1}}
         />
         {/* <Image source={{uri:userData?.images?.[0]}} resizeMode="contain" /> */}
       </View>

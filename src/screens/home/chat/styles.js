@@ -30,11 +30,12 @@ export const styles = ScaledSheet.create({
     borderRadius: verticalScale(20),
     maxHeight:verticalScale(100),
     padding:5,
+    minHeight:verticalScale(32),
     // height: verticalScale(32),
     borderColor: colors.primary,
     borderWidth: 1,
     alignItems: 'center',
-    paddingRight: 5,
+    paddingRight: verticalScale(5),
   },
   innerMainContainer: {
     flex: 1,

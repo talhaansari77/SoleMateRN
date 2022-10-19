@@ -22,9 +22,6 @@ import RudioRecoder from '../../screens/home/rudioRecoder/RudioRecoder';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthStack = ({navigation}) => {
-
-
-
   useEffect(() => {
     dynamicLinks()
       .getInitialLink()
@@ -38,37 +35,27 @@ const AuthStack = ({navigation}) => {
     };
   }, []);
 
-
- 
-
-  const handleDynamicUrlLink =async  link => {
-    console.log("this is background")
+  const handleDynamicUrlLink = async link => {
+    console.log('this is background');
 
     console.log('this is DynamicLink:🖐', link);
     if (link?.url) {
       const id = link.url?.split('=').pop();
-      await AsyncStorage.setItem("requestId",id)
-
+      await AsyncStorage.setItem('requestId', id);
+      console.log('Forground Id:', id);
       const screenName = link.url?.split('&')[0].split('=').pop();
       const wihApp = link.url?.split('&')[1].split('=').pop();
       const linkDate = link.url?.split('&')[2].split('=').pop();
+      console.log('linkDate', linkDate);
+      await AsyncStorage.setItem('linkDate', linkDate);
 
-      await AsyncStorage.setItem("linkDate",linkDate)
-      
-      console.log('user Id:', id);
-      console.log("RequestIdData",id)
-      
       console.log('screenName:', screenName);
       console.log('wihApp:', wihApp);
-      console.log('linkDate:', linkDate);
 
       if (screenName === 'Profile')
-
-        navigation.navigate('MainStack', {screen: 'Profile',});
+        navigation.navigate('MainStack', {screen: 'Profile'});
     }
   };
-
-
 
   const Stack = createStackNavigator();
   return (

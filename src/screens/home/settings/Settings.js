@@ -9,7 +9,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import SettingItem from './molecules/SettingItem';
 
 const Settings = ({navigation}) => {
-
   const [count, setCount] = useState(-1);
 
   // setting array
@@ -74,7 +73,7 @@ const Settings = ({navigation}) => {
           </View>
         </TouchableOpacity>
 
-         {/* setting array */}
+        {/* setting array */}
 
         {SettingsArray.map((setting, index) => (
           <View style={{display: 'flex'}}>
@@ -86,7 +85,7 @@ const Settings = ({navigation}) => {
               count={count}
               index={index}
               key={index}
-              onPress={()=>console.log("btn")}               
+              onPress={() => console.log('btn')}
             />
           </View>
         ))}

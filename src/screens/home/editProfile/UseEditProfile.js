@@ -48,6 +48,27 @@ export const EditValidate = (data, submitError, setSubmitError, images) => {
     });
     return;
   }
+  if (!data.dob) {
+    setSubmitError({
+      ...submitError,
+      birthdayError: 'Birthday is required',
+    });
+    return;
+  }
+  if (moment().diff(data.dob, 'years', false) < 17) {
+    setSubmitError({
+      ...submitError,
+      birthdayError: 'Your age must be 17',
+    });
+    return;
+  }
+  if (!data.gender) {
+    setSubmitError({
+      ...submitError,
+      genderError: 'Gender is required',
+    });
+    return;
+  }
   
   if (!data?.iceBreakerQ[0]?.question && !data?.iceBreakerQ[0]?.answer) {
     Toast.show('All Ice Breaker Questions are required');

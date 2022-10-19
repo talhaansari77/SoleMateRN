@@ -45,8 +45,12 @@ const IceBreakQField = ({
                       setQuestionFromList(q.question);
                       setIndex(index);
                       setVisible(false);
-                      setTimeout(() => {}, 1000);
-                      props.setModalVisible(true);
+                      setTimeout(() => {
+                        props.setModalVisible(true);
+
+
+
+                      }, 1000);
                     }
                   : () => {}
               }
@@ -182,6 +186,7 @@ const IceBreakQField = ({
                     // props.setModalVisible(true);
                     setVisible(!visible);
                     setQuestionIndex(index + 1);
+                 
                   }}>
                   {q.question ? (
                     <FontAwesome5 name="pen" color={colors.black} />

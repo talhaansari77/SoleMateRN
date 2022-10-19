@@ -95,11 +95,10 @@ export const ChatBody = ({
     }
   }, [authId, otherId, isFocused, messages]);
 
- 
-// MessageStatus changer 
+  // MessageStatus changer
   const changeMessageStatus = async () => {
     const id = await getAuthId();
-    
+
     if (messages)
       messages.map(async item => {
         const isUser = item.from == authId;
@@ -186,7 +185,7 @@ export const ChatBody = ({
       }
     }
   };
-// onStart Audio Play
+  // onStart Audio Play
   const onStartPlay = async item => {
     console.log('onStartPlay', item[0]?.audioUri);
 
@@ -301,7 +300,7 @@ export const ChatBody = ({
                       {message.createdAt}
                     </Text>
 
-                    <View style={{marginBottom: 10}}>
+                    <View style={{marginBottom: verticalScale(1)}}>
                       <Ionicons
                         name={
                           message.status == true
@@ -372,8 +371,7 @@ export const ChatBody = ({
                           textAlign={'justify'}
                         />
                         <TouchableOpacity
-                          onPress={() => {
-                          }}
+                          onPress={() => {}}
                           style={styles.fileContainer3}>
                           <CustomText
                             label={message.createdAt}
@@ -383,7 +381,6 @@ export const ChatBody = ({
                             }}
                           />
 
-                         
                           <View style={{marginLeft: 5}}>
                             <Ionicons
                               name={
@@ -428,7 +425,6 @@ export const ChatBody = ({
                   uniqueKey={Math.random()}
                   source={{uri: otherUserData?.images?.image1}}
                 />
-              
               </View>
             </View>
 
@@ -458,7 +454,6 @@ export const ChatBody = ({
                       style={{
                         alignSelf: 'flex-end',
                       }}>
-
                       <CustomText
                         label={message.createdAt}
                         textStyle={styles.timerText1}
@@ -564,12 +559,11 @@ export const ChatBody = ({
               ) : (
                 <View style={styles.audioContainer1}>
                   <CustomAudio
-                  message={message}
-                  userData={getAuthData}
-                  audio={message.audio}
-                  isUser={false}
-                />
-                  
+                    message={message}
+                    userData={otherUserData}
+                    audio={message.audio}
+                    isUser={false}
+                  />
                 </View>
               )}
             </View>
@@ -587,7 +581,7 @@ export const ChatBody = ({
         keyExtractor={item => item._id}
         showsVerticalScrollIndicator={false}
         inverted
-        contentContainerStyle={{ flexDirection: 'column-reverse' }}
+        contentContainerStyle={{flexDirection: 'column-reverse'}}
       />
     </View>
   );
@@ -629,12 +623,12 @@ const styles = ScaledSheet.create({
   reactionContainer2: {
     backgroundColor: 'white',
     borderRadius: 100,
-    // marginTop: -15,
+    marginTop: 10,
     width: 25,
     height: 25,
-    // top:0,
+    top: '100%',
     // bottom: 0,
-    alignSelf: 'flex-end',
+    // alignSelf: 'flex-end',
     // marginRight: 40,
     alignItems: 'center',
     justifyContent: 'center',
@@ -652,8 +646,8 @@ const styles = ScaledSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    // paddingBottom:10
-    height: verticalScale(185),
+    paddingBottom: 10,
+    height: verticalScale(190),
   },
   fileContainer: {
     width: '100%',
@@ -951,4 +945,3 @@ const styles = ScaledSheet.create({
     borderRadius: 5,
   },
 });
-
