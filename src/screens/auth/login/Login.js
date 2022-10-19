@@ -117,7 +117,7 @@ const Login = ({navigation}) => {
             // console.log('UserInfo --->', userInfo.user);
             // if (!userInfo.additionalUserInfo.isNewUser) {
             AsyncStorage.setItem('userAuth', userInfo.user.uid);
-            navigation.navigate('MainStack', {screen: 'Profile'});
+            navigation.navigate('EditProfile');
             // }
           })
           .catch(e => alert('Error: ', e));

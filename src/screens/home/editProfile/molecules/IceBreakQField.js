@@ -89,6 +89,8 @@ const IceBreakQField = ({
                 onPress={
                   q.button
                     ? () => {
+                        setVisible(false);
+                        setTimeout(() => {}, 1000);
                         props.setModalVisible(true);
                       }
                     : () => {}

@@ -37,6 +37,7 @@ import {
   religiousitySuggList,
   sectorsList,
 } from '../../../utils/Data';
+import ShowError from './molecules/ShowError';
 
 const genders = [
   {id: 1, name: 'Male'},
@@ -98,25 +99,6 @@ const EditProfile = ({navigation}) => {
   const [religiousitySugg, setReligiousitySugg] =
     useState(religiousitySuggList);
 
-  // - Islam: Sunni, Shia
-  const [openIslamicSectors, setOpenIslamicSectors] = useState(false);
-  const [islamicSectorValue, setIslamicSectorValue] = useState(null);
-  const [islamicSectors, setIslamicSectors] = useState([
-    {value: 1, label: 'Sunni'},
-    {value: 2, label: 'Shia'},
-  ]);
-  // - Christianity: Catholic, Protestant, Baptist, Latter-Day Saints, Lutheran, Non-Denimonational
-  const [openChristianitySectors, setOpenChristianitySectors] = useState(false);
-  const [christianitySectorValue, setChristianitySectorValue] = useState(null);
-  const [christianitySectors, setChristianitySectors] = useState([
-    {value: 1, label: 'Catholic'},
-    {value: 2, label: 'Protestant'},
-    {value: 3, label: 'Baptist'},
-    {value: 4, label: 'Latter-Day Saints'},
-    {value: 5, label: 'Lutheran'},
-    {value: 6, label: 'Non-Denimonational'},
-  ]);
-
   const [openSectors, setOpenSectors] = useState(false);
   const [sectorsValue, setSectorsValue] = useState(null);
   const [sectors, setSectors] = useState(sectorsList);
@@ -167,51 +149,50 @@ const EditProfile = ({navigation}) => {
         if (data) {
           const pTags = [];
           data?.personality.map(item => pTags.push({personality: item}));
-          const cTags = [];
-          data?.characteristics.map(item =>
-            cTags.push({characteristics: item}),
-          );
+          // const cTags = [];
+          // data?.characteristics.map(item =>
+          //   cTags.push({characteristics: item}),
+          // );
           // set all user data in state
           setFirstName(data?.firstName);
           setLastName(data?.lastName);
-          setAboutMe(data?.aboutMe);
-          setfamilyOrigin(data?.familyOrigin);
-          setLanguage(data?.language);
-          setEmployment(data?.employment);
-          setOccupation(data?.occupation);
-          setReligion(data?.religion);
-          setReligiousity(data?.religiousity);
-          setPrayerLevel(data?.prayerLevel);
-          setSector(data?.sector);
-          setMartialHistory(data?.martialHistory);
-          setMartialTimming(data?.martialTimming);
+          setAboutMe(data?.aboutMe);      
+          setEditLocation(data?.basicInfo[0].status);
+          setfamilyOrigin(data?.basicInfo[1].status);
+          setFeetHeight(data?.basicInfo[2].status.split(' ')[0]);
+          setInchesHeight(data?.basicInfo[2].status.split(' ')[1]);
+          setLanguage(data?.basicInfo[3].status);    
+          setOccupation(data?.education[0].status);
+          setEmployment(data?.education[1].status);
+          setReligion(data?.religiousness[0].status);
+          setReligiousity(data?.religiousness[1].status);
+          setSector(data?.religiousness[2].status);
+          setMartialTimming(data?.partnerExpectations[0].status);
+          setMartialHistory(data?.partnerExpectations[1].status);
+          setWhatKids(data?.partnerExpectations[2].status);
+          setHasKids(data?.partnerExpectations[3].status);
+          setDrinking(data?.partnerExpectations[4].status);
+          setSmoking(data?.partnerExpectations[5].status);
+          setWillRelocate(data?.partnerExpectations[6].status);
           setBirthday(data?.dob);
-          setGender(data?.gender);
-          setFeetHeight(data?.feetHeight);
-          setWhatKids(data?.whatKids);
-          setHasKids(data?.hasKids);
-          setWillRelocate(data?.willRelocate);
-          setDrinking(data?.drinking);
-          setSmoking(data?.smoking);
-          setEditLocation(data?.location);
-          setFeetHeight(data?.height.split(' ')[0]);
-          setInchesHeight(data?.height.split(' ')[1]);
+          setGender(data?.gender);          
           setPersonality(pTags);
-          setcharacteristics(cTags);
+          // setcharacteristics(cTags);
           setIceBreakerQ(data?.iceBreakerQ);
-          setImages({
-            image1: data?.images?.image1,
-            image2: data?.images?.image2,
-            image3: data?.images?.image3,
-            image4: data?.images?.image4,
-            image5: data?.images?.image5,
-            image6: data?.images?.image6,
-          });
-
-          setAuthData(data);
+          
         }
 
         setLoading(false);
+        setImages({
+          image1: data?.images?.image1,
+          image2: data?.images?.image2,
+          image3: data?.images?.image3,
+          image4: data?.images?.image4,
+          image5: data?.images?.image5,
+          image6: data?.images?.image6,
+        });
+
+        setAuthData(data);
       });
     } catch (error) {
       setLoading(false);
@@ -282,6 +263,8 @@ const EditProfile = ({navigation}) => {
       gender: gender,
       dob: birthday,
       personality: personality.map(item => item.personality),
+      iceBreakerQ: iceBreakerQ,
+
       basicInfo: [
         {label: 'Current Location', status: editLocation},
         {label: 'Family Origin', status: familyOrigin},
@@ -314,8 +297,8 @@ const EditProfile = ({navigation}) => {
         },
       ],
       partnerExpectations: [
-        {label: 'MartialTimming', status: martialTimming},
-        {label: 'MartialHistory', status: martialHistory},
+        {label: 'Martial Timming', status: martialTimming},
+        {label: 'Martial History', status: martialHistory},
         {label: 'WhatKids', status: whatKids},
         {label: 'HasKids', status: hasKids},
         {label: 'Drinking', status: drinking},
@@ -327,7 +310,7 @@ const EditProfile = ({navigation}) => {
     // handle all vlaidation
     const response = EditValidate(data, submitError, setSubmitError, images);
     console.log('step 1');
-    if (true) {
+    if (response) {
       console.log('data');
       setLoading(true);
       try {
@@ -646,7 +629,6 @@ const EditProfile = ({navigation}) => {
                         }}
                         error={submitError.familyError}
                       />
-                     
                     </PH10>
                     {/* Language */}
                     <Spacer height={15} />
@@ -677,7 +659,6 @@ const EditProfile = ({navigation}) => {
                         placeholderStyle={{color: colors.placeholder}}
                         multiple={true}
                         mode="BADGE"
-                        
                         badgeDotColors={['#e76f51']}
                         badgeColors={[colors.primary]}
                         style={{borderWidth: 0}}
@@ -690,6 +671,7 @@ const EditProfile = ({navigation}) => {
                         }}
                       />
                       <Divider color={colors.black} width={1} />
+                      <ShowError error={submitError.languageError}/>                      
                     </PH10>
 
                     {/* Current Location */}
@@ -769,7 +751,8 @@ const EditProfile = ({navigation}) => {
                         }}
                       />
 
-                      <Divider color={colors.black} width={1} />
+                      <Divider color={colors.black} width={1} />                      
+                      <ShowError error={submitError.employmentError}/>
                     </PH10>
 
                     {/* Occupation */}
@@ -839,6 +822,7 @@ const EditProfile = ({navigation}) => {
                       />
 
                       <Divider color={colors.black} width={1} />
+                      <ShowError error={submitError.religionError}/>
                     </PH10>
                     {/* Sector */}
                     {religion === 'Islam' || religion === 'Christianity' ? (
@@ -880,6 +864,7 @@ const EditProfile = ({navigation}) => {
                             }}
                           />
                           <Divider color={colors.black} width={1} />
+                          <ShowError error={submitError.sectorError}/>
                         </PH10>
                       </>
                     ) : (
@@ -927,6 +912,7 @@ const EditProfile = ({navigation}) => {
                       />
 
                       <Divider color={colors.black} width={1} />
+                      <ShowError error={submitError.religiousityError}/>
                     </PH10>
                   </View>
 

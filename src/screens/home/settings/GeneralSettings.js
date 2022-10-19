@@ -43,7 +43,7 @@ function GeneralSettings({navigation}) {
             <CustomText
               fontSize={22}
               fontWeight={'700'}
-              marginBottom={35}
+              // marginBottom={35}
               marginTop={17}
               fontFamily={'ProximaNova-Bold'}>
               Settings
@@ -51,7 +51,7 @@ function GeneralSettings({navigation}) {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <DirectionRow>
             <CustomText
               fontFamily={'ProximaNova-Bold'}
@@ -72,12 +72,12 @@ function GeneralSettings({navigation}) {
               </CustomText>
             </View>
           </DirectionRow>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </Container>
       <Divider />
 
       <Container>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <WithSwitch>
             <CustomText
               fontFamily={'ProximaNova-Bold'}
@@ -105,10 +105,10 @@ function GeneralSettings({navigation}) {
             The global mode turns on as soon as the profiles in this location
             run out.
           </CustomText>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity>
-          <WithSwitch style={{marginTop: 50}}>
+          <WithSwitch style={{marginTop: 10}}>
             <CustomText
               fontFamily={'ProximaNova-Bold'}
               fontSize={14}

@@ -46,10 +46,10 @@ const TwoInputModal = ({
       setIceBreakerQ(newQuestionList);
 
       setAnswer('');
-      setQuestion(''); 
+      setQuestion('');  
 
       setModalVisible(!modalVisible);
-      setVisible(!visible);  
+      setVisible(false);  
     }
   };
  
