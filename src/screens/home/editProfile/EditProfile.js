@@ -156,12 +156,12 @@ const EditProfile = ({navigation}) => {
           // set all user data in state
           setFirstName(data?.firstName);
           setLastName(data?.lastName);
-          setAboutMe(data?.aboutMe);      
+          setAboutMe(data?.aboutMe);
           setEditLocation(data?.basicInfo[0].status);
           setfamilyOrigin(data?.basicInfo[1].status);
           setFeetHeight(data?.basicInfo[2].status.split(' ')[0]);
           setInchesHeight(data?.basicInfo[2].status.split(' ')[1]);
-          setLanguage(data?.basicInfo[3].status);    
+          setLanguage(data?.basicInfo[3].status);
           setOccupation(data?.education[0].status);
           setEmployment(data?.education[1].status);
           setReligion(data?.religiousness[0].status);
@@ -175,11 +175,10 @@ const EditProfile = ({navigation}) => {
           setSmoking(data?.partnerExpectations[5].status);
           setWillRelocate(data?.partnerExpectations[6].status);
           setBirthday(data?.dob);
-          setGender(data?.gender);          
+          setGender(data?.gender);
           setPersonality(pTags);
           // setcharacteristics(cTags);
           setIceBreakerQ(data?.iceBreakerQ);
-          
         }
 
         setLoading(false);
@@ -269,7 +268,12 @@ const EditProfile = ({navigation}) => {
       basicInfo: [
         {label: 'Current Location', status: editLocation},
         {label: 'Family Origin', status: familyOrigin},
-        {label: 'Height', status: feetHeight + ' ' + inchesHeight},
+        {
+          label: 'Height',
+          status: feetHeight + ' ' + inchesHeight,
+          feet: feetHeight,
+          inches: inchesHeight,
+        },
         {label: 'Language', status: language},
       ],
       education: [
@@ -308,36 +312,8 @@ const EditProfile = ({navigation}) => {
       ],
     };
 
-    const data1 = {
-      firstName: firstName,
-      lastName: lastName,
-      aboutMe: aboutMe,
-      dob: birthday,
-      familyOrigin: familyOrigin,
-      language: language,
-      personality: personality.map(item => item.personality),
-      gender: gender,
-      location: editLocation,
-      height: feetHeight + ' ' + inchesHeight,
-      employment: employment,
-      occupation: occupation,
-      fcmToken: fcmToken,
-      id: authID,
-      religion: religion,
-      religiousity: religiousity,
-      sector: sector,
-      whatKids: whatKids,
-      hasKids: hasKids,
-      willRelocate: willRelocate,
-      drinking: drinking,
-      smoking: smoking,
-      martialHistory: martialHistory,
-      martialTimming: martialTimming,
-      iceBreakerQ: iceBreakerQ,
-    };
-
     // handle all vlaidation
-    const response = EditValidate(data1, submitError, setSubmitError, images);
+    const response = EditValidate(data, submitError, setSubmitError, images);
     console.log('step 1');
     if (response) {
       console.log('data');
@@ -681,7 +657,10 @@ const EditProfile = ({navigation}) => {
                         value={language}
                         items={items}
                         setOpen={setOpen}
-                        setValue={setLanguage}
+                        setValue={v => {
+                          setLanguage(v);
+                          setSubmitError({...submitError, languageError: ''});
+                        }}
                         setItems={setItems}
                         placeholder={'Select Your Lanuage'}
                         placeholderStyle={{color: colors.placeholder}}
@@ -699,7 +678,7 @@ const EditProfile = ({navigation}) => {
                         }}
                       />
                       <Divider color={colors.black} width={1} />
-                      <ShowError error={submitError.languageError}/>                      
+                      <ShowError error={submitError.languageError} />
                     </PH10>
 
                     {/* Current Location */}
@@ -759,13 +738,16 @@ const EditProfile = ({navigation}) => {
                         fontFamily={'ProximaNova-Regular'}
                         fontSize={12}
                       />
-                      <Spacer height={10} />
+                      {/* <Spacer height={10} /> */}
                       <DropDownPicker
                         open={openEmpSugg}
                         value={employment}
                         items={empSugg}
                         setOpen={setOpenEmpSugg}
-                        setValue={setEmployment}
+                        setValue={v => {
+                          setEmployment(v);
+                          setSubmitError({...submitError, employmentError: ''});
+                        }}
                         setItems={setEmpSugg}
                         placeholder={'Your Employment'}
                         placeholderStyle={{color: colors.placeholder}}
@@ -779,8 +761,8 @@ const EditProfile = ({navigation}) => {
                         }}
                       />
 
-                      <Divider color={colors.black} width={1} />                      
-                      <ShowError error={submitError.employmentError}/>
+                      <Divider color={colors.black} width={1} />
+                      <ShowError error={submitError.employmentError} />
                     </PH10>
 
                     {/* Occupation */}
@@ -834,7 +816,11 @@ const EditProfile = ({navigation}) => {
                         value={religion}
                         items={religionSugg}
                         setOpen={setOpenReligionSugg}
-                        setValue={setReligion}
+                        setValue={v => {
+                          setSector('');
+                          setReligion(v);
+                          setSubmitError({...submitError, religionError: ''});
+                        }}
                         setItems={setReligionSugg}
                         placeholder={'Select Your Religion'}
                         placeholderStyle={{color: colors.placeholder}}
@@ -849,7 +835,7 @@ const EditProfile = ({navigation}) => {
                       />
 
                       <Divider color={colors.black} width={1} />
-                      <ShowError error={submitError.religionError}/>
+                      <ShowError error={submitError.religionError} />
                     </PH10>
                     {/* Sector */}
                     {religion === 'Islam' || religion === 'Christianity' ? (
@@ -871,13 +857,16 @@ const EditProfile = ({navigation}) => {
                             fontFamily={'ProximaNova-Regular'}
                             fontSize={12}
                           />
-                          <Spacer height={10} />
+                          {/* <Spacer height={10} /> */}
                           <DropDownPicker
                             open={openSectors}
                             value={sector}
                             items={sectors}
                             setOpen={setOpenSectors}
-                            setValue={setSector}
+                            setValue={v => {
+                              setSector(v);
+                              setSubmitError({...submitError, sectorError: ''});
+                            }}
                             setItems={setSectors}
                             placeholder={'Which Sector Do You Belong'}
                             placeholderStyle={{color: colors.placeholder}}
@@ -891,7 +880,7 @@ const EditProfile = ({navigation}) => {
                             }}
                           />
                           <Divider color={colors.black} width={1} />
-                          <ShowError error={submitError.sectorError}/>
+                          <ShowError error={submitError.sectorError} />
                         </PH10>
                       </>
                     ) : (
@@ -918,13 +907,16 @@ const EditProfile = ({navigation}) => {
                         fontFamily={'ProximaNova-Regular'}
                         fontSize={12}
                       />
-                      <Spacer height={10} />
+                      {/* <Spacer height={10} /> */}
                       <DropDownPicker
                         open={openReligiousitySugg}
                         value={religiousity}
                         items={religiousitySugg}
                         setOpen={setOpenReligiousitySugg}
-                        setValue={setReligiousity}
+                        setValue={v => {
+                          setReligiousity(v);
+                          setSubmitError({...submitError, religiousityError: ''});
+                        }}
                         setItems={setReligiousitySugg}
                         placeholder={'How Religious Are You'}
                         placeholderStyle={{color: colors.placeholder}}
@@ -939,7 +931,7 @@ const EditProfile = ({navigation}) => {
                       />
 
                       <Divider color={colors.black} width={1} />
-                      <ShowError error={submitError.religiousityError}/>
+                      <ShowError error={submitError.religiousityError} />
                     </PH10>
                   </View>
 

@@ -16,7 +16,7 @@ const InputField = ({label, arrow = true, onChangeText, value, error}) => {
           fontSize={11}>
           {label}
         </CustomText>
-        <Spacer  height={10}/>
+        {/* <Spacer  height={10}/> */}
 
         <View
           style={{
