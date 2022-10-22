@@ -94,29 +94,7 @@ const CustomAudio = ({audio, userData, message, isUser}) => {
   };
 
   const onStartPlay = async () => {
-//     // const response=
-//     const filename = Date.now().toString();
-// MovToMp4(audio[0].audioUri, filename + ".mp4")
-//   .then(function (results) {
-//     //here you can upload the video...
-//     console.log("ConvertMp4",results);
-//   });
-// const respon=await RNFetchBlob.fetch(audio[0].audioUri)
-//     console.log("ConvertMp4",respon);
 
-// RNFetchBlob
-//   .config({
-//     // add this option that makes response data to be stored as a file,
-//     // this is much more performant.
-//     fileCache : true,
-//   })
-//   .fetch(audio[0].audioUri, {
-//    " Content-Type": multipart/form-data
-//   })
-//   .then((res) => {
-//     // the temp file path
-//     console.log('The file saved to ', res.path())
-//   })
 
   
     if (!playing) {
@@ -124,7 +102,7 @@ const CustomAudio = ({audio, userData, message, isUser}) => {
       const msg = await audioRecorderPlayer.startPlayer(audio[0].audioUri);
 
       console.log('This is Inside Play', msg);
-    await  audioRecorderPlayer.addPlayBackListener(e => {
+       audioRecorderPlayer.addPlayBackListener(e => {
         setState({
           currentPositionSec: e.currentPosition,
           currentDurationSec: e.duration,
