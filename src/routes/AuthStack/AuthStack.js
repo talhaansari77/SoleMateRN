@@ -18,8 +18,8 @@ import Reported from '../../screens/home/reported/Reported';
 import reportReason from '../../screens/home/reportReason';
 import reported from '../../screens/home/reported';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
-import RudioRecoder from '../../screens/home/rudioRecoder/RudioRecoder';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import TestScreen from '../../screens/home/TestScreen/testScreen';
 
 const AuthStack = ({navigation}) => {
   useEffect(() => {
@@ -63,36 +63,15 @@ const AuthStack = ({navigation}) => {
       screenOptions={{headerShown: false}}
       // initialRouteName={"Report"}
     >
-      {/* <Stack.Screen name="AudioRecorder" component={RudioRecoder} /> */}
+      {/* <Stack.Screen name="TestScreen" component={TestScreen} /> */}
+      
       <Stack.Screen name="OnBoarding" component={OnBoarding} />
       <Stack.Screen name="Welcome" component={Welcome} />
-      {/* <Stack.Screen name="ViewPager" component={ViewPager} /> */}
-
-      {/* <Stack.Screen name="OnBoarding" component={OnBoarding} /> */}
-      {/* <Stack.Screen name="Welcome" component={Welcome} /> */}
-      {/* <Stack.Screen name="ViewPager" component={ViewPager} /> */}
-
       <Stack.Screen name="Report" component={Report} />
       <Stack.Screen name="ReportReason" component={ReportReason} />
       <Stack.Screen name="Reported" component={Reported} />
-
-      {/* <Stack.Screen name="Settings" component={Settings} /> */}
-      {/* <Stack.Screen name="MainSettings" component={MainSettings} /> */}
-      {/* <Stack.Screen name="GeneralSettings" component={GeneralSettings} /> */}
-
-      {/* <Stack.Screen name="Settings" component={Settings} /> */}
-
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="Login" component={Login} />
-      {/* <Stack.Screen name="EditProfile" component={profile} />
-
-
-
-
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="EditProfile" component={EditProfile} />
-      {/* <Stack.Screen name="Signup" component={Signup} />
-      <Stack.Screen name="Login" component={Login} /> */}
     </Stack.Navigator>
   );
 };

@@ -236,9 +236,10 @@ export const ChatBody = ({
     // Main Function
     return (
       <View style={styles.container}>
-        <View style={styles.pb15}>
+``        {chatDate?<View style={styles.pb15}>
           <CustomText label={chatDate} textStyle={styles.timerText} />
-        </View>
+        </View>:<></>}
+        
 
         {isUser ? (
           <View>

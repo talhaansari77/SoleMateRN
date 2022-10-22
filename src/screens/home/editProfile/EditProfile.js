@@ -635,7 +635,7 @@ const EditProfile = ({navigation}) => {
                       />
                     </PH10>
                     {/* Language */}
-                    <Spacer height={15} />
+                    <Spacer height={10} />
                     <PH10>
                       {/* <InputField
                         label={'Language(s)'}
