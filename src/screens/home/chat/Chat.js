@@ -226,6 +226,8 @@ const Chat = ({navigation, route}) => {
       }
     }
 
+    const dirs = RNFetchBlob.fs.dirs;
+  
     const audioSet = {
       AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
       AudioSourceAndroid: AudioSourceAndroidType.MIC,
@@ -257,9 +259,10 @@ const Chat = ({navigation, route}) => {
       const path = NormalizedPath(uri);
       console.log('PathData', path);
 
-      const result = await RNFetchBlob.fs.readFile(path, 'base64');
+      // const result = await RNFetchBlob.fs.readFile(path, 'base64');
       // Firebase Upload
-      UploadFileToFirebaseStorage(result, uri);
+      // console.log("result",result)
+      UploadFileToFirebaseStorage(path, uri);
       // const response = await readFile(path, "base64");
 
       console.log('PathDataResult', result);
@@ -286,10 +289,12 @@ const Chat = ({navigation, route}) => {
   const UploadFileToFirebaseStorage = async (result, file) => {
     const resData = 0;
     const fileData = 0;
+    
+    
 
     const uploadFile = storage()
       .ref(`audioFiles/${uuid.v4()}`)
-      .putString(result, 'base64');
+      .putFile(result,);
     uploadFile.on(
       'state_changed',
       snapshot => {
