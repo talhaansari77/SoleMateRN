@@ -3,7 +3,7 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import uuid from 'react-native-uuid';
 import auth from '@react-native-firebase/auth';
-import firebase from "@react-native-firebase/app"
+import firebase from '@react-native-firebase/app';
 import moment from 'moment';
 
 // import auth from '@react-native-firebase/auth';
@@ -20,15 +20,34 @@ import moment from 'moment';
 //   }
 // };
 
-export const getTime=async()=>{
+export const deleteFile = async (file) => {
+  const storageRef = firebase.storage().ref();
 
-  return firebase.firestore.Timestamp.now()
+  // [START storage_delete_file]
+  // Create a reference to the file to delete
+  var desertRef = storageRef.child(file);
 
-}
+  // Delete the file
+  desertRef
+    .delete()
+    .then(() => {
+      // File deleted successfully
+      console.log('File deleted successfully');
+    })
+    .catch(error => {
+      // Uh-oh, an error occurred!
+      console.log('Uh-oh, an error occurred! ✋',error);
+    });
+  // [END storage_delete_file]
+};
 
-export const fromNow = (time) => {
+export const getTime = async () => {
+  return firebase.firestore.Timestamp.now();
+};
+
+export const fromNow = time => {
   const fireBaseTime = new Date(
-    time.seconds * 100 + time.nanoseconds / 1000000
+    time.seconds * 100 + time.nanoseconds / 1000000,
   );
   return moment(fireBaseTime).fromNow();
 };
@@ -60,7 +79,7 @@ export const saveUser = async (authId, data) => {
   }
 };
 export const uploadImage = async (uri, path) => {
-  console.log("ImagrAndPath",uri,path)
+  console.log('ImagrAndPath', uri, path);
   try {
     const response = await fetch(uri);
     const blob = await response.blob();

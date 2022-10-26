@@ -23,7 +23,14 @@ const PictureBox = ({images, setImages}) => {
             activeOpacity={0.6}
             onPress={() =>
               onClickImage().then(img => {
-                setImages({...images, image1: img});
+                if (
+                  images.image1 &&
+                  images.image1.includes('https://firebase')
+                ) {
+                  let temp = images.image1.split('?')[0].split('/').pop();
+                  // console.log("Old Image Path",temp);
+                  setImages({...images, image1: img, temp1: temp});
+                }
               })
             }>
             <Text
@@ -51,7 +58,16 @@ const PictureBox = ({images, setImages}) => {
           <ImageContainer
             activeOpacity={0.6}
             onPress={() =>
-              onClickImage().then(img => setImages({...images, image2: img}))
+              onClickImage().then(img => {
+                if (
+                  images.image2 &&
+                  images.image2.includes('https://firebase')
+                ) {
+                  let temp = images.image2.split('?')[0].split('/').pop();
+                  // console.log("Old Image Path",temp);
+                  setImages({...images, image2: img, temp2: temp});
+                }
+              })
             }>
             <Text
               style={[
@@ -76,7 +92,16 @@ const PictureBox = ({images, setImages}) => {
           <ImageContainer
             activeOpacity={0.6}
             onPress={() =>
-              onClickImage().then(img => setImages({...images, image3: img}))
+              onClickImage().then(img => {
+                if (
+                  images.image3 &&
+                  images.image3.includes('https://firebase')
+                ) {
+                  let temp = images.image3.split('?')[0].split('/').pop();
+                  // console.log("Old Image Path",temp);
+                  setImages({...images, image3: img, temp3: temp});
+                }
+              })
             }>
             <Text
               style={[
@@ -103,7 +128,13 @@ const PictureBox = ({images, setImages}) => {
         <ImageContainer2
           activeOpacity={0.6}
           onPress={() =>
-            onClickImage().then(img => setImages({...images, image4: img}))
+            onClickImage().then(img => {
+              if (images.image4 && images.image4.includes('https://firebase')) {
+                let temp = images.image4.split('?')[0].split('/').pop();
+                // console.log("Old Image Path",temp);
+                setImages({...images, image4: img, temp4: temp});
+              }
+            })
           }>
           <Text
             style={[
@@ -124,7 +155,13 @@ const PictureBox = ({images, setImages}) => {
         <ImageContainer2
           activeOpacity={0.6}
           onPress={() =>
-            onClickImage().then(img => setImages({...images, image5: img}))
+            onClickImage().then(img => {
+              if (images.image5 && images.image5.includes('https://firebase')) {
+                let temp = images.image5.split('?')[0].split('/').pop();
+                // console.log("Old Image Path",temp);
+                setImages({...images, image5: img, temp5: temp});
+              }
+            })
           }>
           <Text
             style={[
@@ -145,7 +182,13 @@ const PictureBox = ({images, setImages}) => {
         <ImageContainer2
           activeOpacity={0.6}
           onPress={() =>
-            onClickImage().then(img => setImages({...images, image6: img}))
+            onClickImage().then(img => {
+              if (images.image6 && images.image6.includes('https://firebase')) {
+                let temp = images.image6.split('?')[0].split('/').pop();
+                // console.log("Old Image Path",temp);
+                setImages({...images, image6: img, temp6: temp});
+              }
+            })
           }>
           <Text
             style={[

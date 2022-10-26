@@ -136,6 +136,12 @@ export const imageTemplate={
     image4: '',
     image5: '',
     image6: '',
+    temp1: '',
+    temp2: '',
+    temp3: '',
+    temp4: '',
+    temp5: '',
+    temp6: '',
   }
 
 export const reactionData = ['😀', '😂', '😘', '❤️', '😪', '🤘🏼', '😁', '😅'];

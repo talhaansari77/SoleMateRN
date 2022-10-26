@@ -17,7 +17,12 @@ import styled from 'react-native-styled-components';
 import {EditValidate} from './UseEditProfile';
 import PersonalityModal from './molecules/PersonalityModal';
 import AddMoreContainer from './molecules/AddMoreContainer';
-import {getAuthId, saveUser, uploadImage} from '../../../services/FirebaseAuth';
+import {
+  deleteFile,
+  getAuthId,
+  saveUser,
+  uploadImage,
+} from '../../../services/FirebaseAuth';
 import PictureBox from './molecules/PictureBox';
 import Loader from '../../../utils/Loader';
 import TwoInputModal from './molecules/TwoInputModal';
@@ -250,6 +255,8 @@ const EditProfile = ({navigation}) => {
   const onHandleSubmit = async () => {
     let temp2 = {};
     console.log('I Am Submit ✌');
+    console.log('This is temp Image array', Object.keys(images).slice(6));
+
     console.log('I Am temp2 ✌1', temp2);
 
     // user object
@@ -360,8 +367,14 @@ const EditProfile = ({navigation}) => {
 
           setTimeout(() => {
             setLoading(false);
-          }, 2000);
-
+          }, 500);
+// delete old images
+          Object.values(images)
+            .slice(6)
+            .map(img => {
+              deleteFile(img);
+              console.log("==>",img);
+            });
           console.log('dataSave');
           navigation.reset({
             index: 0,
@@ -915,7 +928,10 @@ const EditProfile = ({navigation}) => {
                         setOpen={setOpenReligiousitySugg}
                         setValue={v => {
                           setReligiousity(v);
-                          setSubmitError({...submitError, religiousityError: ''});
+                          setSubmitError({
+                            ...submitError,
+                            religiousityError: '',
+                          });
                         }}
                         setItems={setReligiousitySugg}
                         placeholder={'How Religious Are You'}
